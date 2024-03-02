@@ -89,4 +89,9 @@ public class Result : IResult
 
         return Success();
     }
+
+    public static Result<T> Failure<T>(object refreshTokenIsExpired)
+    {
+        throw new NotImplementedException();
+    }
 }
