@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
 using Infrasctructure.Hashing.Interfaces;
 
 namespace Infrasctructure.Hashing;
@@ -7,13 +8,17 @@ public class HashingService : IHashingService
 {
     public string GenerateSalt() => GenerateToken();
 
-    public string Hash(string password, string salt)
+    public string Hash(string input, string salt)
     {
-        var saltBytes = ConvertToBytes(salt);
-        var passwordBytes = ConvertToBytes(password);
-        using var hmac = new HMACSHA256(saltBytes);
-        var hash = hmac.ComputeHash(passwordBytes);
-        return Convert.ToBase64String(hash);
+        byte[] inputBytes = Encoding.UTF8.GetBytes(input + salt);
+        byte[] hashBytes = SHA256.HashData(inputBytes);
+
+        StringBuilder builder = new();
+        for (int i = 0; i < hashBytes.Length; i++)
+        {
+            builder.Append(hashBytes[i].ToString("x2"));
+        }
+        return builder.ToString();
     }
 
     public bool Verify(string password, string salt, string hash)
@@ -31,8 +36,13 @@ public class HashingService : IHashingService
 
     public string GenerateToken()
     {
-        using var hmac = new HMACSHA256();
-        var token = ConvertToString(hmac.Key);
-        return token;
+        byte[] saltBytes = RandomNumberGenerator.GetBytes(32);
+
+        StringBuilder builder = new();
+        for (int i = 0; i < saltBytes.Length; i++)
+        {
+            builder.Append(saltBytes[i].ToString("x2"));
+        }
+        return builder.ToString();
     }
 }
