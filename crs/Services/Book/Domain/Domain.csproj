@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="BookAggregate\Entity\" />
+    <Folder Include="BookAggregate\Ids\" />
+    <Folder Include="BookAggregate\Validators\" />
+    <Folder Include="BookAggregate\ValueObjects\" />
+    <Folder Include="UserAggregate\Errors\" />
+    <Folder Include="UserAggregate\ValueObjects\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Common\Domain.Core\Domain.Core.csproj" />
+  </ItemGroup>
+
+</Project>
