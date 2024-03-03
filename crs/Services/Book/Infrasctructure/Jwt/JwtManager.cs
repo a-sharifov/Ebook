@@ -9,7 +9,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-
 namespace Infrasctructure.Jwt;
 
 public class JwtManager(IOptions<JwtOptions> options) : IJwtManager

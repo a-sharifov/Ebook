@@ -1,5 +1,4 @@
-﻿using Domain.Core.Events.Interfaces;
-using Domain.UserAggregate.DomainEvents;
+﻿using Domain.UserAggregate.DomainEvents;
 
 namespace Application.Users.Events;
 
