@@ -1,12 +1,11 @@
 ﻿namespace Domain.Common.ValueObjects;
 
-public sealed partial class ImageUrl : ValueObject
+public class ImageUrl : ValueObject
 {
     public string Value { get; private set; }
-
+    public const int MaxLength = 2000;
 
     private ImageUrl(string value) => Value = value;
-
 
     public static Result<ImageUrl> Create(string imageUrl)
     {
@@ -18,6 +17,12 @@ public sealed partial class ImageUrl : ValueObject
 
         imageUrl = imageUrl.Trim();
 
+        if (imageUrl.Length > MaxLength)
+        {
+            return Result.Failure<ImageUrl>(
+                ImageUrlErrors.IsTooLong);
+        }
+
         if (!IsImageUrl(imageUrl))
         {
             return Result.Failure<ImageUrl>(
@@ -27,14 +32,11 @@ public sealed partial class ImageUrl : ValueObject
         return new ImageUrl(imageUrl);
     }
 
-    public static bool IsImageUrl(string imageUrl) => 
-        ImageUrlRegex.Regex().IsMatch(imageUrl);
+    public static bool IsImageUrl(string imageUrl) =>
+       ImageUrlRegex.Regex().IsMatch(imageUrl);
 
     public override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
-
-    public static implicit operator string(ImageUrl imageUrl) => imageUrl.Value;
-
 }

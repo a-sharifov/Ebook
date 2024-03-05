@@ -3,7 +3,7 @@
 namespace Domain.BookAggregate.ValueObjects;
 
 public class BookDescription : ValueObject
-{ 
+{
     public string Value { get; private set; }
     public const int BookDescriptionMaxLength = 1000;
 

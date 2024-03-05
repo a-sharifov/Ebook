@@ -28,4 +28,10 @@ public static class UserErrors
 
     public static Error EmailIsAlreadyConfirmed =>
         new("User.EmailIsAlreadyConfirmed", $"Email is already confirmed.");
+
+    public static Error BookIsAlreadyInWishList =>
+        new("User.BookIsAlreadyInWishList", $"Book is a;ready in wish list.");
+
+    public static Error BookIsNotInWishList =>
+        new("User.BookIsNotInWishList", $"Book is not in wish list.");
 }

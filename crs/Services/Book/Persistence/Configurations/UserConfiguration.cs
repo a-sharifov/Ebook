@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Contracts.Enumerations;
 using Domain.UserAggregate.Ids;
 using Domain.Common.ValueObjects;
+using Domain.CartAggregate;
+using Domain.UserAggregate.Entities;
 
 namespace Persistence.Configurations;
 
@@ -74,5 +76,16 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
             gender => gender.Name,
             name => Gender.FromName(name)
             ).IsRequired();
+
+        //для того чтоб сделатть каскадное удаление cart при удалении пользователя с помощью CartId:
+        builder.HasOne(x => x.Cart)
+            .WithOne()
+            .HasForeignKey<Cart>(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.Wishes)
+            .WithOne()
+            .HasForeignKey<Wish>(x => x.User)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

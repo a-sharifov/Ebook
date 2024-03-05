@@ -7,4 +7,7 @@ public static class ImageUrlErrors
 
     public static Error IsInvalid =>
         new("ImageUrl.IsInvalid", "Image url is invalid");
+
+    public static Error IsTooLong =>
+        new("ImageUrl.IsTooLong", "Image url is too long");
 }
