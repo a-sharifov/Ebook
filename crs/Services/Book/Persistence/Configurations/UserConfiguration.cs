@@ -3,6 +3,7 @@ using Domain.UserAggregate;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Contracts.Enumerations;
 using Domain.UserAggregate.Ids;
+using Domain.Common.ValueObjects;
 
 namespace Persistence.Configurations;
 
@@ -11,6 +12,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(x => x.Id);
+        builder.HasAlternateKey(x => x.Email);
 
         builder.Property(x => x.Id).HasConversion(
             userId => userId.Value,

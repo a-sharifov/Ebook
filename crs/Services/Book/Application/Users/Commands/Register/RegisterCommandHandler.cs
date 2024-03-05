@@ -1,4 +1,5 @@
 ﻿using Contracts.Enumerations;
+using Domain.Common.ValueObjects;
 using Domain.Core.UnitOfWorks.Interfaces;
 using Domain.UserAggregate;
 using Domain.UserAggregate.Ids;

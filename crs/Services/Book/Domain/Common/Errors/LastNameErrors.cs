@@ -1,4 +1,4 @@
-﻿namespace Domain.UserAggregate.Errors;
+﻿namespace Domain.Common.Errors;
 
 public class LastNameErrors
 {

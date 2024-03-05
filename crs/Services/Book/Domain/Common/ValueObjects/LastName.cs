@@ -1,6 +1,4 @@
-﻿using Domain.UserAggregate.Errors;
-
-namespace Domain.UserAggregate.ValueObjects;
+﻿namespace Domain.Common.ValueObjects;
 
 public sealed class LastName : ValueObject
 {

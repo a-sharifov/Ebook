@@ -8,9 +8,6 @@
 
   <ItemGroup>
     <Folder Include="BookAggregate\Entity\" />
-    <Folder Include="BookAggregate\Ids\" />
-    <Folder Include="BookAggregate\Validators\" />
-    <Folder Include="BookAggregate\ValueObjects\" />
     <Folder Include="UserAggregate\Errors\" />
     <Folder Include="UserAggregate\ValueObjects\" />
   </ItemGroup>

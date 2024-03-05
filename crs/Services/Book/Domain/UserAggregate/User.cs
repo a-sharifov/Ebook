@@ -3,6 +3,7 @@ using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.DomainEvents;
 using Domain.UserAggregate.ValueObjects;
+using Domain.Common.ValueObjects;
 
 namespace Domain.UserAggregate;
 

@@ -3,7 +3,7 @@ using Domain.Core.StrongestIds;
 
 namespace Catalog.Persistence.Caching.Abstractions;
 
-internal interface ICachedEntityService<TEntity, TStrongestId>
+public interface ICachedEntityService<TEntity, TStrongestId>
     where TEntity : Entity<TStrongestId>
     where TStrongestId : class, IStrongestId
 {

@@ -28,12 +28,6 @@ public class HashingService : IHashingService
         return isVerify;
     }
 
-    private static byte[] ConvertToBytes(string value) =>
-        Convert.FromBase64String(value);
-
-    private static string ConvertToString(byte[] value) =>
-        Convert.ToBase64String(value);
-
     public string GenerateToken()
     {
         byte[] saltBytes = RandomNumberGenerator.GetBytes(32);

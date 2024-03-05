@@ -1,9 +1,20 @@
-﻿namespace Domain.BookAggregate;
+﻿using Domain.AuthorAggregate;
+using Domain.BookAggregate.Ids;
+using Domain.BookAggregate.ValueObjects;
+using Domain.GenreAggregate;
 
-public class Book
+namespace Domain.BookAggregate;
+
+public class Book : AggregateRoot<BookId>
 {
-    public int Id { get; private set; }
-    public string Title { get; private set; }
-    public string Author { get; private set; }
-    public string ISBN { get; private set; }
+    public Title Title { get; private set; }
+    public BookDescription BookDescription { get; private set; }
+    public List<Author> Authors { get; private set; }
+    public PageCount PageCount { get; private set; }
+    public Money Price { get; private set; }
+    public List<ImageUrl> Images { get; private set; }
+    public ISBN ISBN { get; private set; }
+    public QuantityBook QuantityBook { get; private set; }
+    public SoldUnits SoldUnits { get; private set; }
+    public List<Genre> Genres { get; private set; }
 }

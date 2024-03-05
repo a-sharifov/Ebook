@@ -12,9 +12,9 @@ public sealed class RefreshToken : ValueObject
     private RefreshToken(string token, DateTime expired) =>
         (Token, Expired) = (token, expired);
 
-    public static Result<RefreshToken> Create(string value, DateTime expires)
+    public static Result<RefreshToken> Create(string refreshToken, DateTime expires)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(refreshToken))
         {
             return Result.Failure<RefreshToken>(
                 RefreshTokenErrors.CannotBeEmpty);
@@ -26,7 +26,7 @@ public sealed class RefreshToken : ValueObject
                 RefreshTokenErrors.CannotBeExpired);
         }
 
-        return new RefreshToken(value, expires);
+        return new RefreshToken(refreshToken, expires);
     }
 
     public static implicit operator string(RefreshToken token) =>
