@@ -3,7 +3,7 @@ using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.DomainEvents;
 using Domain.UserAggregate.ValueObjects;
-using Domain.Common.ValueObjects;
+using Domain.UserAggregate.Entities;
 
 namespace Domain.UserAggregate;
 
@@ -19,6 +19,7 @@ public sealed class User : AggregateRoot<UserId>
     public bool IsEmailConfirmed { get; private set; }
     public Role Role { get; private set; }
     public Gender Gender { get; private set; }
+    public List<Wish> Wishes { get; private set; } 
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private User() { }
@@ -34,7 +35,8 @@ public sealed class User : AggregateRoot<UserId>
         EmailConfirmationToken emailConfirmationToken,
         bool isEmailConfirmed,
         Role role,
-        Gender gender)
+        Gender gender,
+        List<Wish> wishes)
     {
         Id = id;
         Email = email;
@@ -46,6 +48,7 @@ public sealed class User : AggregateRoot<UserId>
         IsEmailConfirmed = isEmailConfirmed;
         Role = role;
         Gender = gender;
+        Wishes = wishes;
     }
 
     public static Result<User> Create(
@@ -58,7 +61,8 @@ public sealed class User : AggregateRoot<UserId>
         EmailConfirmationToken emailConfirmationToken,
         bool isEmailUnique,
         Role role,
-        Gender gender)
+        Gender gender,
+        List<Wish> wishes)
     {
         if (!isEmailUnique)
         {
@@ -76,10 +80,11 @@ public sealed class User : AggregateRoot<UserId>
             emailConfirmationToken,
             isEmailConfirmed: false,
             role,
-            gender);
+            gender,
+            wishes);
 
-        user.AddDomainEvent(
-            new UserCreatedDomainEvent(Guid.NewGuid(), id));
+        //user.AddDomainEvent(
+        //    new UserCreatedDomainEvent(Guid.NewGuid(), id));
 
         return user;
     }
@@ -98,8 +103,8 @@ public sealed class User : AggregateRoot<UserId>
                 UserErrors.PasswordIsNotCorrect);
         }
 
-        user.AddDomainEvent(
-            new UserLoggedInDomainEvent(Guid.NewGuid(), user.Id));
+        //user.AddDomainEvent(
+        //    new UserLoggedInDomainEvent(Guid.NewGuid(), user.Id));
 
         return Result.Success();
     }
@@ -139,8 +144,8 @@ public sealed class User : AggregateRoot<UserId>
     {
         Email = email;
 
-        AddDomainEvent(
-            new UserEmailChangedDomainEvent(Guid.NewGuid(), Id));
+        //AddDomainEvent(
+        //    new UserEmailChangedDomainEvent(Guid.NewGuid(), Id));
     }
 
     public void UpdateRefreshToken(RefreshToken refreshToken) =>

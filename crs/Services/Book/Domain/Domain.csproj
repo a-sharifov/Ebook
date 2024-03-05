@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="BookAggregate\Entity\" />
+    <Folder Include="CartAggregate\Ids\" />
     <Folder Include="UserAggregate\Errors\" />
     <Folder Include="UserAggregate\ValueObjects\" />
   </ItemGroup>
