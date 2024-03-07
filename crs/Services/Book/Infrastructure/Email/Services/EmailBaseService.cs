@@ -1,6 +1,9 @@
 ﻿using Infrastructure.Email.Interfaces;
 using Infrastructure.Email.Models;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Options;
+using MimeKit;
 using Polly;
 
 namespace Infrastructure.Email.Services;

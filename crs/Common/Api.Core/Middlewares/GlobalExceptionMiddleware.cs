@@ -36,7 +36,7 @@ public sealed class ExceptionHandlingMiddleware(
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "the error: {0}", ex.Message);
+            _logger.LogError(ex, "the error: {ErrorMessage}", ex.Message);
 
             var problemDetails = new ProblemDetails
             {

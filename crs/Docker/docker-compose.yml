@@ -8,8 +8,8 @@ services:
       context: . 
       dockerfile: ../Services/Book/Api/Dockerfile
     depends_on:
-    - book.api.database
-    - book.api.cache
+    - postgres
+    - redis
     
   monitoring.api:
     image: ${DOCKER_REGISTRY-}monitoringapi
