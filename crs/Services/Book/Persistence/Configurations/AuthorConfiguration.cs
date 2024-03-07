@@ -1,7 +1,7 @@
 ﻿using Domain.AuthorAggregate;
 using Domain.AuthorAggregate.Ids;
 using Domain.AuthorAggregate.ValueObjects;
-using Domain.Common.ValueObjects;
+using Domain.SharedKernel.ValueObjects;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Persistence.Configurations;

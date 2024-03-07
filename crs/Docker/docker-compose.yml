@@ -10,6 +10,12 @@ services:
     depends_on:
     - book.api.database
     - book.api.cache
+    
+  monitoring.api:
+    image: ${DOCKER_REGISTRY-}monitoringapi
+    build:
+      context: .
+      dockerfile: ../Services/Monitoring/Monitoring.Api/Dockerfile
 
   postgres:
     container_name: postgres
@@ -18,4 +24,4 @@ services:
   redis:
     container_name: redis
     image: redis:latest
-    
+

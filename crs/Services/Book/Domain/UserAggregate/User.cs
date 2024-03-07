@@ -4,7 +4,6 @@ using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.ValueObjects;
 using Domain.UserAggregate.Entities;
 using Domain.BookAggregate.Ids;
-using Domain.CartAggregate.Ids;
 using Domain.CartAggregate;
 
 namespace Domain.UserAggregate;
@@ -167,7 +166,7 @@ public sealed class User : AggregateRoot<UserId>
 
     public Result RemoveFromWishList(BookId bookId)
     {
-        var wish = _wishes.FirstOrDefault(w => w.Book == bookId);
+        var wish = _wishes.FirstOrDefault(w => w.Book.Id == bookId);
 
         if (wish is null)
         {

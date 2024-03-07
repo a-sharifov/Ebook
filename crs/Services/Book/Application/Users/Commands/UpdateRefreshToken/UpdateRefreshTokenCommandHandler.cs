@@ -2,7 +2,7 @@
 using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
-using Infrasctructure.Jwt.Interfaces;
+using Infrastructure.Jwt.Interfaces;
 
 namespace Application.Users.Commands.UpdateRefreshToken;
 

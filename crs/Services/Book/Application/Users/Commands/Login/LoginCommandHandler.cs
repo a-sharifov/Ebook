@@ -3,8 +3,8 @@ using Domain.UserAggregate;
 using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
-using Infrasctructure.Hashing.Interfaces;
-using Infrasctructure.Jwt.Interfaces;
+using Infrastructure.Hashing.Interfaces;
+using Infrastructure.Jwt.Interfaces;
 
 namespace Application.Users.Commands.Login;
 

@@ -1,5 +1,5 @@
 ﻿using Catalog.Persistence.Caching.Abstractions;
-using Domain.Common.Repositores;
+using Domain.SharedKernel.Repositores;
 using Domain.Core.Entities;
 using Domain.Core.StrongestIds;
 using Persistence.DbContexts;

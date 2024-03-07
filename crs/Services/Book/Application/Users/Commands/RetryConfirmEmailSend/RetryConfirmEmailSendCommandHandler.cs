@@ -1,7 +1,7 @@
 ﻿using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
-using Infrasctructure.Hashing.Interfaces;
+using Infrastructure.Hashing.Interfaces;
 
 namespace Application.Users.Commands.RetryConfirmEmailSend;
 

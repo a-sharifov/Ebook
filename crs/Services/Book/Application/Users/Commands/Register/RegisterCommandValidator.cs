@@ -1,5 +1,5 @@
 ﻿using Contracts.Enumerations;
-using Domain.Common.ValueObjects;
+using Domain.SharedKernel.ValueObjects;
 using Domain.UserAggregate.ValueObjects;
 
 namespace Application.Users.Commands.Register;

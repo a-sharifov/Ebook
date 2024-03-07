@@ -7,12 +7,6 @@ builder.Services
     .AddHealthChecksUI()
     .AddInMemoryStorage();
 
-// You can add it to the APIs that will use it, and
-// then retrieve the result from there through some endpoint, instead of writing it here.
-builder.Services.AddHealthChecks()
-    .AddRedis("")
-    .AddNpgSql("");
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

@@ -1,7 +1,7 @@
 ﻿using Domain.AuthorAggregate.Ids;
 using Domain.AuthorAggregate.ValueObjects;
 using Domain.BookAggregate;
-using Domain.Common.Entities;
+using Domain.SharedKernel.Entities;
 
 namespace Domain.AuthorAggregate;
 

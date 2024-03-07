@@ -1,11 +1,11 @@
 ﻿using Contracts.Enumerations;
-using Domain.Common.ValueObjects;
+using Domain.SharedKernel.ValueObjects;
 using Domain.Core.UnitOfWorks.Interfaces;
 using Domain.UserAggregate;
 using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
-using Infrasctructure.Hashing.Interfaces;
+using Infrastructure.Hashing.Interfaces;
 
 namespace Application.Users.Commands.Register;
 

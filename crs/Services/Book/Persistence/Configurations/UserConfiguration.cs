@@ -3,7 +3,7 @@ using Domain.UserAggregate;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Contracts.Enumerations;
 using Domain.UserAggregate.Ids;
-using Domain.Common.ValueObjects;
+using Domain.SharedKernel.ValueObjects;
 using Domain.CartAggregate;
 using Domain.UserAggregate.Entities;
 

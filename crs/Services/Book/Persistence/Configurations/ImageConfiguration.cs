@@ -1,6 +1,6 @@
-﻿using Domain.Common.Entities;
-using Domain.Common.Ids;
-using Domain.Common.ValueObjects;
+﻿using Domain.SharedKernel.Entities;
+using Domain.SharedKernel.Ids;
+using Domain.SharedKernel.ValueObjects;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Persistence.Configurations;
