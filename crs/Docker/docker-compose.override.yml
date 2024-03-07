@@ -7,11 +7,11 @@ services:
     - ASPNETCORE_HTTP_PORTS=5050
     - ASPNETCORE_HTTPS_PORTS=5051
     # custom environment variables
-    - POSTGRE_CONNECTION_STRING = Server=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TimeZone=UTC;
-    - REDIS_CONNECTION_STRING = redis:6379,password=${REDIS_PASSWORD}
+    - POSTGRE_CONNECTION_STRING=Server=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TimeZone=UTC;
+    - REDIS_CONNECTION_STRING=redis:6379,password=${REDIS_PASSWORD}
     ports:
-    - 8080
-    - 8081
+    - 5050:80
+    - 5051:443
     volumes:
     - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -25,8 +25,8 @@ services:
     - HealthChecksUI__HealthChecks__0__Name=Book api
     - HealthChecksUI__HealthChecks__0__Uri=http://book.api/health
     ports:
-    - 8080
-    - 8081
+    - 8080:80
+    - 8081:443
     volumes:
     - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
