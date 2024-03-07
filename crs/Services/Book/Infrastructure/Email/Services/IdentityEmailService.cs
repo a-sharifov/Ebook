@@ -1,4 +1,5 @@
-﻿using Infrastructure.Email.Abstractions;
+﻿using Domain.UserAggregate;
+using Infrastructure.Email.Interfaces;
 using Infrastructure.Email.Models;
 using Microsoft.Extensions.Options;
 using System.Text.Encodings.Web;
@@ -38,5 +39,19 @@ internal sealed class IdentityEmailService
             );
 
         await SendMessageAsync(sendMessageRequest, cancellationToken);
+    }
+
+    public async Task SendConfirmationEmailAsync(User user, string returnUrl, CancellationToken cancellationToken = default)
+    {
+        var request =
+            new SendConfirmationEmailRequest(
+                user.FirstName.Value,
+                user.LastName.Value,
+                user.Id.Value.ToString(),
+                user.Email.Value,
+                user.EmailConfirmationToken.Value,
+                returnUrl);
+
+        await SendConfirmationEmailAsync(request, cancellationToken);
     }
 }

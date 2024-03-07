@@ -85,7 +85,6 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasMany(x => x.Wishes)
             .WithOne()
-            .HasForeignKey<Wish>(x => x.User)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

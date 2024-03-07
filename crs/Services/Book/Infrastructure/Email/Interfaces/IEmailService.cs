@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Email.Models;
 
-namespace Infrastructure.Email.Abstractions;
+namespace Infrastructure.Email.Interfaces;
 
 public interface IEmailService
 {

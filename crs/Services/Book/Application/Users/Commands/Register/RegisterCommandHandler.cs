@@ -6,17 +6,22 @@ using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
 using Infrastructure.Hashing.Interfaces;
+using Infrastructure.Email.Interfaces;
+using Domain.CartAggregate;
+using Domain.CartAggregate.Ids;
 
 namespace Application.Users.Commands.Register;
 
 internal sealed class RegisterCommandHandler(
     IHashingService hashingService,
     IUserRepository userRepository,
+    IIdentityEmailService identityEmailService,
     IUnitOfWork unitOfWork)
     : ICommandHandler<RegisterCommand>
 {
     private readonly IHashingService _hashingService = hashingService;
     private readonly IUserRepository _userRepository = userRepository;
+    private readonly IIdentityEmailService _identityEmailService = identityEmailService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<Result> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -30,22 +35,13 @@ internal sealed class RegisterCommandHandler(
 
         var user = userResult.Value;
 
-        await _userRepository.AddUserAsync(user, cancellationToken);
+        await _userRepository.AddAsync(user, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
-
-        //var endpoint = await _messageBus.GetSendEndpoint(
-        //    new Uri("queue:user-created-confirmation-email-send-command-handler"));
-
-        //await endpoint.Send(
-        //    new UserCreatedConfirmationEmailSendCommand(Guid.NewGuid(), user.Id.Value, user.EmailConfirmationToken.Value, request.ReturnUrl),
-        //    cancellationToken);
 
         return Result.Success();
     }
 
-    private async Task<Result<User>> CreateUserResultAsync(
-        RegisterCommand request,
-        CancellationToken cancellationToken = default)
+    private async Task<Result<User>> CreateUserResultAsync(RegisterCommand request, CancellationToken cancellationToken = default)
     {
         var userId = new UserId(Guid.NewGuid());
         var emailResult = Email.Create(request.Email);
@@ -66,6 +62,9 @@ internal sealed class RegisterCommandHandler(
         var isEmailUnique = await _userRepository
             .IsEmailUnigueAsync(emailResult.Value, cancellationToken);
 
+        var cartId = new CartId(Guid.NewGuid());
+        var cart = Cart.Create(cartId, userId);
+
         var user = User.Create(
             userId,
             emailResult.Value,
@@ -76,7 +75,8 @@ internal sealed class RegisterCommandHandler(
             emailConfirmationToken,
             isEmailUnique,
             role,
-            gender);
+            gender,
+            cart.Value);
 
         return user;
     }

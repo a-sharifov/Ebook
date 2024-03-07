@@ -1,6 +1,8 @@
-﻿using Application.Users.Queries.GetUserInfoById;
+﻿using Application.Users.Common;
+using Application.Users.Queries.GetUserInfoById;
+using MediatR;
 
-namespace Identity.Application.Users.Queries.GetUserInfoByIdString;
+namespace Application.Users.Queries.GetUserInfoByIdString;
 
 internal sealed class GetUserByIdStringQueryHandler(ISender sender) : 
     IQueryHandler<GetUserInfoByIdStringQuery, UserDto>

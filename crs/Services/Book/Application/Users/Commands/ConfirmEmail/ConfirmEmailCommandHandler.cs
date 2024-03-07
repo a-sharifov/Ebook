@@ -1,5 +1,4 @@
-﻿using Domain.Core.Results;
-using Domain.Core.UnitOfWorks.Interfaces;
+﻿using Domain.Core.UnitOfWorks.Interfaces;
 using Domain.UserAggregate;
 using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Ids;
@@ -40,16 +39,12 @@ internal sealed class ConfirmEmailCommandHandler(
 
         await _unitOfWork.Commit(cancellationToken);
 
-        //добавить кинуть регистрацию сообщение
-        //await _messageBus.Publish(
-        //    new IdentityVerificationConfirmedEvent(Guid.NewGuid(), user.Id.Value), cancellationToken);
-
         return Result.Success();
     }
 
     private async Task<User?> GetUserByIdAsync(Guid id)
     {
         var userId = new UserId(id);
-        return await _userRepository.GetUserByIdAsync(userId);
+        return await _userRepository.GetByIdAsync(userId);
     }
 }

@@ -84,7 +84,7 @@ public abstract class BaseRepository<TEntity, TStrongestId>
         return entity;
     }
 
-    public async Task<bool> ExistsAsync(TStrongestId id, CancellationToken cancellationToken = default) =>
+    public async Task<bool> IsExistsAsync(TStrongestId id, CancellationToken cancellationToken = default) =>
         await GetByIdAsync(id, cancellationToken) is not null;
 
     public async Task DeleteByIdAsync(TStrongestId id, CancellationToken cancellationToken = default)

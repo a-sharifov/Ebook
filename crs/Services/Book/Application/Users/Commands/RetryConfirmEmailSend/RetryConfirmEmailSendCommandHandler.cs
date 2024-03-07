@@ -1,17 +1,20 @@
 ﻿using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
+using Infrastructure.Email.Interfaces;
 using Infrastructure.Hashing.Interfaces;
 
 namespace Application.Users.Commands.RetryConfirmEmailSend;
 
 public class RetryConfirmEmailSendCommandHandler(
     IUserRepository userRepository,
-    IHashingService hashingService)
+    IHashingService hashingService,
+    IIdentityEmailService identityEmailService)
     : ICommandHandler<RetryConfirmEmailSendCommand>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IHashingService _hashingService = hashingService;
+    private readonly IIdentityEmailService _identityEmailService = identityEmailService;
 
     public async Task<Result> Handle(RetryConfirmEmailSendCommand request, CancellationToken cancellationToken)
     {
@@ -35,6 +38,8 @@ public class RetryConfirmEmailSendCommandHandler(
             return Result.Failure(
                 RetryEmailConfirmationResult.Error);
         }
+
+        await _identityEmailService.SendConfirmationEmailAsync(user, request.ReturnUrl, cancellationToken);
 
         return Result.Success();
     }

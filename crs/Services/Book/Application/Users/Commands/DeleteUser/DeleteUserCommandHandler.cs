@@ -14,7 +14,7 @@ internal sealed class DeleteUserCommandHandler(
     {
         var userId = new UserId(request.UserId);
 
-        var isExists = await _userRepository.IsUserExistsAsync(userId, cancellationToken);
+        var isExists = await _userRepository.IsExistsAsync(userId, cancellationToken);
 
         if (!isExists)
         {
@@ -22,7 +22,7 @@ internal sealed class DeleteUserCommandHandler(
                 UserErrors.UserDoesNotExist);
         }
 
-        await _userRepository.DeleteUserAsync(userId, cancellationToken);
+        await _userRepository.DeleteByIdAsync(userId, cancellationToken);
 
         return Result.Success();
     }

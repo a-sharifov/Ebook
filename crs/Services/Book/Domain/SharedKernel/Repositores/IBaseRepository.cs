@@ -12,6 +12,6 @@ public interface IBaseRepository<TEntity, TStrongestId>
     Task<IEnumerable<TEntity>> GetPagedAsync(int skip, int take, CancellationToken cancellationToken = default);
     Task<int> CountAsync(CancellationToken cancellationToken = default);
     Task<TEntity?> GetByIdAsync(TStrongestId id, CancellationToken cancellationToken = default);
-    Task<bool> ExistsAsync(TStrongestId id, CancellationToken cancellationToken = default);
+    Task<bool> IsExistsAsync(TStrongestId id, CancellationToken cancellationToken = default);
     Task DeleteByIdAsync(TStrongestId id, CancellationToken cancellationToken = default);
 }

@@ -1,4 +1,4 @@
-﻿using Infrastructure.Email.Abstractions;
+﻿using Infrastructure.Email.Interfaces;
 using Infrastructure.Email.Models;
 using Microsoft.Extensions.Options;
 using Polly;
