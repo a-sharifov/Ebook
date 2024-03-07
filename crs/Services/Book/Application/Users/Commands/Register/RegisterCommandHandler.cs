@@ -38,6 +38,8 @@ internal sealed class RegisterCommandHandler(
         await _userRepository.AddAsync(user, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
+        await _identityEmailService.SendConfirmationEmailAsync(user, request.ReturnUrl, cancellationToken);
+
         return Result.Success();
     }
 

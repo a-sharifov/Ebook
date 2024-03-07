@@ -12,5 +12,5 @@ internal static class EmailTemplatePath
 
 
     private static string GetTemplatePath(string templateName) =>
-        Path.Combine(Templates.AssemblyReference.AssemblyPath, "Templates", templateName);
+        Path.Combine(Templates.AssemblyReference.AssemblyPath, templateName);
 }

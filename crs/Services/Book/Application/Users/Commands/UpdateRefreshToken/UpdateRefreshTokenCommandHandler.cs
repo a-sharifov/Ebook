@@ -41,7 +41,7 @@ internal sealed class UpdateRefreshTokenCommandHandler(
 
         user.UpdateRefreshToken(refreshToken);
 
-        await _userRepository.UpdateAsync(user);
+        await _userRepository.UpdateAsync(user, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
         return new UpdateRefreshTokenCommandResponse(userToken, refreshToken.Token);
