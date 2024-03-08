@@ -5,9 +5,6 @@ using Application.Users.Commands.RetryConfirmEmailSend;
 using Application.Users.Commands.UpdateRefreshToken;
 using Application.Users.Queries.GetGenders;
 using Application.Users.Queries.GetRoles;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Presentation.Core.Controllers;
 using Presentation.V1.Models;
 
 namespace Presentation.V1.Controllers;
