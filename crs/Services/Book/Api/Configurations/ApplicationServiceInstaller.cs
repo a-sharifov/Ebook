@@ -19,4 +19,3 @@ internal sealed class ApplicationServiceInstaller : IServiceInstaller
             includeInternalTypes: true);
     }
 }
-

@@ -12,6 +12,7 @@ services:
     - redis
     
   monitoring.api:
+    container_name: monitoring.api
     image: ${DOCKER_REGISTRY-}monitoringapi
     build:
       context: .
