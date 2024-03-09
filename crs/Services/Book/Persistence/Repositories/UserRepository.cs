@@ -13,8 +13,7 @@ public class UserRepository(
     : BaseRepository<User, UserId>(
         dbContext,
         cached,
-        expirationTime: TimeSpan.FromMinutes(20)),
-    IUserRepository
+        expirationTime: TimeSpan.FromMinutes(20)), IUserRepository
 {
     public async Task<User?> GetUserByEmailAsync(Email email, CancellationToken cancellationToken = default)
     {
@@ -22,7 +21,7 @@ public class UserRepository(
         .Set<User>()
         .FirstOrDefaultAsync(x => x.Email == email, cancellationToken: cancellationToken);
 
-        if(user == null)
+        if (user is null)
         {
             return user;
         }
@@ -42,7 +41,7 @@ public class UserRepository(
     }
 
     public async Task<bool> IsEmailUnigueAsync(Email email, CancellationToken cancellationToken = default) =>
-        await _dbContext
+        !await _dbContext
         .Set<User>()
         .AnyAsync(u => u.Email == email, cancellationToken);
 }

@@ -8,7 +8,7 @@ using Domain.UserAggregate;
 
 namespace Persistence.DbContexts;
 
-public sealed class BookDbContext(DbContextOptions<BookDbContext> options) : DbContext(options)
+public class BookDbContext(DbContextOptions<BookDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Genre> Genres { get; set; }

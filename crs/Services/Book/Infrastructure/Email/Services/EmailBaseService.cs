@@ -8,7 +8,7 @@ using Polly;
 
 namespace Infrastructure.Email.Services;
 
-internal abstract class EmailBaseService(IOptions<EmailOptions> options) : IEmailService
+public abstract class EmailBaseService(IOptions<EmailOptions> options) : IEmailService
 {
     private readonly EmailOptions _options = options.Value;
 

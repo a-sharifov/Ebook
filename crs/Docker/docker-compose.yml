@@ -17,12 +17,23 @@ services:
     build:
       context: .
       dockerfile: ../Services/Monitoring/Monitoring.Api/Dockerfile
+    depends_on:
+    - book.api
 
   postgres:
     container_name: postgres
     image: postgres:latest
+
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
   
   redis:
     container_name: redis
     image: redis:latest
+
+  seq:
+    container_name: seq
+    image: datalust/seq:latest
 

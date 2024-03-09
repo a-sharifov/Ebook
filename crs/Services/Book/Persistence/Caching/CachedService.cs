@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace Catalog.Persistence.Caching;
 
-internal class CachedService(IDistributedCache cache) : ICachedService
+public class CachedService(IDistributedCache cache) : ICachedService
 {
     protected readonly IDistributedCache _cache = cache;
 
@@ -41,9 +41,9 @@ internal class CachedService(IDistributedCache cache) : ICachedService
         await _cache.SetStringAsync(key, serializeObject, options, cancellationToken);
     }
 
-    public async Task RefreshAsync(string key, CancellationToken cancellationToken = default) => 
+    public async Task RefreshAsync(string key, CancellationToken cancellationToken = default) =>
         await _cache.RefreshAsync(key, cancellationToken);
 
-    public async Task DeleteAsync(string key, CancellationToken cancellationToken = default) => 
+    public async Task DeleteAsync(string key, CancellationToken cancellationToken = default) =>
         await _cache.RemoveAsync(key, cancellationToken);
 }

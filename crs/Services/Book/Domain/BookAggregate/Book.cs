@@ -18,14 +18,18 @@ public class Book : AggregateRoot<BookId>
     public QuantityBook QuantityBook { get; private set; }
     public SoldUnits SoldUnits { get; private set; }
 
-    private readonly List<Image> _images;
+    private readonly List<Image> _images = [];
     public IReadOnlyCollection<Image> Images => _images.AsReadOnly();
 
-    private readonly List<Genre> _genres;
+    private readonly List<Genre> _genres = [];
     public IReadOnlyCollection<Genre> Genres => _genres.AsReadOnly();
 
-    private readonly List<Author> _authors;
+    private readonly List<Author> _authors = [];
     public IReadOnlyCollection<Author> Authors => _authors.AsReadOnly();
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    private Book() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     private Book(
         BookId id,

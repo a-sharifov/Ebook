@@ -14,4 +14,4 @@ public class LanguageRepository(
         cached,
         expirationTime: TimeSpan.FromMinutes(20)), ILanguageRepository
 {
-}
+}   

@@ -5,6 +5,7 @@ using Application.Users.Commands.RetryConfirmEmailSend;
 using Application.Users.Commands.UpdateRefreshToken;
 using Application.Users.Queries.GetGenders;
 using Application.Users.Queries.GetRoles;
+using Microsoft.AspNetCore.Authorization;
 using Presentation.V1.Models;
 
 namespace Presentation.V1.Controllers;
@@ -21,7 +22,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
         var command = new LoginCommand(
             request.Email,
             request.Password,
-            audience!);
+            audience);
 
         var result = await _sender.Send(command);
         return result.IsSuccess ? Ok(result.Value)
@@ -99,5 +100,12 @@ public sealed class UserController(ISender sender) : ApiController(sender)
         var result = await _sender.Send(query);
         return result.IsSuccess ? Ok(result.Value)
             : HandleFailure(result);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("test")]
+    public IActionResult Test()
+    {
+        return Ok("Test");
     }
 }

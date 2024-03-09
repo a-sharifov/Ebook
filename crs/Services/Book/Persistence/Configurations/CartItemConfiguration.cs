@@ -1,5 +1,6 @@
 ﻿using Domain.CartAggregate.Entities;
 using Domain.CartAggregate.Ids;
+using Domain.CartAggregate.ValueObjects;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Persistence.Configurations;
@@ -26,5 +27,11 @@ internal sealed class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
             .WithMany()
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(x => x.CartItemQuantity)
+            .HasConversion(
+            cartItemQuantity => cartItemQuantity.Value,
+            value => CartItemQuantity.Create(value).Value)
+            .IsRequired();
     }
 }

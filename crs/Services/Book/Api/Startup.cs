@@ -1,9 +1,10 @@
 ﻿using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Persistence.DbContexts;
 using Api.Core.Middlewares;
 using Api.Core.Extensions;
 using Api.Core.ServiceInstaller;
+using Persistence.DbContexts;
+using Serilog;
 
 namespace Api;
 
@@ -23,9 +24,14 @@ public sealed class Startup(IConfiguration configuration)
             app.UseSwaggerUI();
         }
 
+        app.UseCors(SD.DefaultCorsPolicyName);
+
         app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+        app.UseSerilogRequestLogging();
+
         app.UseHttpsRedirection();
+
 
         app.MigrateDbContext<BookDbContext>();
 

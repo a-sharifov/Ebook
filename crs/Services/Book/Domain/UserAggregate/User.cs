@@ -20,9 +20,9 @@ public sealed class User : AggregateRoot<UserId>
     public bool IsEmailConfirmed { get; private set; }
     public Role Role { get; private set; }
     public Gender Gender { get; private set; }
-    public Cart Cart { get; private set; }
+    public Cart? Cart { get; private set; }
 
-    private readonly List<Wish> _wishes;
+    private readonly List<Wish> _wishes = [];
     public IReadOnlyCollection<Wish> Wishes => _wishes.AsReadOnly();
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -53,7 +53,6 @@ public sealed class User : AggregateRoot<UserId>
         Role = role;
         Gender = gender;
         Cart = cart;
-        _wishes = [];
     }
 
     public static Result<User> Create(

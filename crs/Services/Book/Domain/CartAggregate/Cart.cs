@@ -11,14 +11,17 @@ namespace Domain.CartAggregate;
 public class Cart : AggregateRoot<CartId>
 {
     public UserId UserId { get; private set; }
-    private readonly List<CartItem> _cartItems;
+    private readonly List<CartItem> _cartItems = [];
     public IReadOnlyCollection<CartItem> CartItems => _cartItems.AsReadOnly();
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    private Cart() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     private Cart(CartId id, UserId userId)
     {
         Id = id;
         UserId = userId;
-        _cartItems = [];
     }
 
     public static Result<Cart> Create(CartId id, UserId userId)

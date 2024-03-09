@@ -4,17 +4,18 @@ services:
   book.api:
     environment:
     - ASPNETCORE_ENVIRONMENT=Development
-    - ASPNETCORE_HTTP_PORTS=5050
-    - ASPNETCORE_HTTPS_PORTS=5051
+    - ASPNETCORE_HTTP_PORTS=6060
+    - ASPNETCORE_HTTPS_PORTS=6061
     # custom environment variables
     - POSTGRE_CONNECTION_STRING=Server=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TimeZone=UTC;
     - REDIS_CONNECTION_STRING=redis:6379,password=${REDIS_PASSWORD}
     - AUTH_ISSUER=${AUTH_ISSUER}
     - WEB_AUDIENCE=${WEB_AUDIENCE}
     - JWT_SECURITY_KEY=${JWT_SECURITY_KEY}
+    - IDENTITY_ENDPOINT=${IDENTITY_ENDPOINT}
     ports:
-    - 5050:5050
-    - 5051:5051
+    - 6060:6060
+    - 6061:6061
     volumes:
     - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -44,6 +45,10 @@ services:
     ports:
     - 5432:5432
 
+  pgadmin:  
+    ports:
+      - "80:80"
+
   redis:
     environment:
     - REDIS_ARGS=--requirepass ${REDIS_PASSWORD}
@@ -51,8 +56,17 @@ services:
     - redis:/data
     ports:
     - 6379:6379
-
+  
+  seq:
+    environment:
+    - ACCEPT_EULA=Y
+    ports:
+    - 5341:5341
+    - 7070:80
+    volumes:
+    - seq:/data
+  
 volumes:
   postgres:
   redis:  
-
+  seq:

@@ -21,7 +21,7 @@ internal sealed class LoginCommandHandler(
     private readonly IJwtManager _jwtManager = jwtManager;
 
     public async Task<Result<LoginCommanResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
-    {
+          {
         var user = await GetUserByEmailAsync(request.Email, cancellationToken);
 
         if (user is null)

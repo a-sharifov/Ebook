@@ -1,6 +1,7 @@
 ﻿using Domain.AuthorAggregate;
 using Domain.AuthorAggregate.Ids;
 using Domain.AuthorAggregate.ValueObjects;
+using Domain.SharedKernel.Entities;
 using Domain.SharedKernel.ValueObjects;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -53,6 +54,7 @@ internal sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
 
         builder.HasOne(x => x.AuthorImage)
             .WithOne()
+            .HasPrincipalKey<Image>(x => x.Id)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -45,7 +45,7 @@ public abstract class BaseRepository<TEntity, TStrongestId>
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
-         await _dbContext.Set<TEntity>().ToListAsync();
+         await _dbContext.Set<TEntity>().ToListAsync(cancellationToken: cancellationToken);
 
     public async Task<IEnumerable<TEntity>> GetPagedAsync(int skip, int take, CancellationToken cancellationToken = default)
     {

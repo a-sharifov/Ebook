@@ -7,7 +7,7 @@ using System.Text.Encodings.Web;
 
 namespace Infrastructure.Email.Services;
 
-internal sealed class IdentityEmailService
+public sealed class IdentityEmailService
     (IOptions<EmailOptions> options,
      IOptions<IdentityEndpointOptions> identityEndpointOptions) :
     EmailBaseService(options), 
@@ -23,7 +23,7 @@ internal sealed class IdentityEmailService
             await File.ReadAllTextAsync(confirmEmailTemplatePath, cancellationToken);
 
         var confirmUrl =
-           $@"{_identityEndpointOptions.BaseUrl}/confirm-email?UserId={request.UserId}&EmailConfirmationToken={request.EmailConfirmationToken}&ReturnUrl={request.ReturnUrl}";
+           $@"{_identityEndpointOptions.BaseUrl}/api/v1/users/confirm-email?userId={request.UserId}&emailConfirmationToken={request.EmailConfirmationToken}&returnUrl={request.ReturnUrl}";
 
         var confirmUrlEncode = HtmlEncoder.Default.Encode(confirmUrl);
 

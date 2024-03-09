@@ -8,14 +8,17 @@ public class Genre : AggregateRoot<GenreId>
 {
     public GenreName GenreName { get; private set; }
 
-    private readonly List<Book> _books;
+    private readonly List<Book> _books = [];
     public IReadOnlyCollection<Book> Books => _books.AsReadOnly();
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    private Genre() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     private Genre(GenreId id, GenreName genreName)
     {
         Id = id;
         GenreName = genreName;
-        _books = [];
     }
 
     public static Result<Genre> Create(GenreId id, GenreName genreName)

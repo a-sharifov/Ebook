@@ -2,12 +2,12 @@
 
 namespace Application.Users.Events;
 
-internal sealed class UserCreatedDomainEventHandler
-    : IDomainEventHandler<UserCreatedDomainEvent>
-{
+//internal sealed class UserCreatedDomainEventHandler
+//    : IDomainEventHandler<UserCreatedDomainEvent>
+//{
 
-    public Task Handle(UserCreatedDomainEvent notification, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-}
+//    public Task Handle(UserCreatedDomainEvent notification, CancellationToken cancellationToken)
+//    {
+//        throw new NotImplementedException();
+//    }
+//}
