@@ -8,7 +8,7 @@ namespace Api.Core.Extensions;
 /// <summary>
 /// Extension methods for <see cref="IApplicationBuilder"/>.
 /// </summary>
-public static class ApplictionBuilderExtension
+public static class ApplicationBuilderExtension
 {
     /// <summary>
     /// Migrates the database for the given <typeparamref name="TDbContext"/>.

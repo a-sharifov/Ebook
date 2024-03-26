@@ -1,0 +1,46 @@
+.header {
+  width: 100%;
+  padding: 0 20px;
+  position: fixed;
+  background-color: black;
+  color: rgb(245, 245, 220);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 99;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+.header .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+  z-index: 98;
+}
+.header .header-content .header-left {
+  display: flex;
+  gap: 7px;
+  font-size: 15px;
+  font-weight: 500;
+  align-items: center;
+}
+.header .header-content .header-left h1 {
+  font-weight: 500;
+  cursor: pointer;
+}
+.header .header-content .header-right {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+.header .header-content .header-right svg {
+  font-size: 20px;
+  cursor: pointer;
+}
+.header .header-content .header-right .login-button {
+  font-size: 14px;
+  color: rgb(245, 245, 220);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}/*# sourceMappingURL=Header.css.map */

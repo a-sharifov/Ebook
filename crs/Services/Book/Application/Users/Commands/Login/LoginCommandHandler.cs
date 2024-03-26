@@ -51,7 +51,7 @@ internal sealed class LoginCommandHandler(
     private async Task<User?> GetUserByEmailAsync(string emailString, CancellationToken cancellationToken = default)
     {
         var emailResult = Email.Create(emailString);
-        return await _userRepository.GetUserByEmailAsync(emailResult.Value, cancellationToken);
+        return await _userRepository.GetByEmailAsync(emailResult.Value, cancellationToken);
     }
 
     private Result Login(User user, string password)

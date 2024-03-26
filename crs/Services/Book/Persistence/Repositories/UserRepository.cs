@@ -15,11 +15,10 @@ public class UserRepository(
         cached,
         expirationTime: TimeSpan.FromMinutes(20)), IUserRepository
 {
-    public async Task<User?> GetUserByEmailAsync(Email email, CancellationToken cancellationToken = default)
+    public async Task<User?> GetByEmailAsync(Email email, CancellationToken cancellationToken = default)
     {
-        var user = await _dbContext
-        .Set<User>()
-        .FirstOrDefaultAsync(x => x.Email == email, cancellationToken: cancellationToken);
+        var user = await GetEntityDbSet()
+            .FirstOrDefaultAsync(x => x.Email == email, cancellationToken: cancellationToken);
 
         if (user is null)
         {
@@ -33,15 +32,13 @@ public class UserRepository(
 
     public async Task<bool> IsEmailConfirmedAsync(UserId userId, CancellationToken cancellationToken = default)
     {
-        var user = await _dbContext
-            .Set<User>()
-            .FirstAsync(x => x.Id == userId, cancellationToken: cancellationToken);
+        var user = await GetEntityDbSet().FirstAsync(
+            x => x.Id == userId, cancellationToken: cancellationToken);
 
         return user.IsEmailConfirmed;
     }
 
     public async Task<bool> IsEmailUnigueAsync(Email email, CancellationToken cancellationToken = default) =>
-        !await _dbContext
-        .Set<User>()
+        !await GetEntityDbSet()
         .AnyAsync(u => u.Email == email, cancellationToken);
 }

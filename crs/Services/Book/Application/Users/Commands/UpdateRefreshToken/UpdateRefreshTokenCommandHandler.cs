@@ -21,7 +21,7 @@ internal sealed class UpdateRefreshTokenCommandHandler(
         var emailString = _jwtManager.GetEmailFromToken(request.Token);
         var emailResult = Email.Create(emailString);
 
-        var user = await _userRepository.GetUserByEmailAsync(emailResult.Value, cancellationToken);
+        var user = await _userRepository.GetByEmailAsync(emailResult.Value, cancellationToken);
 
         if (user is null ||
             user.RefreshToken?.Token != request.RefreshToken)
