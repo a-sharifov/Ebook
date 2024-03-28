@@ -3,57 +3,24 @@
   min-height: 1000px;
   max-width: 1200px;
   margin: 0 auto;
-  padding-top: 20px;
+  padding-top: 70px;
   text-align: center;
 }
 
-.home__title {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.home__products {
+.home__banner {
+  position: relative;
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
+  text-align: center;
+  overflow: hidden;
 }
-
-.home__product {
-  display: flex;
-  flex-direction: column;
-  background-color: transparent;
-  border-radius: 10px;
-  margin: 0 0 20px 20px;
-}
-
-.home__product-image {
+.home__banner__image {
+  width: 1200px;
+  height: 200px;
   cursor: pointer;
-  width: 180px;
-  height: 270px;
-  border-radius: 3px;
-  margin-bottom: 5px;
+  transition: all ease 0.3s;
 }
-
-.home__product-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.home__product-name {
-  font-size: 18px;
-  display: flex;
-  justify-items: left;
-}
-
-.home__product-author {
-  display: flex;
-  cursor: pointer;
-  justify-items: left;
-  font-size: 14px;
-}
-
-.home__product-price {
-  display: flex;
+.home__banner:hover img {
+  transform: scale(1.1);
 }/*# sourceMappingURL=Home.css.map */

@@ -7,7 +7,6 @@ namespace Domain.GenreAggregate;
 public class Genre : AggregateRoot<GenreId>
 {
     public GenreName GenreName { get; private set; }
-
     private readonly List<Book> _books = [];
     public IReadOnlyCollection<Book> Books => _books.AsReadOnly();
 

@@ -2,23 +2,21 @@
 .newsletter {
   background-color: white;
   padding: 20px;
-  border: 2px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
   width: 100%;
   text-align: center;
 }
-
-.newsletter__title {
+.newsletter .newsletter__title {
   font-size: 20px;
   margin-bottom: 10px;
 }
-
-.newsletter__form {
+.newsletter .newsletter__form {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
-.newsletter__input {
+.newsletter .newsletter__input {
   padding: 10px;
   font-size: 16px;
   border: 1px solid black;
@@ -26,8 +24,7 @@
   margin-right: 10px;
   width: 250px;
 }
-
-.newsletter__button {
+.newsletter .newsletter__button {
   padding: 10px 20px;
   font-size: 16px;
   background-color: black;

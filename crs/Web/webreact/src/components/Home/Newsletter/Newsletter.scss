@@ -2,39 +2,41 @@
 .newsletter {
   background-color: white;
   padding: 20px;
-  border: 2px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  // border: 2px solid black;
   width: 100%;
   // border-radius: 5px;
   text-align: center;
-}
 
-.newsletter__title {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
+  .newsletter__title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
 
-.newsletter__form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  .newsletter__form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-.newsletter__input {
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid black;
-  border-radius: 3px;
-  margin-right: 10px;
-  width: 250px;
-}
+  .newsletter__input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid black;
+    border-radius: 3px;
+    margin-right: 10px;
+    width: 250px;
+  }
 
-.newsletter__button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: black;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  .newsletter__button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 }
