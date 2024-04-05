@@ -4,3 +4,4 @@ global using Application.Core.CQRS.Command;
 global using Application.Core.CQRS.Query;
 global using Domain.Core.Results;
 global using Domain.Core.Events.Interfaces;
+global using Mapster;

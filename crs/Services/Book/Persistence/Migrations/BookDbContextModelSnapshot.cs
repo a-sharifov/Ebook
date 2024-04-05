@@ -8,464 +8,477 @@ using Persistence.DbContexts;
 
 #nullable disable
 
-namespace Persistence.Migrations;
-
-[DbContext(typeof(BookDbContext))]
-partial class BookDbContextModelSnapshot : ModelSnapshot
+namespace Persistence.Migrations
 {
-    protected override void BuildModel(ModelBuilder modelBuilder)
+    [DbContext(typeof(BookDbContext))]
+    partial class BookDbContextModelSnapshot : ModelSnapshot
     {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
 #pragma warning disable 612, 618
-        modelBuilder
-            .HasAnnotation("ProductVersion", "8.0.2")
-            .HasAnnotation("Relational:MaxIdentifierLength", 63);
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-        NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-        modelBuilder.Entity("Domain.AuthorAggregate.Author", b =>
-            {
-                b.Property<Guid>("Id")
-                    .HasColumnType("uuid");
+            modelBuilder.Entity("Domain.AuthorAggregate.Author", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                b.Property<string>("AuthorDescription")
-                    .IsRequired()
-                    .HasMaxLength(1000)
-                    .HasColumnType("character varying(1000)");
+                    b.Property<Guid?>("BookId")
+                        .HasColumnType("uuid");
 
-                b.Property<Guid?>("AuthorImageId")
-                    .HasColumnType("uuid");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
-                b.Property<Guid?>("BookId")
-                    .HasColumnType("uuid");
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                b.Property<string>("FirstName")
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnType("character varying(50)");
+                    b.Property<Guid?>("ImageId")
+                        .HasColumnType("uuid");
 
-                b.Property<string>("LastName")
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnType("character varying(50)");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                b.Property<string>("Pseudonym")
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnType("character varying(50)");
+                    b.Property<string>("Pseudonym")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasAlternateKey("Pseudonym");
+                    b.HasAlternateKey("Pseudonym");
 
-                b.HasIndex("AuthorImageId")
-                    .IsUnique();
+                    b.HasIndex("BookId");
 
-                b.HasIndex("BookId");
+                    b.HasIndex("ImageId")
+                        .IsUnique();
 
-                b.ToTable("Authors");
-            });
+                    b.ToTable("Authors");
+                });
 
-        modelBuilder.Entity("Domain.BookAggregate.Book", b =>
-            {
-                b.Property<Guid>("Id")
-                    .HasColumnType("uuid");
+            modelBuilder.Entity("Domain.BookAggregate.Book", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                b.Property<Guid?>("AuthorId")
-                    .HasColumnType("uuid");
+                    b.Property<Guid?>("AuthorId")
+                        .HasColumnType("uuid");
 
-                b.Property<string>("BookDescription")
-                    .IsRequired()
-                    .HasMaxLength(1000)
-                    .HasColumnType("character varying(1000)");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
-                b.Property<Guid?>("GenreId")
-                    .HasColumnType("uuid");
+                    b.Property<Guid?>("GenreId")
+                        .HasColumnType("uuid");
 
-                b.Property<string>("ISBN")
-                    .IsRequired()
-                    .HasColumnType("text");
+                    b.Property<string>("ISBN")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                b.Property<Guid>("LanguageId")
-                    .HasColumnType("uuid");
+                    b.Property<Guid>("LanguageId")
+                        .HasColumnType("uuid");
 
-                b.Property<int>("PageCount")
-                    .HasColumnType("integer");
+                    b.Property<int>("PageCount")
+                        .HasColumnType("integer");
 
-                b.Property<int>("QuantityBook")
-                    .HasColumnType("integer");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
 
-                b.Property<int>("SoldUnits")
-                    .HasColumnType("integer");
+                    b.Property<int>("SoldUnits")
+                        .HasColumnType("integer");
 
-                b.Property<string>("Title")
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .HasColumnType("character varying(100)");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasAlternateKey("ISBN");
+                    b.HasAlternateKey("ISBN");
 
-                b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorId");
 
-                b.HasIndex("GenreId");
+                    b.HasIndex("GenreId");
 
-                b.ToTable("Books");
-            });
+                    b.ToTable("Books");
+                });
 
-        modelBuilder.Entity("Domain.CartAggregate.Cart", b =>
-            {
-                b.Property<Guid>("Id")
-                    .HasColumnType("uuid");
+            modelBuilder.Entity("Domain.CartAggregate.Cart", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                b.Property<Guid>("UserId")
-                    .HasColumnType("uuid");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasIndex("UserId")
-                    .IsUnique();
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
-                b.ToTable("Carts");
-            });
+                    b.ToTable("Carts");
+                });
 
-        modelBuilder.Entity("Domain.CartAggregate.Entities.CartItem", b =>
-            {
-                b.Property<Guid>("Id")
-                    .HasColumnType("uuid");
+            modelBuilder.Entity("Domain.CartAggregate.Entities.CartItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                b.Property<Guid>("BookId")
-                    .HasColumnType("uuid");
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uuid");
 
-                b.Property<Guid>("CartId")
-                    .HasColumnType("uuid");
+                    b.Property<Guid>("CartId")
+                        .HasColumnType("uuid");
 
-                b.Property<int>("CartItemQuantity")
-                    .HasColumnType("integer");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasIndex("BookId");
+                    b.HasIndex("BookId");
 
-                b.HasIndex("CartId");
+                    b.HasIndex("CartId");
 
-                b.ToTable("CartItem");
-            });
+                    b.ToTable("CartItem");
+                });
 
-        modelBuilder.Entity("Domain.GenreAggregate.Genre", b =>
-            {
-                b.Property<Guid>("Id")
-                    .HasColumnType("uuid");
+            modelBuilder.Entity("Domain.GenreAggregate.Genre", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                b.Property<Guid?>("BookId")
-                    .HasColumnType("uuid");
+                    b.Property<Guid?>("BookId")
+                        .HasColumnType("uuid");
 
-                b.Property<string>("GenreName")
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnType("character varying(50)");
+                    b.Property<Guid>("ImageId")
+                        .HasColumnType("uuid");
 
-                b.HasKey("Id");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                b.HasAlternateKey("GenreName");
+                    b.HasKey("Id");
 
-                b.HasIndex("BookId");
+                    b.HasAlternateKey("Name");
 
-                b.ToTable("Genres");
-            });
+                    b.HasIndex("BookId");
 
-        modelBuilder.Entity("Domain.LanguageAggregate.Language", b =>
-            {
-                b.Property<Guid>("Id")
-                    .HasColumnType("uuid");
+                    b.HasIndex("ImageId");
 
-                b.Property<string>("Code")
-                    .IsRequired()
-                    .HasMaxLength(35)
-                    .HasColumnType("character varying(35)");
+                    b.ToTable("Genres");
+                });
 
-                b.Property<string>("Name")
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .HasColumnType("character varying(100)");
+            modelBuilder.Entity("Domain.LanguageAggregate.Language", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                b.HasKey("Id");
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(35)
+                        .HasColumnType("character varying(35)");
 
-                b.HasAlternateKey("Code");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                b.ToTable("Languages");
-            });
+                    b.HasKey("Id");
 
-        modelBuilder.Entity("Domain.SharedKernel.Entities.Image", b =>
-            {
-                b.Property<Guid>("Id")
-                    .HasColumnType("uuid");
+                    b.HasAlternateKey("Code");
 
-                b.Property<Guid?>("BookId")
-                    .HasColumnType("uuid");
+                    b.ToTable("Languages");
+                });
 
-                b.Property<string>("ImageUrl")
-                    .IsRequired()
-                    .HasMaxLength(2000)
-                    .HasColumnType("character varying(2000)");
+            modelBuilder.Entity("Domain.SharedKernel.Entities.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                b.HasKey("Id");
+                    b.Property<Guid?>("BookId")
+                        .HasColumnType("uuid");
 
-                b.HasIndex("BookId");
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
-                b.ToTable("Image");
-            });
+                    b.HasKey("Id");
 
-        modelBuilder.Entity("Domain.UserAggregate.Entities.Wish", b =>
-            {
-                b.Property<Guid>("Id")
-                    .HasColumnType("uuid");
+                    b.HasIndex("BookId");
 
-                b.Property<Guid>("BookId")
-                    .HasColumnType("uuid");
+                    b.ToTable("Image");
+                });
 
-                b.Property<Guid>("UserId")
-                    .HasColumnType("uuid");
+            modelBuilder.Entity("Domain.UserAggregate.Entities.Wish", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                b.Property<Guid>("UserId1")
-                    .HasColumnType("uuid");
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uuid");
 
-                b.HasKey("Id");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                b.HasIndex("BookId");
+                    b.Property<Guid>("UserId1")
+                        .HasColumnType("uuid");
 
-                b.HasIndex("UserId");
+                    b.HasKey("Id");
 
-                b.HasIndex("UserId1");
+                    b.HasIndex("BookId");
 
-                b.ToTable("Wish");
-            });
+                    b.HasIndex("UserId");
 
-        modelBuilder.Entity("Domain.UserAggregate.User", b =>
-            {
-                b.Property<Guid>("Id")
-                    .HasColumnType("uuid");
+                    b.HasIndex("UserId1");
 
-                b.Property<string>("Email")
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .HasColumnType("character varying(100)");
+                    b.ToTable("Wish");
+                });
 
-                b.Property<string>("EmailConfirmationToken")
-                    .IsRequired()
-                    .HasColumnType("text");
+            modelBuilder.Entity("Domain.UserAggregate.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                b.Property<string>("FirstName")
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnType("character varying(50)");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                b.Property<string>("Gender")
-                    .IsRequired()
-                    .HasColumnType("text");
+                    b.Property<string>("EmailConfirmationToken")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                b.Property<bool>("IsEmailConfirmed")
-                    .HasColumnType("boolean");
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                b.Property<string>("LastName")
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnType("character varying(50)");
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                b.Property<string>("PasswordHash")
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .HasColumnType("character varying(100)");
+                    b.Property<bool>("IsEmailConfirmed")
+                        .HasColumnType("boolean");
 
-                b.Property<string>("PasswordSalt")
-                    .IsRequired()
-                    .HasColumnType("text");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                b.Property<string>("Role")
-                    .IsRequired()
-                    .HasColumnType("text");
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                b.HasKey("Id");
+                    b.Property<string>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                b.HasAlternateKey("Email");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                b.ToTable("Users");
-            });
+                    b.HasKey("Id");
 
-        modelBuilder.Entity("Domain.AuthorAggregate.Author", b =>
-            {
-                b.HasOne("Domain.SharedKernel.Entities.Image", "AuthorImage")
-                    .WithOne()
-                    .HasForeignKey("Domain.AuthorAggregate.Author", "AuthorImageId")
-                    .OnDelete(DeleteBehavior.Cascade);
+                    b.HasAlternateKey("Email");
 
-                b.HasOne("Domain.BookAggregate.Book", null)
-                    .WithMany("Authors")
-                    .HasForeignKey("BookId")
-                    .OnDelete(DeleteBehavior.NoAction);
+                    b.ToTable("Users");
+                });
 
-                b.Navigation("AuthorImage");
-            });
+            modelBuilder.Entity("Domain.AuthorAggregate.Author", b =>
+                {
+                    b.HasOne("Domain.BookAggregate.Book", null)
+                        .WithMany("Authors")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
-        modelBuilder.Entity("Domain.BookAggregate.Book", b =>
-            {
-                b.HasOne("Domain.AuthorAggregate.Author", null)
-                    .WithMany("AuthorBooks")
-                    .HasForeignKey("AuthorId")
-                    .OnDelete(DeleteBehavior.NoAction);
+                    b.HasOne("Domain.SharedKernel.Entities.Image", "Image")
+                        .WithOne()
+                        .HasForeignKey("Domain.AuthorAggregate.Author", "ImageId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                b.HasOne("Domain.GenreAggregate.Genre", null)
-                    .WithMany("Books")
-                    .HasForeignKey("GenreId")
-                    .OnDelete(DeleteBehavior.NoAction);
+                    b.Navigation("Image");
+                });
 
-                b.OwnsOne("Domain.SharedKernel.ValueObjects.Money", "Price", b1 =>
-                    {
-                        b1.Property<Guid>("BookId")
-                            .HasColumnType("uuid");
+            modelBuilder.Entity("Domain.BookAggregate.Book", b =>
+                {
+                    b.HasOne("Domain.AuthorAggregate.Author", null)
+                        .WithMany("AuthorBooks")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                        b1.Property<decimal>("Amount")
-                            .HasColumnType("decimal(18,2)");
+                    b.HasOne("Domain.GenreAggregate.Genre", null)
+                        .WithMany("Books")
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                        b1.Property<string>("Currency")
-                            .IsRequired()
-                            .HasColumnType("text");
+                    b.OwnsOne("Domain.SharedKernel.ValueObjects.Money", "Price", b1 =>
+                        {
+                            b1.Property<Guid>("BookId")
+                                .HasColumnType("uuid");
 
-                        b1.HasKey("BookId");
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)");
 
-                        b1.ToTable("Books");
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasColumnType("text");
 
-                        b1.WithOwner()
-                            .HasForeignKey("BookId");
-                    });
+                            b1.HasKey("BookId");
 
-                b.Navigation("Price")
-                    .IsRequired();
-            });
+                            b1.ToTable("Books");
 
-        modelBuilder.Entity("Domain.CartAggregate.Cart", b =>
-            {
-                b.HasOne("Domain.UserAggregate.User", null)
-                    .WithOne("Cart")
-                    .HasForeignKey("Domain.CartAggregate.Cart", "UserId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
-            });
+                            b1.WithOwner()
+                                .HasForeignKey("BookId");
+                        });
 
-        modelBuilder.Entity("Domain.CartAggregate.Entities.CartItem", b =>
-            {
-                b.HasOne("Domain.BookAggregate.Book", "Book")
-                    .WithMany()
-                    .HasForeignKey("BookId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                    b.Navigation("Price")
+                        .IsRequired();
+                });
 
-                b.HasOne("Domain.CartAggregate.Cart", null)
-                    .WithMany("CartItems")
-                    .HasForeignKey("CartId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+            modelBuilder.Entity("Domain.CartAggregate.Cart", b =>
+                {
+                    b.HasOne("Domain.UserAggregate.User", null)
+                        .WithOne("Cart")
+                        .HasForeignKey("Domain.CartAggregate.Cart", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                b.Navigation("Book");
-            });
+            modelBuilder.Entity("Domain.CartAggregate.Entities.CartItem", b =>
+                {
+                    b.HasOne("Domain.BookAggregate.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-        modelBuilder.Entity("Domain.GenreAggregate.Genre", b =>
-            {
-                b.HasOne("Domain.BookAggregate.Book", null)
-                    .WithMany("Genres")
-                    .HasForeignKey("BookId")
-                    .OnDelete(DeleteBehavior.NoAction);
-            });
+                    b.HasOne("Domain.CartAggregate.Cart", null)
+                        .WithMany("Items")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-        modelBuilder.Entity("Domain.SharedKernel.Entities.Image", b =>
-            {
-                b.HasOne("Domain.BookAggregate.Book", null)
-                    .WithMany("Images")
-                    .HasForeignKey("BookId")
-                    .OnDelete(DeleteBehavior.Cascade);
-            });
+                    b.Navigation("Book");
+                });
 
-        modelBuilder.Entity("Domain.UserAggregate.Entities.Wish", b =>
-            {
-                b.HasOne("Domain.BookAggregate.Book", "Book")
-                    .WithMany()
-                    .HasForeignKey("BookId")
-                    .OnDelete(DeleteBehavior.ClientCascade)
-                    .IsRequired();
+            modelBuilder.Entity("Domain.GenreAggregate.Genre", b =>
+                {
+                    b.HasOne("Domain.BookAggregate.Book", null)
+                        .WithMany("Genres")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                b.HasOne("Domain.UserAggregate.User", null)
-                    .WithMany("Wishes")
-                    .HasForeignKey("UserId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                    b.HasOne("Domain.SharedKernel.Entities.Image", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                b.HasOne("Domain.UserAggregate.User", "User")
-                    .WithMany()
-                    .HasForeignKey("UserId1")
-                    .OnDelete(DeleteBehavior.ClientCascade)
-                    .IsRequired();
+                    b.Navigation("Image");
+                });
 
-                b.Navigation("Book");
+            modelBuilder.Entity("Domain.SharedKernel.Entities.Image", b =>
+                {
+                    b.HasOne("Domain.BookAggregate.Book", null)
+                        .WithMany("Images")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                b.Navigation("User");
-            });
+            modelBuilder.Entity("Domain.UserAggregate.Entities.Wish", b =>
+                {
+                    b.HasOne("Domain.BookAggregate.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
 
-        modelBuilder.Entity("Domain.UserAggregate.User", b =>
-            {
-                b.OwnsOne("Domain.UserAggregate.ValueObjects.RefreshToken", "RefreshToken", b1 =>
-                    {
-                        b1.Property<Guid>("UserId")
-                            .HasColumnType("uuid");
+                    b.HasOne("Domain.UserAggregate.User", null)
+                        .WithMany("Wishes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                        b1.Property<DateTime>("Expired")
-                            .HasColumnType("timestamp with time zone");
+                    b.HasOne("Domain.UserAggregate.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
 
-                        b1.Property<string>("Token")
-                            .IsRequired()
-                            .HasColumnType("text");
+                    b.Navigation("Book");
 
-                        b1.HasKey("UserId");
+                    b.Navigation("User");
+                });
 
-                        b1.ToTable("Users");
+            modelBuilder.Entity("Domain.UserAggregate.User", b =>
+                {
+                    b.OwnsOne("Domain.UserAggregate.ValueObjects.RefreshToken", "RefreshToken", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
 
-                        b1.WithOwner()
-                            .HasForeignKey("UserId");
-                    });
+                            b1.Property<DateTime>("Expired")
+                                .HasColumnType("timestamp with time zone");
 
-                b.Navigation("RefreshToken");
-            });
+                            b1.Property<string>("Token")
+                                .IsRequired()
+                                .HasColumnType("text");
 
-        modelBuilder.Entity("Domain.AuthorAggregate.Author", b =>
-            {
-                b.Navigation("AuthorBooks");
-            });
+                            b1.HasKey("UserId");
 
-        modelBuilder.Entity("Domain.BookAggregate.Book", b =>
-            {
-                b.Navigation("Authors");
+                            b1.ToTable("Users");
 
-                b.Navigation("Genres");
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
 
-                b.Navigation("Images");
-            });
+                    b.Navigation("RefreshToken");
+                });
 
-        modelBuilder.Entity("Domain.CartAggregate.Cart", b =>
-            {
-                b.Navigation("CartItems");
-            });
+            modelBuilder.Entity("Domain.AuthorAggregate.Author", b =>
+                {
+                    b.Navigation("AuthorBooks");
+                });
 
-        modelBuilder.Entity("Domain.GenreAggregate.Genre", b =>
-            {
-                b.Navigation("Books");
-            });
+            modelBuilder.Entity("Domain.BookAggregate.Book", b =>
+                {
+                    b.Navigation("Authors");
 
-        modelBuilder.Entity("Domain.UserAggregate.User", b =>
-            {
-                b.Navigation("Cart")
-                    .IsRequired();
+                    b.Navigation("Genres");
 
-                b.Navigation("Wishes");
-            });
+                    b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("Domain.CartAggregate.Cart", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Domain.GenreAggregate.Genre", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("Domain.UserAggregate.User", b =>
+                {
+                    b.Navigation("Cart");
+
+                    b.Navigation("Wishes");
+                });
 #pragma warning restore 612, 618
+        }
     }
 }

@@ -28,7 +28,7 @@ internal sealed class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(x => x.CartItemQuantity)
+        builder.Property(x => x.Quantity)
             .HasConversion(
             cartItemQuantity => cartItemQuantity.Value,
             value => CartItemQuantity.Create(value).Value)

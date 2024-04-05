@@ -7,12 +7,12 @@ using Infrastructure.Jwt.Interfaces;
 namespace Application.Users.Commands.UpdateRefreshToken;
 
 internal sealed class UpdateRefreshTokenCommandHandler(
-    IUserRepository userRepository,
+    IUserRepository repository,
     IUnitOfWork unitOfWork,
     IJwtManager jwtManager) :
     ICommandHandler<UpdateRefreshTokenCommand, UpdateRefreshTokenCommandResponse>
 {
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IJwtManager _jwtManager = jwtManager;
 
@@ -21,7 +21,7 @@ internal sealed class UpdateRefreshTokenCommandHandler(
         var emailString = _jwtManager.GetEmailFromToken(request.Token);
         var emailResult = Email.Create(emailString);
 
-        var user = await _userRepository.GetByEmailAsync(emailResult.Value, cancellationToken);
+        var user = await _repository.GetByEmailAsync(emailResult.Value, cancellationToken);
 
         if (user is null ||
             user.RefreshToken?.Token != request.RefreshToken)
@@ -41,9 +41,11 @@ internal sealed class UpdateRefreshTokenCommandHandler(
 
         user.UpdateRefreshToken(refreshToken);
 
-        await _userRepository.UpdateAsync(user, cancellationToken);
+        await _repository.UpdateAsync(user, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
-        return new UpdateRefreshTokenCommandResponse(userToken, refreshToken.Token);
+        var response = new UpdateRefreshTokenCommandResponse(userToken, refreshToken.Token);
+
+        return response;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Errors;
+using System.Collections.Generic;
 
 namespace Domain.Core.Results;
 

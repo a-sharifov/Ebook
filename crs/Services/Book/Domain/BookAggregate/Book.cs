@@ -10,12 +10,12 @@ namespace Domain.BookAggregate;
 public class Book : AggregateRoot<BookId>
 {
     public Title Title { get; private set; }
-    public BookDescription BookDescription { get; private set; }
+    public BookDescription Description { get; private set; }
     public PageCount PageCount { get; private set; }
     public Money Price { get; private set; }
     public LanguageId LanguageId { get; private set; }
-    public ISBN ISBN { get; private     set; }
-    public QuantityBook QuantityBook { get; private set; }
+    public ISBN ISBN { get; private set; }
+    public QuantityBook Quantity { get; private set; }
     public SoldUnits SoldUnits { get; private set; }
 
     private readonly List<Image> _images = [];
@@ -37,9 +37,9 @@ public class Book : AggregateRoot<BookId>
         BookDescription bookDescription,
         PageCount pageCount,
         Money price,
-        LanguageId bookLanguage,
+        LanguageId languageId,
         ISBN isbn,
-        QuantityBook quantityBook,
+        QuantityBook quantity,
         SoldUnits soldUnits,
         List<Image> images,
         List<Genre> genres,
@@ -47,12 +47,12 @@ public class Book : AggregateRoot<BookId>
     {
         Id = id;
         Title = title;
-        BookDescription = bookDescription;
+        Description = bookDescription;
         PageCount = pageCount;
         Price = price;
-        LanguageId = bookLanguage;
+        LanguageId = languageId;
         ISBN = isbn;
-        QuantityBook = quantityBook;
+        Quantity = quantity;
         SoldUnits = soldUnits;
         _images = images;
         _genres = genres;
@@ -62,19 +62,19 @@ public class Book : AggregateRoot<BookId>
     public static Result<Book> Create(
         BookId id,
         Title title,
-        BookDescription bookDescription,
+        BookDescription description,
         PageCount pageCount,
         Money price,
-        LanguageId bookLanguage,
+        LanguageId languageId,
         ISBN isbn,
-        QuantityBook quantityBook,
+        QuantityBook quantity,
         SoldUnits soldUnits,
         List<Image> images,
         List<Genre> genres,
         List<Author> authors)
     {
         var book = new Book(
-            id, title, bookDescription, pageCount, price, bookLanguage, isbn, quantityBook, soldUnits, images, genres, authors);
+            id, title, description, pageCount, price, languageId, isbn, quantity, soldUnits, images, genres, authors);
 
         //TODO: Add domain events
 

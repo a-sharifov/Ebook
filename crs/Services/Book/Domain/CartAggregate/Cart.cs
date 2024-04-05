@@ -11,8 +11,8 @@ namespace Domain.CartAggregate;
 public class Cart : AggregateRoot<CartId>
 {
     public UserId UserId { get; private set; }
-    private readonly List<CartItem> _cartItems = [];
-    public IReadOnlyCollection<CartItem> CartItems => _cartItems.AsReadOnly();
+    private readonly List<CartItem> _items = [];
+    public IReadOnlyCollection<CartItem> Items => _items.AsReadOnly();
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private Cart() { }
@@ -30,52 +30,52 @@ public class Cart : AggregateRoot<CartId>
         return Result.Success(cart);
     }
 
-    public Result AddItem(CartItem cartItem)
+    public Result AddItem(CartItem item)
     {
-        var isExistInCart = _cartItems.Exists(x => x.Id == cartItem.Id);
+        var isExistInCart = _items.Exists(x => x.Id == item.Id);
         if (isExistInCart)
         {
-            cartItem = _cartItems.Single(x => x.Id == cartItem.Id);
-            var cartItemQuantityResult = CartItemQuantity.Create(cartItem.CartItemQuantity.Value + 1);
+            item = _items.Single(x => x.Id == item.Id);
+            var cartItemQuantityResult = CartItemQuantity.Create(item.Quantity.Value + 1);
             return cartItemQuantityResult.IsSuccess ?
-                cartItem.UpdateQuantity(cartItemQuantityResult.Value) : cartItemQuantityResult;
+                item.UpdateQuantity(cartItemQuantityResult.Value) : cartItemQuantityResult;
         }
 
-        _cartItems.Add(cartItem);
+        _items.Add(item);
         return Result.Success();
     }
 
-    public Result RemoveItem(CartItemId cartItemId)
+    public Result RemoveItem(CartItemId itemId)
     {
-        var cartItem = _cartItems.SingleOrDefault(x => x.Id == cartItemId);
+        var cartItem = _items.SingleOrDefault(x => x.Id == itemId);
         if (cartItem is null)
         {
             return Result.Failure(CartErrors.ItemNotFound);
         }
 
-        _cartItems.Remove(cartItem);
+        _items.Remove(cartItem);
         return Result.Success();
     }
 
-    public Result UpdateItemQuantity(CartItemId cartItemId, CartItemQuantity cartItemQuantity)
+    public Result UpdateItemQuantity(CartItemId itemId, CartItemQuantity itemQuantity)
     {
-        var cartItem = _cartItems.SingleOrDefault(x => x.Id == cartItemId);
+        var cartItem = _items.SingleOrDefault(x => x.Id == itemId);
         if (cartItem is null)
         {
             return Result.Failure(CartErrors.ItemNotFound);
         }
 
-        return cartItem.UpdateQuantity(cartItemQuantity);
+        return cartItem.UpdateQuantity(itemQuantity);
     }
 
-    public void Clear() => _cartItems.Clear();
+    public void Clear() => _items.Clear();
 
     public decimal CalculateTotalPrice()
     {
         var totalPrice = 0m;
-        foreach (var cartItem in _cartItems)
+        foreach (var cartItem in _items)
         {
-            totalPrice += cartItem.Book.Price * cartItem.CartItemQuantity.Value;
+            totalPrice += cartItem.Book.Price * cartItem.Quantity.Value;
         }
 
         return totalPrice;

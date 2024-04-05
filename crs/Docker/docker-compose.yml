@@ -25,6 +25,7 @@ services:
     image: postgres:latest
 
   pgadmin:
+    container_name: pgadmin
     image: dpage/pgadmin4
     depends_on:
       - postgres
@@ -36,4 +37,8 @@ services:
   seq:
     container_name: seq
     image: datalust/seq:latest
+
+  minio:
+    container_name: minio
+    image: quay.io/minio/minio
 

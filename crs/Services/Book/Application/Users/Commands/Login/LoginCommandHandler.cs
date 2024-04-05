@@ -9,19 +9,19 @@ using Infrastructure.Jwt.Interfaces;
 namespace Application.Users.Commands.Login;
 
 internal sealed class LoginCommandHandler(
-    IUserRepository userRepository,
+    IUserRepository repository,
     IUnitOfWork unitOfWork,
     IHashingService hashingService,
     IJwtManager jwtManager)
     : ICommandHandler<LoginCommand, LoginCommanResponse>
 {
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IHashingService _hashingService = hashingService;
     private readonly IJwtManager _jwtManager = jwtManager;
 
     public async Task<Result<LoginCommanResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
-          {
+    {
         var user = await GetUserByEmailAsync(request.Email, cancellationToken);
 
         if (user is null)
@@ -45,13 +45,15 @@ internal sealed class LoginCommandHandler(
 
         await _unitOfWork.Commit(cancellationToken);
 
-        return new LoginCommanResponse(userToken, refreshToken.Token);
+        var response = new LoginCommanResponse(userToken, refreshToken.Token);
+
+        return response;
     }
 
     private async Task<User?> GetUserByEmailAsync(string emailString, CancellationToken cancellationToken = default)
     {
         var emailResult = Email.Create(emailString);
-        return await _userRepository.GetByEmailAsync(emailResult.Value, cancellationToken);
+        return await _repository.GetByEmailAsync(emailResult.Value, cancellationToken);
     }
 
     private Result Login(User user, string password)
@@ -59,6 +61,8 @@ internal sealed class LoginCommandHandler(
         var passwordIsCorrect = _hashingService.Verify(
             password, user.PasswordSalt.Value, user.PasswordHash.Value);
 
-        return User.Login(user, passwordIsCorrect);
+        var loginResult = User.Login(user, passwordIsCorrect);
+
+        return loginResult;
     }
 }

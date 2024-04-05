@@ -41,7 +41,7 @@ internal sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
             .HasMaxLength(LastName.MaxLength)
             .IsRequired();
 
-        builder.Property(x => x.AuthorDescription)
+        builder.Property(x => x.Description)
             .HasConversion(
             authorDescription => authorDescription.Value,
             value => AuthorDescription.Create(value).Value)
@@ -52,7 +52,7 @@ internal sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
             .WithOne()
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasOne(x => x.AuthorImage)
+        builder.HasOne(x => x.Image)
             .WithOne()
             .HasPrincipalKey<Image>(x => x.Id)
             .OnDelete(DeleteBehavior.Cascade);

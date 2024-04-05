@@ -8,7 +8,7 @@ using Domain.UserAggregate;
 
 namespace Persistence.DbContexts;
 
-public class BookDbContext(DbContextOptions<BookDbContext> options) : DbContext(options)
+public class BookDbContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Genre> Genres { get; set; }
@@ -17,8 +17,20 @@ public class BookDbContext(DbContextOptions<BookDbContext> options) : DbContext(
     public DbSet<Author> Authors { get; set; }
     public DbSet<Cart> Carts { get; set; }
 
+    // if you need migration in Persistence layer.
+    private BookDbContext()
+    {
+    }
+
+    public BookDbContext(DbContextOptions<BookDbContext> options) : base(options)
+    {
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder
         .Ignore<IList<IDomainEvent>>()
         .ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => 
+        optionsBuilder.UseNpgsql();
 }

@@ -5,16 +5,16 @@ using Domain.UserAggregate.Repositories;
 namespace Application.Users.Commands.DeleteUser;
 
 internal sealed class DeleteUserCommandHandler(
-    IUserRepository userRepository) 
+    IUserRepository repository) 
     : ICommandHandler<DeleteUserCommand>
 {
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserRepository _repository = repository;
 
     public async Task<Result> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
         var userId = new UserId(request.UserId);
 
-        var isExists = await _userRepository.IsExistsAsync(userId, cancellationToken);
+        var isExists = await _repository.IsExistsAsync(userId, cancellationToken);
 
         if (!isExists)
         {
@@ -22,7 +22,7 @@ internal sealed class DeleteUserCommandHandler(
                 UserErrors.UserDoesNotExist);
         }
 
-        await _userRepository.DeleteByIdAsync(userId, cancellationToken);
+        await _repository.DeleteByIdAsync(userId, cancellationToken);
 
         return Result.Success();
     }

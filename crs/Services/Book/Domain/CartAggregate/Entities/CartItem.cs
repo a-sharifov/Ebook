@@ -10,39 +10,39 @@ public class CartItem : Entity<CartItemId>
 {
     public CartId CartId { get; private set; }
     public Book Book { get; private set; }
-    public CartItemQuantity CartItemQuantity { get; private set; }
+    public CartItemQuantity Quantity { get; private set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private CartItem() { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-    private CartItem(CartItemId id, CartId cartId, Book book, CartItemQuantity cartItemQuantity)
+    private CartItem(CartItemId id, CartId cartId, Book book, CartItemQuantity quantity)
     {
         Id = id;
         CartId = cartId;
         Book = book;
-        CartItemQuantity = cartItemQuantity;
+        Quantity = quantity;
     }
 
-    public static Result<CartItem> Create(CartItemId id, CartId cartId, Book book, CartItemQuantity cartItemQuantity)
+    public static Result<CartItem> Create(CartItemId id, CartId cartId, Book book, CartItemQuantity quantity)
     {
-        var cartItem = new CartItem(id, cartId, book, cartItemQuantity);
+        var cartItem = new CartItem(id, cartId, book, quantity);
         return cartItem;
     }
 
-    public Result UpdateQuantity(CartItemQuantity cartItemQuantity)
+    public Result UpdateQuantity(CartItemQuantity quantity)
     {
-        if (cartItemQuantity.Value > Book.QuantityBook.Value)
+        if (quantity.Value > Book.Quantity.Value)
         {
             return Result.Failure(
                 CartItemErrors.QuantityExceedsBookQuantity);
         }
 
-        CartItemQuantity = cartItemQuantity;
+        Quantity = quantity;
         return Result.Success();
     }
 
     //add int operator convert
     public static implicit operator int(CartItem cartItem) =>
-        cartItem.CartItemQuantity.Value;
+        cartItem.Quantity.Value;
 }

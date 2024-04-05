@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.9.0" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,6 +17,13 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Genres\Commands\DeleteGenreById\" />
+    <Folder Include="Genres\Commands\UpdateImageGenre\" />
+    <Folder Include="Images\Commands\" />
+    <Folder Include="Images\Queries\" />
   </ItemGroup>
 
 </Project>

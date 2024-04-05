@@ -23,7 +23,7 @@ internal sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
             value => new UserId(value))
             .IsRequired();
 
-        builder.HasMany(x => x.CartItems)
+        builder.HasMany(x => x.Items)
             .WithOne()
             .OnDelete(DeleteBehavior.Cascade);
     }

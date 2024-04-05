@@ -9,12 +9,12 @@ public class Author : AggregateRoot<AuthorId>
 {
     public FirstName FirstName { get; private set; }
     public LastName LastName { get; private set; }
-    public Image AuthorImage { get; private set; }
     public Pseudonym Pseudonym { get; private set; }
-    public AuthorDescription AuthorDescription { get; private set; }
+    public Image Image { get; private set; }
+    public AuthorDescription Description { get; private set; }
 
-    private readonly List<Book> _auhorBooks = [];
-    public IReadOnlyCollection<Book> AuthorBooks => _auhorBooks.AsReadOnly();
+    private readonly List<Book> _authorBooks = [];
+    public IReadOnlyCollection<Book> AuthorBooks => _authorBooks.AsReadOnly();
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private Author() { }
@@ -24,27 +24,27 @@ public class Author : AggregateRoot<AuthorId>
         AuthorId id,
         FirstName firstName,
         LastName lastName,
-        Image authorImage,
         Pseudonym pseudonym,
-        AuthorDescription authorDescription)
+        Image image,
+        AuthorDescription description)
     {
         Id = id;
         FirstName = firstName;
         LastName = lastName;
-        AuthorImage = authorImage;
         Pseudonym = pseudonym;
-        AuthorDescription = authorDescription;
+        Image = image;
+        Description = description;
     }
 
     public static Result<Author> Create(
         AuthorId id,
         FirstName firstName,
         LastName lastName,
-        Image authorImage,
         Pseudonym pseudonym,
-        AuthorDescription authorDescription)
+        Image image,
+        AuthorDescription description)
     {
-        var author = new Author(id, firstName, lastName, authorImage, pseudonym, authorDescription);
+        var author = new Author(id, firstName, lastName, pseudonym, image, description);
 
         // TODO: Add domain events
 

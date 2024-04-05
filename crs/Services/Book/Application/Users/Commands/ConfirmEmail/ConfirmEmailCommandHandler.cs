@@ -9,10 +9,10 @@ namespace Application.Users.Commands.ConfirmEmail;
 
 internal sealed class ConfirmEmailCommandHandler(
     IUnitOfWork unitOfWork, 
-    IUserRepository userRepository) 
+    IUserRepository repository) 
     : ICommandHandler<ConfirmEmailCommand>
 {
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<Result> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
@@ -45,6 +45,6 @@ internal sealed class ConfirmEmailCommandHandler(
     private async Task<User?> GetUserByIdAsync(Guid id)
     {
         var userId = new UserId(id);
-        return await _userRepository.GetByIdAsync(userId);
+        return await _repository.GetByIdAsync(userId);
     }
 }

@@ -7,19 +7,19 @@ using Infrastructure.Hashing.Interfaces;
 namespace Application.Users.Commands.RetryConfirmEmailSend;
 
 public class RetryConfirmEmailSendCommandHandler(
-    IUserRepository userRepository,
+    IUserRepository repository,
     IHashingService hashingService,
     IIdentityEmailService identityEmailService)
     : ICommandHandler<RetryConfirmEmailSendCommand>
 {
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserRepository _repository = repository;
     private readonly IHashingService _hashingService = hashingService;
     private readonly IIdentityEmailService _identityEmailService = identityEmailService;
 
     public async Task<Result> Handle(RetryConfirmEmailSendCommand request, CancellationToken cancellationToken)
     {
         var emailResult = Email.Create(request.Email);
-        var user = await _userRepository
+        var user = await _repository
             .GetByEmailAsync(emailResult.Value, cancellationToken);
 
         if (user is null)

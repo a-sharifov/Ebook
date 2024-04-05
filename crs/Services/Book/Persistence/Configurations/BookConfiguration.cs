@@ -27,7 +27,7 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
             .HasMaxLength(Title.TitleMaxLength)
             .IsRequired();
 
-        builder.Property(x => x.BookDescription)
+        builder.Property(x => x.Description)
             .HasConversion(
             bookDescription => bookDescription.Value,
             value => BookDescription.Create(value).Value)
@@ -61,7 +61,7 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
             value => ISBN.Create(value).Value)
             .IsRequired();
 
-        builder.Property(x => x.QuantityBook)
+        builder.Property(x => x.Quantity)
             .HasConversion(
             quantityBook => quantityBook.Value,
             value => QuantityBook.Create(value).Value)

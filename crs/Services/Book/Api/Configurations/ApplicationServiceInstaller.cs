@@ -1,6 +1,7 @@
 ﻿using Api.Core.ServiceInstaller.Interfaces;
 using Api.Core.Pipelines;
 using FluentValidation;
+using Application.Core.MappingConfig;
 
 namespace Api.Configurations;
 
@@ -17,5 +18,8 @@ internal sealed class ApplicationServiceInstaller : IServiceInstaller
         services.AddValidatorsFromAssembly(
             Application.AssemblyReference.Assembly,
             includeInternalTypes: true);
+
+        services.MappingConfigsFromAssembly(
+            Application.AssemblyReference.Assembly);
     }
 }

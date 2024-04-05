@@ -11,7 +11,7 @@ internal sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
     {
         builder.HasKey(x => x.Id);
 
-        builder.HasAlternateKey(x => x.GenreName);
+        builder.HasAlternateKey(x => x.Name);
 
         builder.Property(x => x.Id)
             .HasConversion(
@@ -19,7 +19,7 @@ internal sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
             value => new GenreId(value))
             .IsRequired();
 
-        builder.Property(x => x.GenreName)
+        builder.Property(x => x.Name)
             .HasConversion(
             genreName => genreName.Value,
             value => GenreName.Create(value).Value)

@@ -6,26 +6,18 @@ using Persistence.DbContexts;
 
 namespace Persistence.Repositories;
 
-public abstract class BaseRepository<TEntity, TStrongestId>
+public abstract class BaseRepository<TEntity, TStrongestId>(
+    BookDbContext dbContext,
+    ICachedEntityService<TEntity, TStrongestId> cached,
+    TimeSpan expirationTime)
     : IBaseRepository<TEntity, TStrongestId>
     where TEntity : Entity<TStrongestId>
     where TStrongestId : class, IStrongestId
 {
-    protected readonly string _entityName;
-    protected readonly BookDbContext _dbContext;
-    protected readonly ICachedEntityService<TEntity, TStrongestId> _cached;
-    protected readonly TimeSpan _expirationTime;
-
-    protected BaseRepository(
-        BookDbContext dbContext,
-        ICachedEntityService<TEntity, TStrongestId> cached,
-        TimeSpan expirationTime)
-    {
-        _entityName = typeof(TEntity).Name;
-        _dbContext = dbContext;
-        _cached = cached;
-        _expirationTime = expirationTime;
-    }
+    protected readonly string _entityName = typeof(TEntity).Name;
+    protected readonly BookDbContext _dbContext = dbContext;
+    protected readonly ICachedEntityService<TEntity, TStrongestId> _cached = cached;
+    protected readonly TimeSpan _expirationTime = expirationTime;
 
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default) =>
         await GetEntityDbSet().AddAsync(entity, cancellationToken);
@@ -61,7 +53,7 @@ public abstract class BaseRepository<TEntity, TStrongestId>
     public async Task<int> CountAsync(CancellationToken cancellationToken = default) =>
         await GetEntityDbSet().CountAsync(cancellationToken);
 
-    public async Task<TEntity?> GetByIdAsync(TStrongestId id, CancellationToken cancellationToken = default)
+    public async Task<TEntity> GetByIdAsync(TStrongestId id, CancellationToken cancellationToken = default)
     {
         var entity = await _cached.GetAsync(id, cancellationToken);
 
@@ -70,12 +62,7 @@ public abstract class BaseRepository<TEntity, TStrongestId>
             return entity;
         }
 
-        entity = await GetEntityDbSet().FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
-
-        if (entity is null)
-        {
-            return entity;
-        }
+        entity = await GetEntityDbSet().FirstAsync(c => c.Id == id, cancellationToken);
 
         await _cached.SetAsync(entity, _expirationTime, cancellationToken);
         return entity;
@@ -105,6 +92,6 @@ public abstract class BaseRepository<TEntity, TStrongestId>
         return entities;
     }
 
-    public DbSet<TEntity> GetEntityDbSet() =>
+    public DbSet<TEntity> GetEntityDbSet() => 
         _dbContext.Set<TEntity>();
 }

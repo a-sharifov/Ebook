@@ -14,13 +14,13 @@ namespace Application.Users.Commands.Register;
 
 internal sealed class RegisterCommandHandler(
     IHashingService hashingService,
-    IUserRepository userRepository,
+    IUserRepository repository,
     IIdentityEmailService identityEmailService,
     IUnitOfWork unitOfWork)
     : ICommandHandler<RegisterCommand>
 {
     private readonly IHashingService _hashingService = hashingService;
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserRepository _repository = repository;
     private readonly IIdentityEmailService _identityEmailService = identityEmailService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
@@ -35,7 +35,7 @@ internal sealed class RegisterCommandHandler(
 
         var user = userResult.Value;
 
-        await _userRepository.AddAsync(user, cancellationToken);
+        await _repository.AddAsync(user, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
         await _identityEmailService.SendConfirmationEmailAsync(user, request.ReturnUrl, cancellationToken);
@@ -61,7 +61,7 @@ internal sealed class RegisterCommandHandler(
         var role = Role.FromName(request.Role);
         var gender = Gender.FromName(request.Gender);
 
-        var isEmailUnique = await _userRepository
+        var isEmailUnique = await _repository
             .IsEmailUnigueAsync(emailResult.Value, cancellationToken);
 
         var cartId = new CartId(Guid.NewGuid());
