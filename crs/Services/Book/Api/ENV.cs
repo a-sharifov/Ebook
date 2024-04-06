@@ -17,6 +17,7 @@ public static class Env
     //min.io or AWS S3
     public static string SERVER_ACCESS_KEY => GetEnvironmentVariable("SERVER_ACCESS_KEY");
     public static string SERVER_SECRET_KEY => GetEnvironmentVariable("SERVER_SECRET_KEY");
+    public static string SERVER_ENDPOINT => GetEnvironmentVariable("SERVER_ENDPOINT");
 
     private static string GetEnvironmentVariable(string key) =>
         Environment.GetEnvironmentVariable(key) ??

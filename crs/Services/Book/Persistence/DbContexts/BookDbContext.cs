@@ -18,7 +18,7 @@ public class BookDbContext : DbContext
     public DbSet<Cart> Carts { get; set; }
 
     // if you need migration in Persistence layer.
-    private BookDbContext()
+    public BookDbContext()
     {
     }
 

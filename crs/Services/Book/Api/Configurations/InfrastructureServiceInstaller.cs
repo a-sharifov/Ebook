@@ -14,7 +14,7 @@ using Persistence.DbContexts;
 
 namespace Api.Configurations;
 
-internal sealed class InfrasctructureServiceInstaller : IServiceInstaller
+internal sealed class InfrastructureServiceInstaller : IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {

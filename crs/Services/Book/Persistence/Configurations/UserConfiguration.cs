@@ -77,7 +77,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
             name => Gender.FromName(name)
             ).IsRequired();
 
-        //для того чтоб сделатть каскадное удаление cart при удалении пользователя с помощью CartId:
+        //для того чтоб сделать каскадное удаление cart при удалении пользователя с помощью CartId:
         builder.HasOne(x => x.Cart)
             .WithOne()
             .HasForeignKey<Cart>(x => x.UserId)

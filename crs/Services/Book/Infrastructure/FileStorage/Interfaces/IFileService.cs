@@ -1,8 +1,7 @@
-namespace Infrastructure.FileStorage.Interfaces;
+﻿namespace Infrastructure.FileStorage.Interfaces;
 
 public interface IFileService
 {
-	void GetFile(IFormFile formFile);
-	void UploadFile();
-	void DeleteFile();
+    Task UploadFileAsync(string bucketName, string fileName, string fileType, Stream fileStream, CancellationToken cancellationToken = default);
+    Task DeleteFileAsync(string bucketName, string objectName, CancellationToken cancellationToken = default);
 }

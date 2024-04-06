@@ -1,5 +1,4 @@
 ﻿using Domain.BookAggregate;
-using Domain.BookAggregate.Ids;
 using Domain.UserAggregate.Ids;
 
 namespace Domain.UserAggregate.Entities;
