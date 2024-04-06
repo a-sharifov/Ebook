@@ -35,4 +35,18 @@ public class MinioService(IMinioClient minioClient) : IFileService
 
         await _minioClient.RemoveObjectAsync(args, cancellationToken);
     }
+
+    public async Task CreateBucketAsync(string bucketName, CancellationToken cancellationToken = default)
+    {
+        var args = new MakeBucketArgs();
+        args.WithBucket(bucketName);
+        await _minioClient.MakeBucketAsync(args, cancellationToken);
+    }
+
+    public async Task DeleteBucketAsync(string bucketName, CancellationToken cancellationToken = default)
+    {
+        var args = new RemoveBucketArgs();
+        args.WithBucket(bucketName);
+        await _minioClient.RemoveBucketAsync(args, cancellationToken);
+    }
 }

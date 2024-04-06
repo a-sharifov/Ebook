@@ -4,6 +4,8 @@ using Domain.Core.UnitOfWorks.Interfaces;
 using Infrastructure.Email;
 using Infrastructure.Email.Interfaces;
 using Infrastructure.Email.Services;
+using Infrastructure.FileStorage.Interfaces;
+using Infrastructure.FileStorage.Services;
 using Infrastructure.Hashing;
 using Infrastructure.Hashing.Interfaces;
 using Infrastructure.Jwt;
@@ -37,6 +39,7 @@ internal sealed class InfrastructureServiceInstaller : IServiceInstaller
         services.AddTransient<IIdentityEmailService, IdentityEmailService>();
         services.AddTransient<IHashingService, HashingService>();
         services.AddTransient<IJwtManager, JwtManager>();
+        services.AddTransient<IFileService, MinioService>();
 
         services.AddTransient<IUnitOfWork, UnitOfWork>();
 
