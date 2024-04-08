@@ -1,6 +1,5 @@
 ﻿using Domain.SharedKernel.Entities;
 using Domain.SharedKernel.Ids;
-using Domain.SharedKernel.ValueObjects;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Persistence.Configurations;
@@ -17,11 +16,6 @@ internal sealed class ImageConfiguration : IEntityTypeConfiguration<Image>
             value => new ImageId(value))
             .IsRequired();
 
-        builder.Property(x => x.ImageUrl)
-            .HasConversion(
-            imageUrl => imageUrl.Value,
-            value => ImageUrl.Create(value).Value)
-            .HasMaxLength(ImageUrl.MaxLength)
-            .IsRequired();
+
     }
 }

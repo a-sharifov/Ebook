@@ -8,7 +8,7 @@ global using Domain.Core.Events;
 global using Domain.Core.Errors;
 global using Domain.Core.Entities;
 global using Domain.Core.Repositories.Interfaces;
-global using Domain.SharedKernel.Repositores;
+global using Domain.SharedKernel.Repositories;
 global using Domain.SharedKernel.Errors;
 global using Domain.SharedKernel.Regexes;
 global using Domain.SharedKernel.ValueObjects;

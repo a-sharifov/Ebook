@@ -2,9 +2,9 @@
 
 namespace Application.Users.Commands.Login;
 
-internal sealed class LoginCommandVaidator : AbstractValidator<LoginCommand>
+internal sealed class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
-    public LoginCommandVaidator()
+    public LoginCommandValidator()
     {
         RuleFor(x => x.Email)
             .NotEmpty()

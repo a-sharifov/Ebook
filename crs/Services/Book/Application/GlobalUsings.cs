@@ -5,3 +5,5 @@ global using Application.Core.CQRS.Query;
 global using Domain.Core.Results;
 global using Domain.Core.Events.Interfaces;
 global using Mapster;
+global using Contracts.Extensions;
+global using Domain.SharedKernel.Entities;

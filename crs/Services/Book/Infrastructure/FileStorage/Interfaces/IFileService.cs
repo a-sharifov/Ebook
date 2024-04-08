@@ -7,3 +7,4 @@ public interface IFileService
     Task CreateBucketAsync(string bucketName, CancellationToken cancellationToken = default);
     Task DeleteBucketAsync(string bucketName, CancellationToken cancellationToken = default);
 }
+    

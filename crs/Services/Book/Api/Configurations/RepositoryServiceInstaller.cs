@@ -4,6 +4,7 @@ using Domain.BookAggregate.Repositories;
 using Domain.CartAggregate.Repositories;
 using Domain.GenreAggregate.Repositories;
 using Domain.LanguageAggregate.Repositories;
+using Domain.SharedKernel.Repositories;
 using Domain.UserAggregate.Repositories;
 using Persistence.Repositories;
 
@@ -19,5 +20,6 @@ internal sealed class RepositoryServiceInstaller : IServiceInstaller
         services.AddTransient<IGenreRepository, GenreRepository>();
         services.AddTransient<ILanguageRepository, LanguageRepository>();
         services.AddTransient<IUserRepository, UserRepository>();
+        services.AddTransient<IImageRepository, ImageRepository>();
     }
 }

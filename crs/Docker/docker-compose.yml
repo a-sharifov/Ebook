@@ -22,18 +22,18 @@ services:
     container_name: minio
     image: quay.io/minio/minio
 
-  book.api:
-    container_name: book.api
-    image: ${DOCKER_REGISTRY-}api
-    build:
-      context: . 
-      dockerfile: ../Services/Book/Api/Dockerfile
-    depends_on: [minio, redis, postgres]
+  # book.api:
+  #   container_name: book.api
+  #   image: ${DOCKER_REGISTRY-}api
+  #   build:
+  #     context: . 
+  #     dockerfile: ../Services/Book/Api/Dockerfile
+  #   depends_on: [minio, redis, postgres]
     
-  monitoring.api:
-    container_name: monitoring.api
-    image: ${DOCKER_REGISTRY-}monitoringapi
-    build:
-      context: .
-      dockerfile: ../Services/Monitoring/Monitoring.Api/Dockerfile
-    depends_on: [book.api]
+  # monitoring.api:
+  #   container_name: monitoring.api
+  #   image: ${DOCKER_REGISTRY-}monitoringapi
+  #   build:
+  #     context: .
+  #     dockerfile: ../Services/Monitoring/Monitoring.Api/Dockerfile
+  #   depends_on: [book.api]

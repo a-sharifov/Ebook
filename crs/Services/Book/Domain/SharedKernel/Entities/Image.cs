@@ -1,27 +1,38 @@
-﻿using Domain.SharedKernel.Ids;
+﻿using Domain.SharedKernel.Enumerations;
+using Domain.SharedKernel.Ids;
 
 namespace Domain.SharedKernel.Entities;
 
 public class Image : Entity<ImageId>
 {
-    public ImageUrl ImageUrl { get; private set; }
+    public string BucketName { get; private set; }
+    public string ImageName { get; private set; }
+    public ImageType ImageType { get; private set; }
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public Image() { }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    private Image(ImageId id, string bucketName, string imageName, ImageType imageType) =>
+        (Id, BucketName, ImageName, ImageType) = (id, bucketName, imageName, imageType);
 
-    private Image(ImageId imageId, ImageUrl imageUrl)
+    public string FullName => $"{ImageName}{ImageType.Name}";
+
+    public string Path => $"/{BucketName}/{FullName}";
+
+    public string UrlString(string domainName) => domainName + Path;
+
+
+    public static Result<Image> Create(ImageId id, string bucketName, ImageType imageType)
     {
-        Id = imageId;
-        ImageUrl = imageUrl;
+        var isBucketNameNullOrEmpty = bucketName.IsNullOrEmpty();
+
+        if (isBucketNameNullOrEmpty)
+        {
+            return Result.Failure<Image>(
+                ImageErrors.ImageNameCannotBeEmpty);
+        }
+
+        var imageName = Guid.NewGuid().ToString();
+
+        var image = new Image(id, bucketName, imageName, imageType);
+        return image;
     }
 
-    public static Result<Image> Create(ImageId imageId , ImageUrl imageUrl)
-    {
-        var image = new Image(imageId, imageUrl);
-
-        // Add domain rules here
-
-        return Result.Success(image);
-    }
 }

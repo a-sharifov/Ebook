@@ -2,5 +2,10 @@
 
 public sealed record ImageDto(
     Guid Id,
-    string ImageUrl
-    );
+    string BucketName,
+    string ImageName,
+    string ImageType
+    )
+{
+    public string GetPath() => $"{BucketName}/{ImageName}{ImageType}";
+};

@@ -19,9 +19,9 @@ public class MinioService(IMinioClient minioClient) : IFileService
         args.WithBucket(bucketName);
         args.WithContentType(fileType);
         args.WithStreamData(fileStream);
-        args.WithFileName(fileType);
-
-        await _minioClient.PutObjectAsync(args, cancellationToken);
+        args.WithFileName(fileName); 
+        var res = await _minioClient.PutObjectAsync(args, cancellationToken);
+        
     }
 
     public async Task DeleteFileAsync(
@@ -33,7 +33,13 @@ public class MinioService(IMinioClient minioClient) : IFileService
         args.WithBucket(bucketName);
         args.WithObject(objectName);
 
-        await _minioClient.RemoveObjectAsync(args, cancellationToken);
+         await _minioClient.RemoveObjectAsync(args, cancellationToken);
+    }
+
+    public async Task<string> GetUrl(string etag)
+    {
+        var args = new PresignedGetObjectArgs();
+        var url = _minioClient.get()
     }
 
     public async Task CreateBucketAsync(string bucketName, CancellationToken cancellationToken = default)

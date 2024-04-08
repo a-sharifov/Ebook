@@ -5,6 +5,7 @@ using Domain.UserAggregate.ValueObjects;
 using Domain.UserAggregate.Entities;
 using Domain.BookAggregate.Ids;
 using Domain.CartAggregate;
+using Domain.CartAggregate.Ids;
 
 namespace Domain.UserAggregate;
 
@@ -22,6 +23,7 @@ public sealed class User : AggregateRoot<UserId>
     public Gender Gender { get; private set; }
     public Cart? Cart { get; private set; }
 
+    //todo: Make Aggregate Root
     private readonly List<Wish> _wishes = [];
     public IReadOnlyCollection<Wish> Wishes => _wishes.AsReadOnly();
 

@@ -1,4 +1,4 @@
-﻿namespace Domain.SharedKernel.Repositores;
+﻿namespace Domain.SharedKernel.Repositories;
 
 public interface IBaseRepository<TEntity, TStrongestId>
     : IRepository<TEntity, TStrongestId>
