@@ -5,6 +5,8 @@ using Api.Core.Extensions;
 using Api.Core.ServiceInstaller;
 using Persistence.DbContexts;
 using Serilog;
+using Asp.Versioning.ApiExplorer;
+using Microsoft.Extensions.Options;
 
 namespace Api;
 
@@ -19,9 +21,20 @@ public sealed class Startup(IConfiguration configuration)
     {
         if (env.IsDevelopment())
         {
+            using var scope = app.ApplicationServices.CreateScope();
+            var apiVersionDescriptionProvider = 
+                scope.ServiceProvider.GetRequiredService<IApiVersionDescriptionProvider>();
+
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(x =>
+            {
+                foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                {
+                    x.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                        description.GroupName.ToUpperInvariant());
+                }
+            });
         }
 
         app.UseCors(SD.DefaultCorsPolicyName);

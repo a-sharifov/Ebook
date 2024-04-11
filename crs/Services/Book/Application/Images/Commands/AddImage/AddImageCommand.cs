@@ -5,5 +5,5 @@ namespace Application.Images.Commands.AddImage;
 public sealed record AddImageCommand(
     string BucketName,
     Stream ImageStream,
-    string ImageType
+    string Name
     ) : ICommand<ImageDto>;

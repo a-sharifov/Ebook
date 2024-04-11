@@ -13,12 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Api.Core\Api.Core.csproj" />
     <ProjectReference Include="..\..\..\Common\Presentation.Core\Presentation.Core.csproj" />
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Languages\" />
+    <Folder Include="V1\Languages\" />
   </ItemGroup>
 
 </Project>

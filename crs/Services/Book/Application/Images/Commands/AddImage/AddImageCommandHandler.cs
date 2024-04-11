@@ -1,36 +1,47 @@
-﻿using Domain.Core.UnitOfWorks.Interfaces;
+﻿using Application.Common.DTOs.Images;
+using Domain.Core.UnitOfWorks.Interfaces;
 using Domain.SharedKernel.Enumerations;
+using Domain.SharedKernel.Ids;
 using Domain.SharedKernel.Repositories;
+using Domain.SharedKernel.ValueObjects;
 using Infrastructure.FileStorage.Interfaces;
 
 namespace Application.Images.Commands.AddImage;
 
 internal sealed class AddImageCommandHandler(
-    IUnitOfWork unitOfWork,
+    IFileService fileService,
     IImageRepository repository,
-    IImageService imageService)
-    : ICommandHandler<AddImageCommand, Image>
+    IUnitOfWork unitOfWork)
+    : ICommandHandler<AddImageCommand, ImageDto>
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IFileService _fileService = fileService;
     private readonly IImageRepository _repository = repository;
-    private readonly IImageService _imageService = imageService;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<Result<Image>> Handle(AddImageCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ImageDto>> Handle(AddImageCommand request, CancellationToken cancellationToken)
     {
-        var imageType = ImageType.FromName(request.ImageType);
-
-        var imageResult = await _imageService.UploadImageAsync(
-            request.BucketName, request.ImageStream, imageType, cancellationToken);
+        var id = new ImageId(Guid.NewGuid());
+        var bucketName = BucketName.Create(request.BucketName);
+        var name = ImageName.Create(request.Name);
+        var imageResult = Image.Create(id, bucketName.Value, name.Value);
 
         if (imageResult.IsFailure)
         {
-            return imageResult;
+            return Result.Failure<ImageDto>(
+                imageResult.Error);
         }
 
         var image = imageResult.Value;
 
+        await _fileService.UploadFileAsync(
+            image.BucketName.Value, 
+            image.Name.Value, 
+            request.ImageStream, 
+            cancellationToken);
+
         await _repository.AddAsync(image, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
-        return image;
+        var imageDto = image.Adapt<ImageDto>();
+        return imageDto;
     }
 }

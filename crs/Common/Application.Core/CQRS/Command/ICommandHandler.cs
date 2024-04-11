@@ -1,7 +1,7 @@
 ﻿namespace Application.Core.CQRS.Command;
 
 /// <summary>
-/// Interface for commnand handlers - CQRS.
+/// Interface for command handlers - CQRS.
 /// </summary>
 /// <typeparam name="TCommand"> The command type.</typeparam>
 public interface ICommandHandler<TCommand> : IRequestHandler<TCommand, Result>
@@ -10,7 +10,7 @@ public interface ICommandHandler<TCommand> : IRequestHandler<TCommand, Result>
 }
 
 /// <summary>
-/// Interface for commnand handlers with a response - CQRS.
+/// Interface for command handlers with a response - CQRS.
 /// </summary>
 /// <typeparam name="TCommand"> The command type.</typeparam>
 /// <typeparam name="TResponse"> The response type.</typeparam>

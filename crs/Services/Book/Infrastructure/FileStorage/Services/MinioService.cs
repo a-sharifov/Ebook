@@ -11,17 +11,15 @@ public class MinioService(IMinioClient minioClient) : IFileService
     public async Task UploadFileAsync(
         string bucketName,
         string fileName,
-        string fileType,
         Stream fileStream,
         CancellationToken cancellationToken = default)
     {
-        var args = new PutObjectArgs();
-        args.WithBucket(bucketName);
-        args.WithContentType(fileType);
-        args.WithStreamData(fileStream);
-        args.WithFileName(fileName); 
-        var res = await _minioClient.PutObjectAsync(args, cancellationToken);
-        
+        var args = new PutObjectArgs()
+            .WithBucket(bucketName)
+            .WithStreamData(fileStream)
+            .WithFileName(fileName);
+
+        await _minioClient.PutObjectAsync(args, cancellationToken);
     }
 
     public async Task DeleteFileAsync(
@@ -29,30 +27,40 @@ public class MinioService(IMinioClient minioClient) : IFileService
         string objectName,
         CancellationToken cancellationToken = default)
     {
-        var args = new RemoveObjectArgs();
-        args.WithBucket(bucketName);
-        args.WithObject(objectName);
+        var args = new RemoveObjectArgs()
+            .WithBucket(bucketName)
+            .WithObject(objectName);
 
          await _minioClient.RemoveObjectAsync(args, cancellationToken);
     }
 
-    public async Task<string> GetUrl(string etag)
-    {
-        var args = new PresignedGetObjectArgs();
-        var url = _minioClient.get()
-    }
-
     public async Task CreateBucketAsync(string bucketName, CancellationToken cancellationToken = default)
     {
-        var args = new MakeBucketArgs();
-        args.WithBucket(bucketName);
+        var args = new MakeBucketArgs()
+            .WithBucket(bucketName);
+
         await _minioClient.MakeBucketAsync(args, cancellationToken);
     }
 
     public async Task DeleteBucketAsync(string bucketName, CancellationToken cancellationToken = default)
     {
-        var args = new RemoveBucketArgs();
-        args.WithBucket(bucketName);
+        var args = new RemoveBucketArgs()
+            .WithBucket(bucketName);
+
         await _minioClient.RemoveBucketAsync(args, cancellationToken);
+    }
+
+    public async Task<string> GetUrl(
+        string bucketName,
+        string fileName,
+        int ttl)
+    {
+        var args = new PresignedGetObjectArgs()
+            .WithBucket(bucketName)
+            .WithObject(fileName)
+            .WithExpiry(ttl);
+
+        var url = await _minioClient.PresignedGetObjectAsync(args);
+        return url;
     }
 }

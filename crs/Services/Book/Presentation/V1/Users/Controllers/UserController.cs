@@ -1,4 +1,6 @@
-﻿using Application.Users.Commands.ConfirmEmail;
+﻿using Api.Core.Swagger;
+using Application.Images.Commands.AddImage;
+using Application.Users.Commands.ConfirmEmail;
 using Application.Users.Commands.Login;
 using Application.Users.Commands.Register;
 using Application.Users.Commands.RetryConfirmEmailSend;
@@ -6,9 +8,12 @@ using Application.Users.Commands.UpdateRefreshToken;
 using Application.Users.Queries.GetGenders;
 using Application.Users.Queries.GetRoles;
 using Microsoft.AspNetCore.Authorization;
-using Presentation.Users.V1.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.FileProviders;
+using Presentation.V1.Users.Models;
+using System.Reflection.Metadata;
 
-namespace Presentation.Users.V1.Controllers;
+namespace Presentation.V1.Users.Controllers;
 
 [Route("api/v{version:apiVersion}/users")]
 [ApiVersion("1.0")]
@@ -102,9 +107,23 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             : HandleFailure(result);
     }
 
-    [Authorize(Roles = "Admin")]
-    [HttpGet("test")]
-    public IActionResult Test()
+    [HttpPost("test-image")]
+    public IActionResult TestImage(IFileInfo fileInfo)
+    {
+        //var imageStream = fileInfo.CreateReadStream();
+        //var command = new AddImageCommand("test", imageStream, "aaa");
+
+        //var result = await _sender.Send(command);
+
+        //return result.IsSuccess ? Ok(result.Value)
+        //    : HandleFailure(result);
+
+        return Ok();
+    }
+
+    [Authorize(Roles = "User")]
+    [HttpPost("test")]
+    public IActionResult Test(IFormFile formFile)
     {
         return Ok("Test");
     }

@@ -62,7 +62,7 @@ internal sealed class RegisterCommandHandler(
         var gender = Gender.FromName(request.Gender);
 
         var isEmailUnique = await _repository
-            .IsEmailUnigueAsync(emailResult.Value, cancellationToken);
+            .IsEmailUniqueAsync(emailResult.Value, cancellationToken);
 
         var cartId = new CartId(Guid.NewGuid());
         var cart = Cart.Create(cartId, userId);

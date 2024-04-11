@@ -13,6 +13,8 @@ using Domain.LanguageAggregate.Ids;
 using Domain.LanguageAggregate;
 using Domain.UserAggregate.Ids;
 using Domain.UserAggregate;
+using Domain.SharedKernel.Ids;
+using Domain.SharedKernel.Entities;
 
 namespace Api.Configurations;
 
@@ -26,5 +28,6 @@ internal sealed class CachedServiceInstaller : IServiceInstaller
         services.AddTransient<ICachedEntityService<Genre, GenreId>, CachedEntityService<Genre, GenreId>>();
         services.AddTransient<ICachedEntityService<Language, LanguageId>, CachedEntityService<Language, LanguageId>>();
         services.AddTransient<ICachedEntityService<User, UserId>, CachedEntityService<User, UserId>>();
+        services.AddTransient<ICachedEntityService<Image, ImageId>, CachedEntityService<Image, ImageId>>();
     }
 }

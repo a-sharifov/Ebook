@@ -84,4 +84,26 @@ public class JwtManager(IOptions<JwtOptions> options) : IJwtManager
 
         return RefreshToken.Create(refreshTokenValue, refreshTokenExpirationTime).Value;
     }
+
+    public string UpdateTokenString(string oldToken)
+    {
+        var claims = GetClaimsInToken(oldToken);
+
+        var key = new SymmetricSecurityKey(
+           Encoding.UTF8.GetBytes(_jwtOptions.Key));
+
+        var signingCredentials = new SigningCredentials(
+            key, SecurityAlgorithms.HmacSha256Signature);
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(TokenExpirationTimeMinutes),
+            signingCredentials: signingCredentials
+        );
+
+        var tokenValue = new JwtSecurityTokenHandler()
+            .WriteToken(token);
+
+        return tokenValue;
+    }
 }

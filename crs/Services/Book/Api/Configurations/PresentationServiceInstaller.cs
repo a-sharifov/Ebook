@@ -16,7 +16,8 @@ internal sealed class PresentationServiceInstaller : IServiceInstaller
                 .AllowAnyHeader());
         });
 
-        services.AddControllers();
+        services.AddControllers().AddApplicationPart(
+            Presentation.AssemblyReference.Assembly);
 
         services.AddApiVersioning(setup =>
         {

@@ -1,4 +1,4 @@
-﻿namespace Presentation.Users.V1.Models;
+﻿namespace Presentation.V1.Users.Models;
 
 public record class UpdateRefreshTokenRequest(
     [Required] string Token,

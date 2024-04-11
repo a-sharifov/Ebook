@@ -1,4 +1,5 @@
 ﻿using Domain.SharedKernel.Enumerations;
+using Domain.SharedKernel.ValueObjects;
 
 namespace Application.Images.Commands.AddImage;
 
@@ -7,12 +8,14 @@ internal sealed class AddImageCommandValidator : AbstractValidator<AddImageComma
     public AddImageCommandValidator()
     {
         RuleFor(x => x.BucketName)
+            .MaximumLength(BucketName.MaxLength)
+            .NotEmpty();
+
+        RuleFor(x => x.Name)
+            .MaximumLength(ImageName.MaxLength)
             .NotEmpty();
 
         RuleFor(x => x.ImageStream)
             .NotNull();
-
-        RuleFor(x => x.ImageType)
-            .Must(x => ImageType.FromNameOrDefault(x) is not null);
     }
-}
+} 

@@ -1,38 +1,29 @@
-﻿using Domain.SharedKernel.Enumerations;
-using Domain.SharedKernel.Ids;
+﻿using Domain.SharedKernel.Ids;
 
 namespace Domain.SharedKernel.Entities;
 
 public class Image : Entity<ImageId>
 {
-    public string BucketName { get; private set; }
-    public string ImageName { get; private set; }
-    public ImageType ImageType { get; private set; }
+    public BucketName BucketName { get; private set; }
+    public ImageName Name { get; private set; }
 
-    private Image(ImageId id, string bucketName, string imageName, ImageType imageType) =>
-        (Id, BucketName, ImageName, ImageType) = (id, bucketName, imageName, imageType);
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    private Image() {}
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-    public string FullName => $"{ImageName}{ImageType.Name}";
+    private Image(ImageId id, BucketName bucketName, ImageName name) =>
+        (Id, BucketName, Name) = (id, bucketName, name);
 
-    public string Path => $"/{BucketName}/{FullName}";
+    public string Path => $"/{BucketName}/{Name}";
 
     public string UrlString(string domainName) => domainName + Path;
 
-
-    public static Result<Image> Create(ImageId id, string bucketName, ImageType imageType)
+    public static Result<Image> Create(ImageId id, BucketName bucketName, ImageName name)
     {
-        var isBucketNameNullOrEmpty = bucketName.IsNullOrEmpty();
+        var image = new Image(id, bucketName, name);
 
-        if (isBucketNameNullOrEmpty)
-        {
-            return Result.Failure<Image>(
-                ImageErrors.ImageNameCannotBeEmpty);
-        }
+        // todo: add domain event
 
-        var imageName = Guid.NewGuid().ToString();
-
-        var image = new Image(id, bucketName, imageName, imageType);
         return image;
     }
-
 }

@@ -46,7 +46,6 @@ internal sealed class DocumentationServiceInstaller : IServiceInstaller
                     Array.Empty<string>()
                 }
             });
-
         });
 
         services.ConfigureOptions<ConfigureSwaggerOptions>();

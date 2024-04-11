@@ -23,7 +23,7 @@ Jwt:
   TokenExpirationTimeMinutes: 15
 
 Swagger:
-  Title: "Identity API"
+  Title: "Book api"
 
 Email:
   From: "Eshop"

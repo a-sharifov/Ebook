@@ -52,7 +52,7 @@ public sealed class ConfigureSwaggerOptions(IApiVersionDescriptionProvider provi
         var info = new OpenApiInfo()
         {
             Title = _title,
-            Version = desc.ApiVersion.ToString(),
+            Version = desc.ApiVersion.ToString()
         };
 
         if (desc.IsDeprecated)
