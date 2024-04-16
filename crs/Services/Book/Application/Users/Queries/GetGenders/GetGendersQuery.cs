@@ -1,3 +1,3 @@
 ﻿namespace Application.Users.Queries.GetGenders;
 
-public sealed record GetGendersQuery() : IQuery<GetGendersQueryResponse>;
+public sealed record GetGendersQuery() : IQuery<IEnumerable<string>>;

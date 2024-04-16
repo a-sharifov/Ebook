@@ -2,12 +2,12 @@
 
 namespace Application.Users.Queries.GetRoles;
 
-internal sealed class GetRolesQueryHandler : IQueryHandler<GetRolesQuery, GetRolesQueryResponse>
+internal sealed class GetRolesQueryHandler : IQueryHandler<GetRolesQuery, IEnumerable<string>>
 {
-    public Task<Result<GetRolesQueryResponse>> Handle(GetRolesQuery request, CancellationToken cancellationToken)
+    public Task<Result<IEnumerable<string>>> Handle(GetRolesQuery request, CancellationToken cancellationToken)
     {
         var roles = Role.GetNames();
-        var response = Result.Success(new GetRolesQueryResponse(roles));
+        var response = Result.Success(roles);
         return Task.FromResult(response);
     }
 }

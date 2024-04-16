@@ -2,12 +2,12 @@ using Contracts.Enumerations;
 
 namespace Application.Users.Queries.GetGenders;
 
-internal sealed class GetRolesQueryHandler : IQueryHandler<GetGendersQuery, GetGendersQueryResponse>
+internal sealed class GetRolesQueryHandler : IQueryHandler<GetGendersQuery, IEnumerable<string>>
 {
-    public Task<Result<GetGendersQueryResponse>> Handle(GetGendersQuery request, CancellationToken cancellationToken)
+    public Task<Result<IEnumerable<string>>> Handle(GetGendersQuery request, CancellationToken cancellationToken)
     {
         var roles = Gender.GetNames();
-        var response = Result.Success(new GetGendersQueryResponse(roles));
+        var response = Result.Success(roles);
         return Task.FromResult(response);
     }
 }
