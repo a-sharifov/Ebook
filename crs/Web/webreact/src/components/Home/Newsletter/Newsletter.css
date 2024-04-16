@@ -1,0 +1,34 @@
+/* Newsletter.scss */
+.newsletter {
+  background-color: white;
+  padding: 20px;
+  border-top: 1px solid black;
+  width: 100%;
+  text-align: center;
+}
+.newsletter .newsletter__title {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.newsletter .newsletter__form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.newsletter .newsletter__input {
+  padding: 10px;
+  font-size: 16px;
+  border-top: 1px solid black;
+  border-radius: 3px;
+  margin-right: 10px;
+  width: 250px;
+}
+.newsletter .newsletter__button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}/*# sourceMappingURL=Newsletter.css.map */

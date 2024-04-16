@@ -9,15 +9,15 @@ public sealed class EmailConfirmationToken : ValueObject
     private EmailConfirmationToken(string value) =>
         Value = value;
 
-    public static Result<EmailConfirmationToken> Create(string value)
+    public static Result<EmailConfirmationToken> Create(string emailConfirmationToken)
     {
-        if (value.IsNullOrWhiteSpace())
+        if (emailConfirmationToken.IsNullOrWhiteSpace())
         {
             return Result.Failure<EmailConfirmationToken>(
                 EmailConfirmationTokenErrors.InvalidEmailConfirmationToken());
         }
 
-        return Result.Success(new EmailConfirmationToken(value));
+        return Result.Success(new EmailConfirmationToken(emailConfirmationToken));
     }
 
     public static implicit operator EmailConfirmationToken(string token) =>

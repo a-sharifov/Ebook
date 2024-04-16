@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Errors;
+using Domain.Core.Results.Interfaces;
 
 namespace Domain.Core.Results;
 

@@ -1,0 +1,32 @@
+/* HomePage.scss */
+.home {
+  min-height: 1000px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 70px;
+  text-align: center;
+}
+
+.home__banner {
+  position: relative;
+  // position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+
+  &__image {
+    width: 1200px;
+    height: 200px;
+    cursor: pointer;
+    transition: all ease 0.3s;
+  }
+
+  &:hover {
+    img {
+      transform: scale(1.1);
+    }
+  }
+
+}

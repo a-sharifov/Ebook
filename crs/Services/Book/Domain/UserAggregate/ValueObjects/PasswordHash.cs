@@ -12,27 +12,27 @@ public sealed class PasswordHash : ValueObject
     private PasswordHash(string value) =>
         Value = value;
 
-    public static Result<PasswordHash> Create(string password)
+    public static Result<PasswordHash> Create(string passwordHash)
     {
-        if (password.IsNullOrWhiteSpace())
+        if (passwordHash.IsNullOrWhiteSpace())
         {
             return Result.Failure<PasswordHash>(
                 PasswordHashErrors.CannotBeEmpty);
         }
 
-        if (password.Length < MinLength)
+        if (passwordHash.Length < MinLength)
         {
             return Result.Failure<PasswordHash>(
                 PasswordHashErrors.CannotBeShorterThan(MinLength));
         }
 
-        if (password.Length > MaxLength)
+        if (passwordHash.Length > MaxLength)
         {
             return Result.Failure<PasswordHash>(
                 PasswordHashErrors.CannotBeLongerThan(MaxLength));
         }
 
-        return new PasswordHash(password);
+        return new PasswordHash(passwordHash);
     }
 
     public override IEnumerable<object> GetEqualityComponents()

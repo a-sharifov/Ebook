@@ -1,8 +1,9 @@
 ﻿using Contracts.Enumerations;
 using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Errors;
-using Domain.UserAggregate.DomainEvents;
 using Domain.UserAggregate.ValueObjects;
+using Domain.CartAggregate;
+using Domain.WishAggregate;
 
 namespace Domain.UserAggregate;
 
@@ -18,6 +19,10 @@ public sealed class User : AggregateRoot<UserId>
     public bool IsEmailConfirmed { get; private set; }
     public Role Role { get; private set; }
     public Gender Gender { get; private set; }
+    public Cart Cart { get; private set; }
+    public Wish Wish { get; private set; }
+    //todo: Make Aggregate Root
+
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private User() { }
@@ -33,7 +38,9 @@ public sealed class User : AggregateRoot<UserId>
         EmailConfirmationToken emailConfirmationToken,
         bool isEmailConfirmed,
         Role role,
-        Gender gender)
+        Gender gender,
+        Cart cart,
+        Wish wish)
     {
         Id = id;
         Email = email;
@@ -45,6 +52,8 @@ public sealed class User : AggregateRoot<UserId>
         IsEmailConfirmed = isEmailConfirmed;
         Role = role;
         Gender = gender;
+        Cart = cart;
+        Wish = wish;
     }
 
     public static Result<User> Create(
@@ -57,13 +66,16 @@ public sealed class User : AggregateRoot<UserId>
         EmailConfirmationToken emailConfirmationToken,
         bool isEmailUnique,
         Role role,
-        Gender gender)
+        Gender gender,
+        Cart cart,
+        Wish wish)
     {
         if (!isEmailUnique)
         {
             return Result.Failure<User>(
                 UserErrors.EmailIsNotUnique(email.Value));
         }
+
 
         var user = new User(
             id,
@@ -75,10 +87,12 @@ public sealed class User : AggregateRoot<UserId>
             emailConfirmationToken,
             isEmailConfirmed: false,
             role,
-            gender);
+            gender,
+            cart,
+            wish);
 
-        user.AddDomainEvent(
-            new UserCreatedDomainEvent(Guid.NewGuid(), id));
+        //user.AddDomainEvent(
+        //    new UserCreatedDomainEvent(Guid.NewGuid(), id));
 
         return user;
     }
@@ -87,18 +101,18 @@ public sealed class User : AggregateRoot<UserId>
     {
         if (!user.IsEmailConfirmed)
         {
-            return Result.Failure<User>(
+            return Result.Failure(
                 UserErrors.EmailIsNotConfirmed);
         }
 
         if (!passwordIsCorrect)
         {
-            return Result.Failure<User>(
+            return Result.Failure(
                 UserErrors.PasswordIsNotCorrect);
         }
 
-        user.AddDomainEvent(
-            new UserLoggedInDomainEvent(Guid.NewGuid(), user.Id));
+        //user.AddDomainEvent(
+        //    new UserLoggedInDomainEvent(Guid.NewGuid(), user.Id));
 
         return Result.Success();
     }
@@ -137,9 +151,6 @@ public sealed class User : AggregateRoot<UserId>
     public void ChangeEmail(Email email)
     {
         Email = email;
-
-        AddDomainEvent(
-            new UserEmailChangedDomainEvent(Guid.NewGuid(), Id));
     }
 
     public void UpdateRefreshToken(RefreshToken refreshToken) =>

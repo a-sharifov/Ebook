@@ -1,0 +1,104 @@
+version: '3.4'
+
+services:
+  postgres:
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "8087:80"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    restart: always
+
+  redis:
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+    restart: always
+
+  seq:
+    image: datalust/seq:latest
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:5341"
+      - "7070:80"
+    volumes:
+      - seq:/data
+    restart: always
+
+  minio:
+    image: minio/minio
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio:/data
+    restart: always
+
+  book.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=6060
+      - ASPNETCORE_HTTPS_PORTS=6061
+      - POSTGRE_CONNECTION_STRING=Server=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TimeZone=UTC;
+      - REDIS_CONNECTION_STRING=redis:6379,password=${REDIS_PASSWORD}
+      - AUTH_ISSUER=${AUTH_ISSUER}
+      - WEB_AUDIENCE=${WEB_AUDIENCE}
+      - JWT_SECURITY_KEY=${JWT_SECURITY_KEY}
+      - IDENTITY_ENDPOINT=${IDENTITY_ENDPOINT}
+      - SERVER_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - SERVER_SECRET_KEY=${MINIO_SECRET_KEY}
+      - SERVER_ENDPOINT=minio
+    ports:
+      - "6060:6060"
+      - "6061:6061"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    restart: always
+
+  monitoring.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - HealthChecksUI__HealthChecks__0__Name=Book api
+      - HealthChecksUI__HealthChecks__0__Uri=http://book/health
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    restart: always
+
+volumes:
+  minio:
+  pgadmin:
+  postgres:
+  redis:
+  seq:
+

@@ -1,0 +1,22 @@
+.shop-by-category {
+  margin: 25px 0;
+}
+.shop-by-category .categories {
+  display: flex;
+  flex-flow: wrap;
+  gap: 5px;
+}
+.shop-by-category .categories .category {
+  background-color: black;
+  width: calc(25% - 5px);
+  cursor: pointer;
+  overflow: hidden;
+}
+.shop-by-category .categories .category img {
+  width: 100%;
+  display: block;
+  transition: all ease 0.3s;
+}
+.shop-by-category .categories .category:hover img {
+  transform: scale(1.1);
+}/*# sourceMappingURL=Category.css.map */

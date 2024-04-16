@@ -1,0 +1,36 @@
+.product {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all ease 0.3s;
+}
+
+.product__image {
+  width: 180px;
+  height: 270px;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+.product__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.product__name {
+  font-size: 18px;
+  display: flex;
+  justify-items: left;
+}
+
+.product__author {
+  display: flex;
+  justify-items: left;
+  font-size: 14px;
+}
+
+.product__price {
+  display: flex;
+}/*# sourceMappingURL=Product.css.map */

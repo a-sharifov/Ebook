@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace Domain.UserAggregate.Regexes;
+﻿namespace Domain.UserAggregate.Regexes;
 
 public partial class EmailRegex
 {
