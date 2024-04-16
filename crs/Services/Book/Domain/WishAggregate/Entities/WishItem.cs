@@ -1,28 +1,28 @@
 ﻿using Domain.BookAggregate;
-using Domain.UserAggregate.Ids;
+using Domain.WishAggregate.Ids;
 
-namespace Domain.UserAggregate.Entities;
+namespace Domain.WishAggregate.Entities;
 
 // if you need , you can made this class as an aggregate root
-public class Wish : Entity<WishId>
+public class WishItem : Entity<WishItemId>
 {
     public Book Book { get; private set; }
-    public User User { get; private set; }
+    public WishId WishId { get; private set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    private Wish() { }
+    private WishItem() { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-    private Wish(WishId id, Book book, User user)
+    private WishItem(WishItemId id, Book book, WishId wishId)
     {
         Id = id;
         Book = book;
-        User = user;
+        WishId = wishId;
     }
 
-    public static Wish Create(WishId id, Book book, User user)
+    public static WishItem Create(WishItemId id, Book book, WishId wishId)
     {
-        var wish = new Wish(id, book, user);
+        var wish = new WishItem(id, book, wishId);
 
         //TODO: Add domain events
 

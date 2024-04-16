@@ -43,6 +43,13 @@ public abstract class Enumeration<TEnum>(int index, string name)
         _enumerations.Values.Single(x => x.Name == name);
 
     /// <summary>
+    /// Return is name exists or not.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    public static bool IsNameExists(string name) =>
+        _enumerations.Values.Select(x => x.Name).Contains(name);
+
+    /// <summary>
     /// Return the enum from name or default.
     /// </summary>
     /// <param name="name"></param>

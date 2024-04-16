@@ -19,7 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="V1\Languages\" />
+    <Folder Include="V1\Authors\" />
+    <Folder Include="V1\Books\Models\" />
   </ItemGroup>
 
 </Project>

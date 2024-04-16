@@ -3,6 +3,8 @@ using Domain.SharedKernel.Repositories;
 using Domain.Core.Entities;
 using Domain.Core.StrongestIds;
 using Persistence.DbContexts;
+using Infrasctrurcture.Core.Extensions;
+using System.Linq.Expressions;
 
 namespace Persistence.Repositories;
 
@@ -34,8 +36,12 @@ public abstract class BaseRepository<TEntity, TStrongestId>(
         await _cached.RefreshAsync(entity.Id, cancellationToken);
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default) =>
-         await GetEntityDbSet().ToListAsync(cancellationToken: cancellationToken);
+    public async Task<IEnumerable<TEntity>> GetAllAsync(
+        Expression<Func<TEntity, object>>? includes = default, 
+        CancellationToken cancellationToken = default) =>
+         await GetEntityDbSet()
+        .Includes(includes)
+        .ToListAsync(cancellationToken: cancellationToken);
 
     public async Task<IEnumerable<TEntity>> GetPagedAsync(int skip, int take, CancellationToken cancellationToken = default)
     {

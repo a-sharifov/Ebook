@@ -13,8 +13,8 @@ public class Author : AggregateRoot<AuthorId>
     public Image Image { get; private set; }
     public AuthorDescription Description { get; private set; }
 
-    private readonly List<Book> _authorBooks = [];
-    public IReadOnlyCollection<Book> AuthorBooks => _authorBooks.AsReadOnly();
+    private readonly List<Book> _books = [];
+    public IReadOnlyCollection<Book> Books => _books.AsReadOnly();
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private Author() { }

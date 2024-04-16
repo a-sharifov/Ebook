@@ -14,11 +14,10 @@ public sealed class AddGenreCommandHandler(IGenreRepository repository, IUnitOfW
     public async Task<Result> Handle(AddGenreCommand request, CancellationToken cancellationToken)
     {
         var id = new GenreId(Guid.NewGuid());
-        var image = request.Image.Adapt<Image>();
-        var genreNameResult = GenreName.Create(request.Name);
-        var genreResult = Genre.Create(id, genreNameResult.Value, image);
+        var genreName = GenreName.Create(request.Name).Value;
+        var genre = Genre.Create(id, genreName).Value;
 
-        await _repository.AddAsync(genreResult.Value, cancellationToken);
+        await _repository.AddAsync(genre, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
         return Result.Success();

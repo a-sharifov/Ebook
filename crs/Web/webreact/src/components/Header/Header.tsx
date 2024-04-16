@@ -5,6 +5,8 @@ import { CgShoppingCart } from "react-icons/cg"
 import { AiOutlineUser } from 'react-icons/ai';
 import { useState } from "react";
 import Burger from "./Burger/Burger";
+import React from "react";
+import { Link } from "react-router-dom";
 
 
 
@@ -16,8 +18,8 @@ function Header() {
         <header className="header">
             <div className="header-content">
                 <div className="header-left">
-                    <Burger/>
-                    <h1>Ebook</h1>
+                    <Burger />
+                    <h1 className="header-name"> Ebook</h1>
                 </div>
                 <div className="header-right">
                     <TbSearch />

@@ -8,6 +8,5 @@ public sealed class ImageConfig : IMappingConfig
        TypeAdapterConfig<Image, ImageDto>
         .NewConfig()
         .Map(dest => dest.Id, src => src.Id.Value)
-        .Map(dest => dest.BucketName, src => src.BucketName.Value)
-        .Map(dest => dest.Name, src => src.Name.Value);
+        .Map(dest => dest.Url, src => src.Url.Value);
 }

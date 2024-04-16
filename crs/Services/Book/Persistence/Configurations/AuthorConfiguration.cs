@@ -48,7 +48,7 @@ internal sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
             .HasMaxLength(AuthorDescription.AuthorDescriptionMaxLength)
             .IsRequired();
 
-        builder.HasMany(x => x.AuthorBooks)
+        builder.HasMany(x => x.Books)
             .WithOne()
             .OnDelete(DeleteBehavior.NoAction);
 

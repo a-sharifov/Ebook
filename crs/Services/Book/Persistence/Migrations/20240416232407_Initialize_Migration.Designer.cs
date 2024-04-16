@@ -12,7 +12,7 @@ using Persistence.DbContexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20240411000258_Initialize_Migration")]
+    [Migration("20240416232407_Initialize_Migration")]
     partial class Initialize_Migration
     {
         /// <inheritdoc />
@@ -28,9 +28,6 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.AuthorAggregate.Author", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("BookId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
@@ -60,8 +57,6 @@ namespace Persistence.Migrations
 
                     b.HasAlternateKey("Pseudonym");
 
-                    b.HasIndex("BookId");
-
                     b.HasIndex("ImageId")
                         .IsUnique();
 
@@ -73,7 +68,7 @@ namespace Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("AuthorId")
+                    b.Property<Guid>("AuthorId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
@@ -94,6 +89,9 @@ namespace Persistence.Migrations
                     b.Property<int>("PageCount")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("PosterId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
@@ -112,6 +110,11 @@ namespace Persistence.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("GenreId");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("PosterId")
+                        .IsUnique();
 
                     b.ToTable("Books");
                 });
@@ -163,9 +166,6 @@ namespace Persistence.Migrations
                     b.Property<Guid?>("BookId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ImageId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -176,8 +176,6 @@ namespace Persistence.Migrations
                     b.HasAlternateKey("Name");
 
                     b.HasIndex("BookId");
-
-                    b.HasIndex("ImageId");
 
                     b.ToTable("Genres");
                 });
@@ -209,49 +207,23 @@ namespace Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("BookId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("BucketName")
+                    b.Property<string>("Bucket")
                         .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("character varying(60)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
-                    b.HasIndex("BookId");
+                    b.HasKey("Id");
 
                     b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("Domain.UserAggregate.Entities.Wish", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("BookId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Wishes");
                 });
 
             modelBuilder.Entity("Domain.UserAggregate.User", b =>
@@ -305,13 +277,44 @@ namespace Persistence.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Domain.WishAggregate.Entities.WishItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("WishId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("WishId");
+
+                    b.ToTable("Wishes");
+                });
+
+            modelBuilder.Entity("Domain.WishAggregate.Wish", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Wish");
+                });
+
             modelBuilder.Entity("Domain.AuthorAggregate.Author", b =>
                 {
-                    b.HasOne("Domain.BookAggregate.Book", null)
-                        .WithMany("Authors")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("Domain.SharedKernel.Entities.Image", "Image")
                         .WithOne()
                         .HasForeignKey("Domain.AuthorAggregate.Author", "ImageId")
@@ -322,15 +325,28 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.BookAggregate.Book", b =>
                 {
-                    b.HasOne("Domain.AuthorAggregate.Author", null)
-                        .WithMany("AuthorBooks")
+                    b.HasOne("Domain.AuthorAggregate.Author", "Author")
+                        .WithMany("Books")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.GenreAggregate.Genre", null)
                         .WithMany("Books")
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Domain.LanguageAggregate.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.SharedKernel.Entities.Image", "Poster")
+                        .WithOne()
+                        .HasForeignKey("Domain.BookAggregate.Book", "PosterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.OwnsOne("Domain.SharedKernel.ValueObjects.Money", "Price", b1 =>
                         {
@@ -352,6 +368,12 @@ namespace Persistence.Migrations
                                 .HasForeignKey("BookId");
                         });
 
+                    b.Navigation("Author");
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Poster");
+
                     b.Navigation("Price")
                         .IsRequired();
                 });
@@ -370,7 +392,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.BookAggregate.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.CartAggregate.Cart", null)
@@ -388,47 +410,6 @@ namespace Persistence.Migrations
                         .WithMany("Genres")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("Domain.SharedKernel.Entities.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Image");
-                });
-
-            modelBuilder.Entity("Domain.SharedKernel.Entities.Image", b =>
-                {
-                    b.HasOne("Domain.BookAggregate.Book", null)
-                        .WithMany("Images")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Domain.UserAggregate.Entities.Wish", b =>
-                {
-                    b.HasOne("Domain.BookAggregate.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.UserAggregate.User", null)
-                        .WithMany("Wishes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.UserAggregate.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.UserAggregate.User", b =>
@@ -456,18 +437,40 @@ namespace Persistence.Migrations
                     b.Navigation("RefreshToken");
                 });
 
+            modelBuilder.Entity("Domain.WishAggregate.Entities.WishItem", b =>
+                {
+                    b.HasOne("Domain.BookAggregate.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.WishAggregate.Wish", null)
+                        .WithMany("Items")
+                        .HasForeignKey("WishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("Domain.WishAggregate.Wish", b =>
+                {
+                    b.HasOne("Domain.UserAggregate.User", null)
+                        .WithOne("Wish")
+                        .HasForeignKey("Domain.WishAggregate.Wish", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.AuthorAggregate.Author", b =>
                 {
-                    b.Navigation("AuthorBooks");
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("Domain.BookAggregate.Book", b =>
                 {
-                    b.Navigation("Authors");
-
                     b.Navigation("Genres");
-
-                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("Domain.CartAggregate.Cart", b =>
@@ -482,9 +485,16 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.UserAggregate.User", b =>
                 {
-                    b.Navigation("Cart");
+                    b.Navigation("Cart")
+                        .IsRequired();
 
-                    b.Navigation("Wishes");
+                    b.Navigation("Wish")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.WishAggregate.Wish", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

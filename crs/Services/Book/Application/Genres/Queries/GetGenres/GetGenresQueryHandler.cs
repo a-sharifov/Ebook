@@ -9,7 +9,7 @@ internal sealed class GetGenresQueryHandler(IGenreRepository repository) : IQuer
 
     public async Task<Result<IEnumerable<GenreDto>>> Handle(GetGenresQuery request, CancellationToken cancellationToken)
     {
-        var genres = await _repository.GetAllAsync(cancellationToken);
+        var genres = await _repository.GetAllAsync(cancellationToken: cancellationToken);
 
         var genresDto = genres.Adapt<IEnumerable<GenreDto>>();
 

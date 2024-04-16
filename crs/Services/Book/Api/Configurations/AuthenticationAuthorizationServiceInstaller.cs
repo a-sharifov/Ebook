@@ -1,5 +1,7 @@
 ﻿using Api.Core.ServiceInstaller.Interfaces;
 using Api.OptionsSetup;
+using Contracts.Enum;
+using Contracts.Enumerations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -32,7 +34,17 @@ internal sealed class AuthenticationAuthorizationServiceInstaller : IServiceInst
                 };
             });
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(Policy.Admin, policy =>
+           policy.RequireRole(Role.Admin));
+
+            options.AddPolicy(Policy.User, policy =>
+           policy.RequireRole(Role.User));
+
+            options.AddPolicy(Policy.UserAndAdmin, policy =>
+            policy.RequireRole(Role.User, Role.Admin));
+        });
 
         services.ConfigureOptions<JwtOptionsSetup>();
         services.ConfigureOptions<JwtBearerOptionsSetup>();

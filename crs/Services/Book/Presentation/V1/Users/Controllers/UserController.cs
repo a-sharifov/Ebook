@@ -1,17 +1,15 @@
-﻿using Api.Core.Swagger;
-using Application.Images.Commands.AddImage;
-using Application.Users.Commands.ConfirmEmail;
+﻿using Application.Users.Commands.ConfirmEmail;
 using Application.Users.Commands.Login;
 using Application.Users.Commands.Register;
 using Application.Users.Commands.RetryConfirmEmailSend;
 using Application.Users.Commands.UpdateRefreshToken;
 using Application.Users.Queries.GetGenders;
 using Application.Users.Queries.GetRoles;
+using Contracts.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Presentation.V1.Users.Models;
-using System.Reflection.Metadata;
 
 namespace Presentation.V1.Users.Controllers;
 
@@ -52,6 +50,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             : HandleFailure(result);
     }
 
+    [Authorize]
     [HttpPut("update-refresh-token")]
     public async Task<IActionResult> UpdateRefreshToken([FromHeader] UpdateRefreshTokenRequest request)
     {
@@ -107,22 +106,8 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             : HandleFailure(result);
     }
 
-    [HttpPost("test-image")]
-    public IActionResult TestImage(IFileInfo fileInfo)
-    {
-        //var imageStream = fileInfo.CreateReadStream();
-        //var command = new AddImageCommand("test", imageStream, "aaa");
-
-        //var result = await _sender.Send(command);
-
-        //return result.IsSuccess ? Ok(result.Value)
-        //    : HandleFailure(result);
-
-        return Ok();
-    }
-
-    [Authorize(Roles = "User")]
-    [HttpPost("test")]
+    [Authorize(Policy.User)]
+    [HttpGet("test")]
     public IActionResult Test(IFormFile formFile)
     {
         return Ok("Test");

@@ -52,9 +52,8 @@ public class JwtManager(IOptions<JwtOptions> options) : IJwtManager
             new Claim(JwtRegisteredClaimNames.Aud, audience),
             new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
             ClaimValueTypes.Integer64),
-            new Claim(ClaimTypes.Role, (string)user.Role)
+            new Claim(ClaimTypes.Role, user.Role.Name)
             ];
-
 
     public string CreateRefreshTokenString()
     {

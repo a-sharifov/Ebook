@@ -1,15 +1,17 @@
 ﻿using Api.Core.ServiceInstaller.Interfaces;
 using Api.OptionsSetup;
 using Domain.Core.UnitOfWorks.Interfaces;
-using Infrastructure.Email;
 using Infrastructure.Email.Interfaces;
+using Infrastructure.Email.Options;
 using Infrastructure.Email.Services;
 using Infrastructure.FileStorage.Interfaces;
+using Infrastructure.FileStorage.Options;
 using Infrastructure.FileStorage.Services;
 using Infrastructure.Hashing;
 using Infrastructure.Hashing.Interfaces;
 using Infrastructure.Jwt;
 using Infrastructure.Jwt.Interfaces;
+using Infrastructure.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.DbContexts;
@@ -36,6 +38,7 @@ internal sealed class InfrastructureServiceInstaller : IServiceInstaller
         //.AsImplementedInterfaces()
         //.WithScopedLifetime());
 
+        services.AddTransient<SeedDefaultProject>();
         services.AddTransient<IIdentityEmailService, IdentityEmailService>();
         services.AddTransient<IHashingService, HashingService>();
         services.AddTransient<IJwtManager, JwtManager>();
@@ -46,6 +49,8 @@ internal sealed class InfrastructureServiceInstaller : IServiceInstaller
         services.AddOptions<EmailOptions>()
            .Bind(configuration.GetSection(SD.EmailSectionKey))
            .ValidateDataAnnotations();
+
+        services.ConfigureOptions<BaseUrlOptionsSetup>();
 
         services.ConfigureOptions<IdentityEndpointOptionsSetup>();
     }

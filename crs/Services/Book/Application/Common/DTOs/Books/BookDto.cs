@@ -10,5 +10,5 @@ public sealed record BookDto(
     string ISBN,
     int Quantity,
     int SoldUnits,
-    IEnumerable<ImageDto> Images
+    ImageDto Poster
     );

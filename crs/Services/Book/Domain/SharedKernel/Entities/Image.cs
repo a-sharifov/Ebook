@@ -1,26 +1,29 @@
-﻿using Domain.SharedKernel.Ids;
+﻿using Domain.SharedKernel.Enumerations;
+using Domain.SharedKernel.Ids;
 
 namespace Domain.SharedKernel.Entities;
 
 public class Image : Entity<ImageId>
 {
-    public BucketName BucketName { get; private set; }
+    public ImageBucket Bucket { get; private set; }
     public ImageName Name { get; private set; }
+    public ImageUrl Url { get; private set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private Image() {}
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-    private Image(ImageId id, BucketName bucketName, ImageName name) =>
-        (Id, BucketName, Name) = (id, bucketName, name);
-
-    public string Path => $"/{BucketName}/{Name}";
-
-    public string UrlString(string domainName) => domainName + Path;
-
-    public static Result<Image> Create(ImageId id, BucketName bucketName, ImageName name)
+    private Image(ImageId id, ImageBucket bucket, ImageName name, ImageUrl url)
     {
-        var image = new Image(id, bucketName, name);
+        Id = id;
+        Bucket = bucket;
+        Name = name;
+        Url = url;
+    }
+
+    public static Result<Image> Create(ImageId id, ImageBucket bucket, ImageName name, ImageUrl url)
+    {
+        var image = new Image(id, bucket, name, url);
 
         // todo: add domain event
 

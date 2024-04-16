@@ -1,4 +1,5 @@
 ﻿using Domain.SharedKernel.Entities;
+using Domain.SharedKernel.Enumerations;
 using Domain.SharedKernel.Ids;
 using Domain.SharedKernel.ValueObjects;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -20,15 +21,20 @@ internal sealed class ImageConfiguration : IEntityTypeConfiguration<Image>
         builder.Property(x => x.Name)
             .HasConversion(
             name => name.Value,
-            value => ImageName.Create(value).Value)
+            value => ImageName.Create(value, false).Value)
             .HasMaxLength(ImageName.MaxLength)
             .IsRequired();
 
-        builder.Property(x => x.BucketName)
+        builder.Property(x => x.Url)
             .HasConversion(
-            bucketName => bucketName.Value,
-            value => BucketName.Create(value).Value)
-            .HasMaxLength(BucketName.MaxLength)
+            name => name.Value,
+            value => ImageUrl.Create(value).Value)
+            .HasMaxLength(ImageUrl.MaxLength)
             .IsRequired();
+
+        builder.Property(x => x.Bucket).HasConversion(
+           bucket => bucket.Name,
+           name => ImageBucket.FromName(name)
+           ).IsRequired();
     }
 }

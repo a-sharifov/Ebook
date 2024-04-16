@@ -1,8 +1,8 @@
 ﻿using Application.Common.DTOs.Books;
 
-namespace Application.Common.DTOs.Users.Wishs;
+namespace Application.Common.DTOs.Wishes.WishItems;
 
-public sealed record WishDto(
+public record WishItemDto(
     Guid Id,
     BookDto Book
     );

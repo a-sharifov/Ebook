@@ -8,7 +8,8 @@ function Home() {
     return (<>
         <div className="home">
             <div className="home__banner">
-                <img src="https://via.placeholder.com/200x400" alt="Banner" className="home__banner__image" />
+                <img src="http://localhost:9001/api/v1/buckets/genres/objects/download?prefix=aG9ycm9yLnBuZw==
+" alt="Banner" className="home__banner__image" />
             </div>
             <Category/>
             <Products title="All Products"/>

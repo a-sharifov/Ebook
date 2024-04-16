@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Email.Interfaces;
 using Infrastructure.Email.Models;
+using Infrastructure.Email.Options;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;

@@ -2,5 +2,6 @@
 
 public sealed record LanguageDto(
     Guid Id,
-    string Name
+    string Name,
+    string Code
     );

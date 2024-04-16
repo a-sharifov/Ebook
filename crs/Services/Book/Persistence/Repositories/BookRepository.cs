@@ -2,7 +2,9 @@
 using Domain.BookAggregate;
 using Domain.BookAggregate.Ids;
 using Domain.BookAggregate.Repositories;
+using Domain.GenreAggregate;
 using Persistence.DbContexts;
+using System.Threading;
 
 namespace Persistence.Repositories;
 
@@ -12,6 +14,9 @@ public class BookRepository(
     : BaseRepository<Book, BookId>(
         dbContext,
         cached,
-        expirationTime: TimeSpan.FromMinutes(20)), IBookRepository
+        expirationTime: TimeSpan.FromMinutes(2)), IBookRepository
 {
+
+
+
 }

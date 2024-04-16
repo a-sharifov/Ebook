@@ -9,6 +9,5 @@ public sealed class GenreMappingConfig : IMappingConfig
         TypeAdapterConfig<Genre, GenreDto>
         .NewConfig()
         .Map(dest => dest.Id, src => src.Id.Value)
-        .Map(dest => dest.Image, src => src.Image.Path)
         .Map(dest => dest.Name, src => src.Name.Value);
 }

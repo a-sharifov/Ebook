@@ -1,6 +1,7 @@
 ﻿using Domain.UserAggregate;
 using Infrastructure.Email.Interfaces;
 using Infrastructure.Email.Models;
+using Infrastructure.Email.Options;
 using Infrastructure.Endpoint.Options;
 using Microsoft.Extensions.Options;
 using System.Text.Encodings.Web;

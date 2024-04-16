@@ -16,8 +16,6 @@ Serilog:
         serverUrl: http://seq:5341
     Enrich: [FromLogContext, WithMachineName, WithProcessId]
 
-
-
 Jwt:
   RefreshTokenExpirationTimeMinutes: 2000
   TokenExpirationTimeMinutes: 15
@@ -26,10 +24,10 @@ Swagger:
   Title: "Book api"
 
 Email:
-  From: "Eshop"
-  Host: "smtp.gmail.com"
+  From: Eshop
+  Host: smtp.gmail.com
   Port: 587
-  Username: "akber.sharifov2004@gmail.com"
-  Password: "ueey qfia bnyx atce"
+  Username: akber.sharifov2004@gmail.com
+  Password: ueey qfia bnyx atce
 
 AllowedHosts: "*"

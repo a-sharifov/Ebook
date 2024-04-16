@@ -2,6 +2,7 @@
 using Domain.BookAggregate.Ids;
 using Domain.BookAggregate.ValueObjects;
 using Domain.LanguageAggregate.Ids;
+using Domain.SharedKernel.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Persistence.Configurations;
@@ -49,12 +50,6 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
             .HasColumnType("decimal(18,2)").IsRequired();
         });
 
-        builder.Property(x => x.LanguageId)
-            .HasConversion(
-            languageId => languageId.Value,
-            value => new LanguageId(value))
-            .IsRequired();
-
         builder.Property(x => x.ISBN)
             .HasConversion(
             isbn => isbn.Value,
@@ -73,16 +68,19 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
             value => SoldUnits.Create(value).Value)
             .IsRequired();
 
-        builder.HasMany(x => x.Images)
+        builder.HasOne(x => x.Poster)
             .WithOne()
+            .HasPrincipalKey<Image>(x => x.Id)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(x => x.Genres)
             .WithOne()
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasMany(x => x.Authors)
-            .WithOne()
-            .OnDelete(DeleteBehavior.NoAction);
+        builder.HasOne(x => x.Author)
+           .WithMany(x => x.Books)
+           .OnDelete(DeleteBehavior.Restrict);
+
+
     }
 }

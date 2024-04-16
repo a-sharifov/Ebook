@@ -14,6 +14,7 @@ internal sealed class AddImageCommandHandler(
     IUnitOfWork unitOfWork)
     : ICommandHandler<AddImageCommand, ImageDto>
 {
+    //private readonly BaseUrlOptions urlOptions = ;
     private readonly IFileService _fileService = fileService;
     private readonly IImageRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
@@ -21,20 +22,14 @@ internal sealed class AddImageCommandHandler(
     public async Task<Result<ImageDto>> Handle(AddImageCommand request, CancellationToken cancellationToken)
     {
         var id = new ImageId(Guid.NewGuid());
-        var bucketName = BucketName.Create(request.BucketName);
-        var name = ImageName.Create(request.Name);
-        var imageResult = Image.Create(id, bucketName.Value, name.Value);
-
-        if (imageResult.IsFailure)
-        {
-            return Result.Failure<ImageDto>(
-                imageResult.Error);
-        }
-
-        var image = imageResult.Value;
+        var name = ImageName.Create(request.Name).Value;
+        var bucketName = ImageBucket.FromName(request.BucketName);
+        var permanentUrl = _fileService.GeneratePermanentUrl(bucketName.Name, name.Value);
+        var url = ImageUrl.Create(permanentUrl).Value;
+        var image = Image.Create(id, bucketName, name, url).Value;
 
         await _fileService.UploadFileAsync(
-            image.BucketName.Value, 
+            image.Bucket.Name, 
             image.Name.Value, 
             request.ImageStream, 
             cancellationToken);

@@ -13,6 +13,6 @@ public sealed class AuthorMappingConfig : IMappingConfig
             .Map(dest => dest.LastName, src => src.LastName.Value)
             .Map(dest => dest.Pseudonym, src => src.Pseudonym)
             .Map(dest => dest.Description, src => src.Description.Value)
-            .Map(dest => dest.Image, src => src.Image.Path);
+            .Map(dest => dest.Image, src => src.Image);
 
 }

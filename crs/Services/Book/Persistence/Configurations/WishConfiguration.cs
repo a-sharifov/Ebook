@@ -1,5 +1,7 @@
-﻿using Domain.UserAggregate.Entities;
-using Domain.UserAggregate.Ids;
+﻿using Domain.UserAggregate.Ids;
+using Domain.WishAggregate;
+using Domain.WishAggregate.Entities;
+using Domain.WishAggregate.Ids;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Persistence.Configurations;
@@ -16,14 +18,14 @@ internal sealed class WishConfiguration : IEntityTypeConfiguration<Wish>
             value => new WishId(value))
             .IsRequired();
 
-        builder.HasOne(x => x.User)
-            .WithMany()
-            .IsRequired()
-            .OnDelete(DeleteBehavior.ClientCascade);
+        builder.Property(x => x.UserId)
+         .HasConversion(
+         userId => userId.Value,
+         value => new UserId(value))
+         .IsRequired();
 
-        builder.HasOne(x => x.Book)
-            .WithMany()
-            .IsRequired()
-            .OnDelete(DeleteBehavior.ClientCascade);
+        builder.HasMany(x => x.Items)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

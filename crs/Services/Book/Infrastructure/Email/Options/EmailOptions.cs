@@ -1,6 +1,6 @@
-﻿namespace Infrastructure.Email;
+﻿namespace Infrastructure.Email.Options;
 
-public class EmailOptions
+public sealed class EmailOptions
 {
     public string From { get; set; } = null!;
     public string Host { get; set; } = null!;

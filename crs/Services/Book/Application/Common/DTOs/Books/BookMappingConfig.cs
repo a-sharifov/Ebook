@@ -13,5 +13,5 @@ public sealed class BookMappingConfig : IMappingConfig
         .Map(dest => dest.ISBN, src => src.ISBN.Value)
         .Map(dest => dest.PageCount, src => src.PageCount)
         .Map(dest => dest.Price, src => src.Price.Amount)
-        .Map(dest => dest.Images, src => src.Images.Select(x => x.Path));
+        .Map(dest => dest.Poster, src => src.Poster);
 }

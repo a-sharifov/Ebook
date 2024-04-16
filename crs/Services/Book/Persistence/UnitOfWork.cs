@@ -7,6 +7,6 @@ public sealed class UnitOfWork(BookDbContext bookDbContext) : IUnitOfWork
 {
     private readonly BookDbContext _bookDbContext = bookDbContext;
 
-    public Task<int> Commit(CancellationToken cancellationToken = default) => 
-        _bookDbContext.SaveChangesAsync(cancellationToken);
+    public async Task<int> Commit(CancellationToken cancellationToken = default) => 
+        await _bookDbContext.SaveChangesAsync(cancellationToken);
 }

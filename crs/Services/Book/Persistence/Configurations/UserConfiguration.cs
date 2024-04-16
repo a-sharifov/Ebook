@@ -5,7 +5,7 @@ using Contracts.Enumerations;
 using Domain.UserAggregate.Ids;
 using Domain.SharedKernel.ValueObjects;
 using Domain.CartAggregate;
-using Domain.UserAggregate.Entities;
+using Domain.WishAggregate;
 
 namespace Persistence.Configurations;
 
@@ -83,8 +83,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
             .HasForeignKey<Cart>(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(x => x.Wishes)
+        builder.HasOne(x => x.Wish)
             .WithOne()
+            .HasForeignKey<Wish>(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

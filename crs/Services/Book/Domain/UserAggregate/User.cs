@@ -2,10 +2,8 @@
 using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.ValueObjects;
-using Domain.UserAggregate.Entities;
-using Domain.BookAggregate.Ids;
 using Domain.CartAggregate;
-using Domain.CartAggregate.Ids;
+using Domain.WishAggregate;
 
 namespace Domain.UserAggregate;
 
@@ -21,11 +19,10 @@ public sealed class User : AggregateRoot<UserId>
     public bool IsEmailConfirmed { get; private set; }
     public Role Role { get; private set; }
     public Gender Gender { get; private set; }
-    public Cart? Cart { get; private set; }
-
+    public Cart Cart { get; private set; }
+    public Wish Wish { get; private set; }
     //todo: Make Aggregate Root
-    private readonly List<Wish> _wishes = [];
-    public IReadOnlyCollection<Wish> Wishes => _wishes.AsReadOnly();
+
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private User() { }
@@ -42,7 +39,8 @@ public sealed class User : AggregateRoot<UserId>
         bool isEmailConfirmed,
         Role role,
         Gender gender,
-        Cart cart)
+        Cart cart,
+        Wish wish)
     {
         Id = id;
         Email = email;
@@ -55,6 +53,7 @@ public sealed class User : AggregateRoot<UserId>
         Role = role;
         Gender = gender;
         Cart = cart;
+        Wish = wish;
     }
 
     public static Result<User> Create(
@@ -68,7 +67,8 @@ public sealed class User : AggregateRoot<UserId>
         bool isEmailUnique,
         Role role,
         Gender gender,
-        Cart cart)
+        Cart cart,
+        Wish wish)
     {
         if (!isEmailUnique)
         {
@@ -88,7 +88,8 @@ public sealed class User : AggregateRoot<UserId>
             isEmailConfirmed: false,
             role,
             gender,
-            cart);
+            cart,
+            wish);
 
         //user.AddDomainEvent(
         //    new UserCreatedDomainEvent(Guid.NewGuid(), id));
@@ -150,34 +151,6 @@ public sealed class User : AggregateRoot<UserId>
     public void ChangeEmail(Email email)
     {
         Email = email;
-    }
-
-    public Result AddInWishList(Wish wish)
-    {
-        if (_wishes.Any(w => w.Book == wish.Book))
-        {
-            return Result.Failure(
-                UserErrors.BookIsAlreadyInWishList);
-        }
-
-        _wishes.Add(wish);
-
-        return Result.Success();
-    }
-
-    public Result RemoveFromWishList(BookId bookId)
-    {
-        var wish = _wishes.FirstOrDefault(w => w.Book.Id == bookId);
-
-        if (wish is null)
-        {
-            return Result.Failure(
-                UserErrors.BookIsNotInWishList);
-        }
-
-        _wishes.Remove(wish);
-
-        return Result.Success();
     }
 
     public void UpdateRefreshToken(RefreshToken refreshToken) =>

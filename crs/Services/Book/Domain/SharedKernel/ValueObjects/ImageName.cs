@@ -1,4 +1,6 @@
-﻿namespace Domain.SharedKernel.ValueObjects;
+﻿using System.Text;
+
+namespace Domain.SharedKernel.ValueObjects;
 
 public sealed class ImageName : ValueObject
 {
@@ -9,7 +11,7 @@ public sealed class ImageName : ValueObject
     private ImageName(string value) =>
         Value = value;
 
-    public static Result<ImageName> Create(string name)
+    public static Result<ImageName> Create(string name, bool isUnigue = false)
     {
         if (name.IsNullOrWhiteSpace())
         {
@@ -21,6 +23,11 @@ public sealed class ImageName : ValueObject
         {
             return Result.Failure<ImageName>(
                 ImageNameErrors.CannotBeLongerThan(MaxLength));
+        }
+
+        if (isUnigue)
+        {
+            return new ImageName(name);
         }
 
         var uniqueName = GenerateUniqueName(name);

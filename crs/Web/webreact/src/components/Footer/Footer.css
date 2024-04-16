@@ -1,5 +1,6 @@
 .footer {
   width: 100%;
+  border-top: 1px solid black;
 }
 .footer .footer-content {
   padding: 50px 20px;

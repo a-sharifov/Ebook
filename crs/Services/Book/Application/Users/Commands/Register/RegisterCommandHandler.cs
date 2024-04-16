@@ -9,6 +9,8 @@ using Infrastructure.Hashing.Interfaces;
 using Infrastructure.Email.Interfaces;
 using Domain.CartAggregate;
 using Domain.CartAggregate.Ids;
+using Domain.WishAggregate.Ids;
+using Domain.WishAggregate;
 
 namespace Application.Users.Commands.Register;
 
@@ -46,15 +48,15 @@ internal sealed class RegisterCommandHandler(
     private async Task<Result<User>> CreateUserResultAsync(RegisterCommand request, CancellationToken cancellationToken = default)
     {
         var userId = new UserId(Guid.NewGuid());
-        var emailResult = Email.Create(request.Email);
-        var firstNameResult = FirstName.Create(request.FirstName);
-        var lastNameResult = LastName.Create(request.LastName);
+        var email = Email.Create(request.Email).Value;
+        var firstName = FirstName.Create(request.FirstName).Value;
+        var lastName = LastName.Create(request.LastName).Value;
 
         var generateSalt = _hashingService.GenerateSalt();
-        var passwordSaltResult = PasswordSalt.Create(generateSalt);
+        var passwordSalt = PasswordSalt.Create(generateSalt).Value;
 
         var hash = _hashingService.Hash(request.Password, generateSalt);
-        var passwordHashResult = PasswordHash.Create(hash);
+        var passwordHash = PasswordHash.Create(hash).Value;
 
         var emailConfirmationToken = _hashingService.GenerateToken();
 
@@ -62,23 +64,27 @@ internal sealed class RegisterCommandHandler(
         var gender = Gender.FromName(request.Gender);
 
         var isEmailUnique = await _repository
-            .IsEmailUniqueAsync(emailResult.Value, cancellationToken);
+            .IsEmailUniqueAsync(email, cancellationToken);
 
         var cartId = new CartId(Guid.NewGuid());
-        var cart = Cart.Create(cartId, userId);
+        var cart = Cart.Create(cartId, userId).Value;
+
+        var wishId = new WishId(Guid.NewGuid());
+        var wish = Wish.Create(wishId, userId).Value;
 
         var user = User.Create(
             userId,
-            emailResult.Value,
-            firstNameResult.Value,
-            lastNameResult.Value,
-            passwordHashResult.Value,
-            passwordSaltResult.Value,
+            email,
+            firstName,
+            lastName,
+            passwordHash,
+            passwordSalt,
             emailConfirmationToken,
             isEmailUnique,
             role,
             gender,
-            cart.Value);
+            cart,
+            wish);
 
         return user;
     }

@@ -9,5 +9,6 @@ public sealed class LanguageConfig : IMappingConfig
         TypeAdapterConfig<Language, LanguageDto>
         .NewConfig()
         .Map(dest => dest.Id, src => src.Id.Value)
+        .Map(dest => dest.Code, src => src.Code.Value)
         .Map(dest => dest.Name, src => src.Name.Value);
 }

@@ -1,4 +1,7 @@
-﻿namespace Contracts.Extensions;
+﻿using Newtonsoft.Json.Linq;
+using System.Text;
+
+namespace Contracts.Extensions;
 
 /// <summary>
 /// Class for string extension.
@@ -71,5 +74,14 @@ public static class StringExtensions
         }
 
         return true;
+    }
+
+    public static string EncodingBase64(this string str)
+    {
+        var bytes = Encoding.UTF8.GetBytes(str);
+
+        string base64String = Convert.ToBase64String(bytes);
+
+        return base64String;
     }
 }

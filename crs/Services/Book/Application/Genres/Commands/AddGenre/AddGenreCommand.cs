@@ -1,6 +1,3 @@
-﻿using Application.Common.DTOs.Images;
+﻿namespace Application.Genres.Commands.AddGenre;
 
-public sealed record AddGenreCommand(
-    string Name,
-    ImageDto Image
-    ) : ICommand;
+public sealed record AddGenreCommand(string Name) : ICommand;

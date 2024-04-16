@@ -6,7 +6,8 @@ using Api.Core.ServiceInstaller;
 using Persistence.DbContexts;
 using Serilog;
 using Asp.Versioning.ApiExplorer;
-using Microsoft.Extensions.Options;
+using Api.Core.SeedInstaller;
+using Infrastructure.Seeds;
 
 namespace Api;
 
@@ -38,15 +39,12 @@ public sealed class Startup(IConfiguration configuration)
         }
 
         app.UseCors(SD.DefaultCorsPolicyName);
-
         app.UseMiddleware<ExceptionHandlingMiddleware>();
-
         app.UseSerilogRequestLogging();
-
         app.UseHttpsRedirection();
 
-
         app.MigrateDbContext<BookDbContext>();
+        app.InstallSeed<SeedDefaultProject>();
 
         app.UseRouting();
 

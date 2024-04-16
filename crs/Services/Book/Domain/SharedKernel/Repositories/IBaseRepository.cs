@@ -1,4 +1,6 @@
-﻿namespace Domain.SharedKernel.Repositories;
+﻿using System.Linq.Expressions;
+
+namespace Domain.SharedKernel.Repositories;
 
 public interface IBaseRepository<TEntity, TStrongestId>
     : IRepository<TEntity, TStrongestId>
@@ -8,7 +10,7 @@ public interface IBaseRepository<TEntity, TStrongestId>
     Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
-    Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, object>>? includes = default, CancellationToken cancellationToken = default);
     Task<IEnumerable<TEntity>> GetPagedAsync(int skip, int take, CancellationToken cancellationToken = default);
     Task<int> CountAsync(CancellationToken cancellationToken = default);
     Task<TEntity> GetByIdAsync(TStrongestId id, CancellationToken cancellationToken = default);
