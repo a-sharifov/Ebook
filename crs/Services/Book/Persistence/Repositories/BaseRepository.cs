@@ -37,17 +37,22 @@ public abstract class BaseRepository<TEntity, TStrongestId>(
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync(
-        Expression<Func<TEntity, object>>? includes = default, 
+        Expression<Func<TEntity, object>>[]? includes = default, 
         CancellationToken cancellationToken = default) =>
          await GetEntityDbSet()
         .Includes(includes)
         .ToListAsync(cancellationToken: cancellationToken);
 
-    public async Task<IEnumerable<TEntity>> GetPagedAsync(int skip, int take, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TEntity>> GetPagedAsync(
+        Expression<Func<TEntity, object>>[]? includes, 
+        int skip, 
+        int take, 
+        CancellationToken cancellationToken = default)
     {
         var entities = await GetEntityDbSet()
             .Skip(skip)
             .Take(take)
+            .Includes(includes)
             .ToListAsync(cancellationToken);
 
         await _cached
@@ -59,7 +64,10 @@ public abstract class BaseRepository<TEntity, TStrongestId>(
     public async Task<int> CountAsync(CancellationToken cancellationToken = default) =>
         await GetEntityDbSet().CountAsync(cancellationToken);
 
-    public async Task<TEntity> GetByIdAsync(TStrongestId id, CancellationToken cancellationToken = default)
+    public async Task<TEntity> GetByIdAsync(
+        TStrongestId id, 
+        Expression<Func<TEntity, object>>[]? includes = default, 
+        CancellationToken cancellationToken = default)
     {
         var entity = await _cached.GetAsync(id, cancellationToken);
 
@@ -68,16 +76,20 @@ public abstract class BaseRepository<TEntity, TStrongestId>(
             return entity;
         }
 
-        entity = await GetEntityDbSet().FirstAsync(c => c.Id == id, cancellationToken);
+        entity = await GetEntityDbSet()
+            .Includes(includes)
+            .FirstAsync(c => c.Id == id, cancellationToken);
 
         await _cached.SetAsync(entity, _expirationTime, cancellationToken);
         return entity;
     }
 
     public async Task<bool> IsExistsAsync(TStrongestId id, CancellationToken cancellationToken = default) =>
-        await GetByIdAsync(id, cancellationToken) is not null;
+        await GetByIdAsync(id, cancellationToken: cancellationToken) is not null;
 
-    public async Task DeleteByIdAsync(TStrongestId id, CancellationToken cancellationToken = default)
+    public async Task DeleteByIdAsync(
+        TStrongestId id, 
+        CancellationToken cancellationToken = default)
     {
         await _cached.DeleteAsync(id, cancellationToken);
 
@@ -86,11 +98,15 @@ public abstract class BaseRepository<TEntity, TStrongestId>(
             .ExecuteDeleteAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<TStrongestId> ids, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TEntity>> GetByIdsAsync(
+        IEnumerable<TStrongestId> ids,
+        Expression<Func<TEntity, object>>[]? includes = default,
+        CancellationToken cancellationToken = default)
     {
         var entities = await GetEntityDbSet()
             .AsNoTracking()
             .Where(x => ids.Contains(x.Id))
+            .Includes(includes)
             .ToListAsync(cancellationToken);
 
         await _cached.SetAsync(entities, cancellationToken: cancellationToken);

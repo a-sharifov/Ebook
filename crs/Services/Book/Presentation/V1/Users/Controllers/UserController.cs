@@ -3,12 +3,10 @@ using Application.Users.Commands.Login;
 using Application.Users.Commands.Register;
 using Application.Users.Commands.RetryConfirmEmailSend;
 using Application.Users.Commands.UpdateRefreshToken;
-using Application.Users.Queries.GetGenders;
 using Application.Users.Queries.GetRoles;
 using Contracts.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.FileProviders;
 using Presentation.V1.Users.Models;
 
 namespace Presentation.V1.Users.Controllers;
@@ -41,8 +39,6 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             request.ConfirmPassword,
             request.FirstName,
             request.LastName,
-            request.Role,
-            request.Gender,
             request.ReturnUrl);
 
         var result = await _sender.Send(command);
@@ -90,16 +86,6 @@ public sealed class UserController(ISender sender) : ApiController(sender)
     public async Task<IActionResult> GetRoles()
     {
         var query = new GetRolesQuery();
-
-        var result = await _sender.Send(query);
-        return result.IsSuccess ? Ok(result.Value)
-            : HandleFailure(result);
-    }
-
-    [HttpGet("genders")]
-    public async Task<IActionResult> GetGenders()
-    {
-        var query = new GetGendersQuery();
 
         var result = await _sender.Send(query);
         return result.IsSuccess ? Ok(result.Value)

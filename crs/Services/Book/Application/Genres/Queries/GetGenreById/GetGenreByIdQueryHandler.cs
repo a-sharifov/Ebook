@@ -11,7 +11,7 @@ internal sealed class GetGenreByIdQueryHandler(IGenreRepository repository) : IQ
     public async Task<Result<GenreDto>> Handle(GetGenreByIdQuery request, CancellationToken cancellationToken)
     {
         var genreId = new GenreId(request.Id);
-        var genre = await _repository.GetByIdAsync(genreId, cancellationToken);
+        var genre = await _repository.GetByIdAsync(genreId, cancellationToken: cancellationToken);
         var genreDto = genre.Adapt<GenreDto>();
         return genreDto;
     }

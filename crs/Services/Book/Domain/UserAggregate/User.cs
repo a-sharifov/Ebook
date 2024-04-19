@@ -15,10 +15,9 @@ public sealed class User : AggregateRoot<UserId>
     public PasswordHash PasswordHash { get; private set; }
     public PasswordSalt PasswordSalt { get; private set; }
     public RefreshToken? RefreshToken { get; private set; }
-    public EmailConfirmationToken EmailConfirmationToken { get; private set; }
+    public EmailConfirmationToken? EmailConfirmationToken { get; private set; }
     public bool IsEmailConfirmed { get; private set; }
     public Role Role { get; private set; }
-    public Gender Gender { get; private set; }
     public Cart Cart { get; private set; }
     public Wish Wish { get; private set; }
     //todo: Make Aggregate Root
@@ -38,7 +37,6 @@ public sealed class User : AggregateRoot<UserId>
         EmailConfirmationToken emailConfirmationToken,
         bool isEmailConfirmed,
         Role role,
-        Gender gender,
         Cart cart,
         Wish wish)
     {
@@ -51,7 +49,6 @@ public sealed class User : AggregateRoot<UserId>
         EmailConfirmationToken = emailConfirmationToken;
         IsEmailConfirmed = isEmailConfirmed;
         Role = role;
-        Gender = gender;
         Cart = cart;
         Wish = wish;
     }
@@ -66,7 +63,6 @@ public sealed class User : AggregateRoot<UserId>
         EmailConfirmationToken emailConfirmationToken,
         bool isEmailUnique,
         Role role,
-        Gender gender,
         Cart cart,
         Wish wish)
     {
@@ -75,7 +71,6 @@ public sealed class User : AggregateRoot<UserId>
             return Result.Failure<User>(
                 UserErrors.EmailIsNotUnique(email.Value));
         }
-
 
         var user = new User(
             id,
@@ -87,7 +82,6 @@ public sealed class User : AggregateRoot<UserId>
             emailConfirmationToken,
             isEmailConfirmed: false,
             role,
-            gender,
             cart,
             wish);
 
@@ -127,6 +121,7 @@ public sealed class User : AggregateRoot<UserId>
         }
 
         IsEmailConfirmed = true;
+        EmailConfirmationToken = null;
 
         // TODO: add domain event
         //AddDomainEvent(

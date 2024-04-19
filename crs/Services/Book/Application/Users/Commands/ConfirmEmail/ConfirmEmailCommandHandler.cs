@@ -17,13 +17,16 @@ internal sealed class ConfirmEmailCommandHandler(
 
     public async Task<Result> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
-        var user = await GetUserByIdAsync(request.UserId);
+        var userId = new UserId(request.UserId);
+        var isExists = await _repository.IsExistsAsync(userId, cancellationToken);
 
-        if (user is null)
+        if (!isExists)
         {
             return Result.Failure(
                 UserErrors.UserDoesNotExist);
         }
+
+        var user = await _repository.GetByIdAsync(userId, cancellationToken: cancellationToken);
 
         var requestEmailConfirmationTokenResult =
             EmailConfirmationToken.Create(request.EmailConfirmationToken);
@@ -40,11 +43,5 @@ internal sealed class ConfirmEmailCommandHandler(
         await _unitOfWork.Commit(cancellationToken);
 
         return Result.Success();
-    }
-
-    private async Task<User?> GetUserByIdAsync(Guid id)
-    {
-        var userId = new UserId(id);
-        return await _repository.GetByIdAsync(userId);
     }
 }

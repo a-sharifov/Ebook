@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Email;
+﻿namespace Infrastructure.Emails;
 
 /// <summary>
 /// This class is used to get the path of the email templates.

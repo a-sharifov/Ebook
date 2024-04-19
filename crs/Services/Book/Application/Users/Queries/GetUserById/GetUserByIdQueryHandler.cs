@@ -14,7 +14,7 @@ internal sealed class GetUserByIdQueryHandler(IUserRepository repository)
     {
         var userId = new UserId(request.Id);
 
-        var user = await _repository.GetByIdAsync(userId, cancellationToken);
+        var user = await _repository.GetByIdAsync(userId, cancellationToken: cancellationToken);
 
         if (user is null)
         {

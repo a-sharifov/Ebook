@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.FileStorage.Options;
+﻿namespace Infrastructure.FileStorages.Options;
 
 public sealed class BaseUrlOptions
 {

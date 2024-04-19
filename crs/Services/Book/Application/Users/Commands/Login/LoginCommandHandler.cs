@@ -15,7 +15,7 @@ internal sealed class LoginCommandHandler(
     IJwtManager jwtManager)
     : ICommandHandler<LoginCommand, LoginCommanResponse>
 {
-    private readonly IUserRepository _repository = repository;
+    private readonly IUserRepository _repository = repository; 
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IHashingService _hashingService = hashingService;
     private readonly IJwtManager _jwtManager = jwtManager;
@@ -53,7 +53,7 @@ internal sealed class LoginCommandHandler(
     private async Task<User?> GetUserByEmailAsync(string emailString, CancellationToken cancellationToken = default)
     {
         var emailResult = Email.Create(emailString);
-        return await _repository.GetByEmailAsync(emailResult.Value, cancellationToken);
+        return await _repository.GetByEmailAsync(emailResult.Value, cancellationToken: cancellationToken);
     }
 
     private Result Login(User user, string password)

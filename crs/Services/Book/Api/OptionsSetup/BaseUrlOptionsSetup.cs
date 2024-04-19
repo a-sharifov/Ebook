@@ -1,4 +1,4 @@
-﻿using Infrastructure.FileStorage.Options;
+﻿using Infrastructure.FileStorages.Options;
 using Microsoft.Extensions.Options;
 
 namespace Api.OptionsSetup;

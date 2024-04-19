@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Email.Models;
+﻿namespace Infrastructure.Emails.Models;
 
 public record SendMessageRequest(
     string To,

@@ -1,6 +1,6 @@
-﻿using Infrastructure.Email.Models;
+﻿using Infrastructure.Emails.Models;
 
-namespace Infrastructure.Email.Interfaces;
+namespace Infrastructure.Emails.Interfaces;
 
 public interface IEmailService
 {
