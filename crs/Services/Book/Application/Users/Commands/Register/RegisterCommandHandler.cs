@@ -6,7 +6,7 @@ using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
 using Infrastructure.Hashing.Interfaces;
-using Infrastructure.Email.Interfaces;
+using Infrastructure.Emails.Interfaces;
 using Domain.CartAggregate;
 using Domain.CartAggregate.Ids;
 using Domain.WishAggregate.Ids;
@@ -60,8 +60,7 @@ internal sealed class RegisterCommandHandler(
 
         var emailConfirmationToken = _hashingService.GenerateToken();
 
-        var role = Role.FromName(request.Role);
-        var gender = Gender.FromName(request.Gender);
+        var role = Role.User;
 
         var isEmailUnique = await _repository
             .IsEmailUniqueAsync(email, cancellationToken);
@@ -82,7 +81,6 @@ internal sealed class RegisterCommandHandler(
             emailConfirmationToken,
             isEmailUnique,
             role,
-            gender,
             cart,
             wish);
 

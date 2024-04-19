@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.FileStorage.Interfaces;
+﻿namespace Infrastructure.FileStorages.Interfaces;
 
 public interface IFileService
 {

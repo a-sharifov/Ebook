@@ -4,7 +4,7 @@ using Domain.SharedKernel.Enumerations;
 using Domain.SharedKernel.Ids;
 using Domain.SharedKernel.Repositories;
 using Domain.SharedKernel.ValueObjects;
-using Infrastructure.FileStorage.Interfaces;
+using Infrastructure.FileStorages.Interfaces;
 
 namespace Application.Images.Commands.AddImage;
 

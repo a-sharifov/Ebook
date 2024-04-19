@@ -1,7 +1,6 @@
 ﻿using Domain.BookAggregate;
 using Domain.BookAggregate.Ids;
 using Domain.BookAggregate.ValueObjects;
-using Domain.LanguageAggregate.Ids;
 using Domain.SharedKernel.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

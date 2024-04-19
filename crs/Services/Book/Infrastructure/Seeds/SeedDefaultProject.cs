@@ -11,9 +11,21 @@ using Domain.SharedKernel.Enumerations;
 using Domain.SharedKernel.Ids;
 using Domain.SharedKernel.ValueObjects;
 using Infrastructure.Core.Seeds;
-using Infrastructure.FileStorage.Interfaces;
+using Infrastructure.FileStorages.Interfaces;
 using Persistence.DbContexts;
 using Domain.SharedKernel.Entities;
+using Domain.UserAggregate;
+using Contracts.Enumerations;
+using MimeKit.Cryptography;
+using Domain.CartAggregate.Ids;
+using Domain.CartAggregate;
+using Domain.Core.Repositories.Interfaces;
+using Domain.UserAggregate.Ids;
+using Domain.UserAggregate.ValueObjects;
+using Domain.WishAggregate.Ids;
+using Domain.WishAggregate;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System.Threading;
 
 namespace Infrastructure.Seeds;
 
@@ -64,7 +76,7 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         var defaultGenreImagesPath = Path.Combine(
            AssemblyReference.AssemblyPath, "Seeds", "images", "genres");
 
-            _fileService.UploadFilesInBasePath(ImageBucket.Genres, defaultGenreImagesPath);
+        _fileService.UploadFilesInBasePath(ImageBucket.Genres, defaultGenreImagesPath);
     }
 
     private void AddGenres()
@@ -94,10 +106,10 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         return language;
     }
 
-    private Image CreateImage(Guid id, ImageBucket bucket, string name, bool isUnigueName = false)
+    private Image CreateImage(Guid id, ImageBucket bucket, string name, bool isUniqueName = false)
     {
         var imageId = new ImageId(id);
-        var imageName = ImageName.Create(name, isUnigueName).Value;
+        var imageName = ImageName.Create(name, isUniqueName).Value;
         var permanentUrl = _fileService.GeneratePermanentUrl(bucket.Name, name);
         var url = ImageUrl.Create(permanentUrl).Value;
         var image = Image.Create(imageId, bucket, imageName, url).Value;
@@ -134,8 +146,8 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         var authorFirstName = FirstName.Create(firstName).Value;
         var authorLastNameAuthor = LastName.Create(lastName).Value;
         var authorPseudonymAuthor = Pseudonym.Create(pseudonym).Value;
-        var authorDescprition = AuthorDescription.Create(description).Value;
-        var author = Author.Create(authorId, authorFirstName, authorLastNameAuthor, authorPseudonymAuthor, image, authorDescprition).Value;
+        var authorDescription = AuthorDescription.Create(description).Value;
+        var author = Author.Create(authorId, authorFirstName, authorLastNameAuthor, authorPseudonymAuthor, image, authorDescription).Value;
         return author;
     }
 
@@ -145,5 +157,57 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
     //    var author = CreateAuthor(id, firstName, lastName, pseudonym, image, description);
     //    _dbContext.Add(author);
     //    return author;
+    //}
+
+    //private User CreateUser(
+    //    Guid id,
+    //    string email,
+    //    string firstName,
+    //    string lastName,
+    //    string password,
+    //    Role role,
+    //    bool isEmailConfirmed)
+    //{
+    //    var userId = new UserId(Guid.NewGuid());
+    //    var emailUser = Email.Create(email).Value;
+    //    var firstNameUser = FirstName.Create(firstName).Value;
+    //    var lastNameUser = LastName.Create(lastName).Value;
+
+    //    var generateSalt = _hashingService.GenerateSalt();
+    //    var passwordSalt = PasswordSalt.Create(generateSalt).Value;
+
+    //    var hash = _hashingService.Hash(password, generateSalt);
+    //    var passwordHash = PasswordHash.Create(hash).Value;
+
+    //    var role = Role.User;
+
+    //    var isEmailUnique = await _repository
+    //        .IsEmailUniqueAsync(email, cancellationToken);
+
+    //    if (!isEmailUnique)
+    //    {
+
+    //    }
+
+    //    var cartId = new CartId(Guid.NewGuid());
+    //    var cart = Cart.Create(cartId, userId).Value;
+
+    //    var wishId = new WishId(Guid.NewGuid());
+    //    var wish = Wish.Create(wishId, userId).Value;
+
+    //    var user = User.Create(
+    //        userId,
+    //        email,
+    //        firstNameUser,
+    //        lastNameUser,
+    //        passwordHash,
+    //        passwordSalt,
+    //        emailConfirmationToken,
+    //        isEmailUnique,
+    //        role,
+    //        cart,
+    //        wish);
+
+    //    return user;
     //}
 }

@@ -28,16 +28,6 @@ internal sealed class RegisterCommandValidator : AbstractValidator<RegisterComma
             .Equal(x => x.Password)
             .WithMessage("Passwords do not match");
 
-        RuleFor(x => x.Role)
-            .NotEmpty()
-            .Must(Role.IsNameExists)
-            .WithMessage("Role is not exist");
-
-        RuleFor(x => x.Gender)
-            .NotEmpty()
-            .Must(Gender.IsNameExists)
-            .WithMessage("Gender is not exist");
-
-        RuleFor(x => x.ReturnUrl);
+        RuleFor(x => x.ReturnUrl).NotEmpty();
     }
 }

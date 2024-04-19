@@ -1,12 +1,12 @@
 ﻿using Domain.UserAggregate;
-using Infrastructure.Email.Interfaces;
-using Infrastructure.Email.Models;
-using Infrastructure.Email.Options;
+using Infrastructure.Emails.Interfaces;
+using Infrastructure.Emails.Models;
+using Infrastructure.Emails.Options;
 using Infrastructure.Endpoint.Options;
 using Microsoft.Extensions.Options;
 using System.Text.Encodings.Web;
 
-namespace Infrastructure.Email.Services;
+namespace Infrastructure.Emails.Services;
 
 public sealed class IdentityEmailService
     (IOptions<EmailOptions> options,

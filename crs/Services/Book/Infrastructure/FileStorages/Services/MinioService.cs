@@ -1,11 +1,11 @@
-﻿using Infrastructure.FileStorage.Interfaces;
+﻿using Infrastructure.FileStorages.Interfaces;
 using Minio;
 using Minio.DataModel.Args;
 using Contracts.Extensions;
 using Microsoft.Extensions.Options;
-using Infrastructure.FileStorage.Options;
+using Infrastructure.FileStorages.Options;
 
-namespace Infrastructure.FileStorage.Services;
+namespace Infrastructure.FileStorages.Services;
 
 public class MinioService(IMinioClient minioClient, IOptions<BaseUrlOptions> urlOptions) : IFileService
 {

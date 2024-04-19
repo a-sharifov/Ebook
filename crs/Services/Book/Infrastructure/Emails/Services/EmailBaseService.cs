@@ -1,13 +1,13 @@
-﻿using Infrastructure.Email.Interfaces;
-using Infrastructure.Email.Models;
-using Infrastructure.Email.Options;
+﻿using Infrastructure.Emails.Interfaces;
+using Infrastructure.Emails.Models;
+using Infrastructure.Emails.Options;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Polly;
 
-namespace Infrastructure.Email.Services;
+namespace Infrastructure.Emails.Services;
 
 public abstract class EmailBaseService(IOptions<EmailOptions> options) : IEmailService
 {

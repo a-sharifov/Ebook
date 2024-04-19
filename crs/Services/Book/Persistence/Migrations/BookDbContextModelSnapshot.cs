@@ -242,10 +242,6 @@ namespace Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<bool>("IsEmailConfirmed")
                         .HasColumnType("boolean");
 

@@ -1,7 +1,7 @@
 ﻿using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
-using Infrastructure.Email.Interfaces;
+using Infrastructure.Emails.Interfaces;
 using Infrastructure.Hashing.Interfaces;
 
 namespace Application.Users.Commands.RetryConfirmEmailSend;
@@ -18,18 +18,19 @@ public class RetryConfirmEmailSendCommandHandler(
 
     public async Task<Result> Handle(RetryConfirmEmailSendCommand request, CancellationToken cancellationToken)
     {
-        var emailResult = Email.Create(request.Email);
-        var user = await _repository
-            .GetByEmailAsync(emailResult.Value, cancellationToken);
+        var email = Email.Create(request.Email).Value;
+        var isEmailExists = await _repository.IsEmailExistAsync(email, cancellationToken);
 
-        if (user is null)
+        if (!isEmailExists)
         {
             return Result.Failure(
-                UserErrors.UserDoesNotExist);
+                UserErrors.EmailIsNotExists(email.Value));
         }
 
-        var confirmationEmailToken = _hashingService.GenerateToken();
+        var user = await _repository
+            .GetByEmailAsync(email, cancellationToken: cancellationToken);
 
+        var confirmationEmailToken = _hashingService.GenerateToken();
         var RetryEmailConfirmationResult =
             user.RetryEmailConfirmation(confirmationEmailToken);
 

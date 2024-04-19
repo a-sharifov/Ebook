@@ -10,10 +10,11 @@ public interface IBaseRepository<TEntity, TStrongestId>
     Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
-    Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, object>>? includes = default, CancellationToken cancellationToken = default);
-    Task<IEnumerable<TEntity>> GetPagedAsync(int skip, int take, CancellationToken cancellationToken = default);
+    Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, object>>[]? includes = default, CancellationToken cancellationToken = default);
+    Task<IEnumerable<TEntity>> GetPagedAsync(Expression<Func<TEntity, object>>[]? includes, int skip, int take, CancellationToken cancellationToken = default);
     Task<int> CountAsync(CancellationToken cancellationToken = default);
-    Task<TEntity> GetByIdAsync(TStrongestId id, CancellationToken cancellationToken = default);
+    Task<TEntity> GetByIdAsync(TStrongestId id, Expression<Func<TEntity, object>>[]? includes = default, CancellationToken cancellationToken = default);
     Task<bool> IsExistsAsync(TStrongestId id, CancellationToken cancellationToken = default);
     Task DeleteByIdAsync(TStrongestId id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<TStrongestId> ids, Expression<Func<TEntity, object>>[]? includes = default, CancellationToken cancellationToken = default);
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations;
 
 /// <inheritdoc />
-public partial class Initialize_Migration : Migration
+public partial class Add_Initialize : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,8 +53,7 @@ public partial class Initialize_Migration : Migration
                 RefreshToken_Expired = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 EmailConfirmationToken = table.Column<string>(type: "text", nullable: false),
                 IsEmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                Role = table.Column<string>(type: "text", nullable: false),
-                Gender = table.Column<string>(type: "text", nullable: false)
+                Role = table.Column<string>(type: "text", nullable: false)
             },
             constraints: table =>
             {

@@ -72,11 +72,6 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
            name => Role.FromName(name)
            ).IsRequired();
 
-        builder.Property(x => x.Gender).HasConversion(
-            gender => gender.Name,
-            name => Gender.FromName(name)
-            ).IsRequired();
-
         //для того чтоб сделать каскадное удаление cart при удалении пользователя с помощью CartId:
         builder.HasOne(x => x.Cart)
             .WithOne()

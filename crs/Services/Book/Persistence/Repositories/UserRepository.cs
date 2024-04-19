@@ -3,7 +3,9 @@ using Domain.UserAggregate;
 using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
+using Infrasctrurcture.Core.Extensions;
 using Persistence.DbContexts;
+using System.Linq.Expressions;
 
 namespace Persistence.Repositories;
 
@@ -15,15 +17,11 @@ public class UserRepository(
         cached,
         expirationTime: TimeSpan.FromMinutes(20)), IUserRepository
 {
-    public async Task<User?> GetByEmailAsync(Email email, CancellationToken cancellationToken = default)
+    public async Task<User> GetByEmailAsync(Email email, Expression<Func<User, object>>[]? includes = default, CancellationToken cancellationToken = default)
     {
         var user = await GetEntityDbSet()
-            .FirstOrDefaultAsync(x => x.Email == email, cancellationToken: cancellationToken);
-
-        if (user is null)
-        {
-            return user;
-        }
+            .Includes(includes)
+            .FirstAsync(x => x.Email == email, cancellationToken: cancellationToken);
 
         await _cached.SetAsync(user, cancellationToken: cancellationToken);
 
