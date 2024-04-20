@@ -20,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Books\Commands\DeleteBook\" />
+    <Folder Include="Books\Commands\UpdateBook\" />
+    <Folder Include="Books\Queries\" />
     <Folder Include="Genres\Commands\DeleteGenreById\" />
     <Folder Include="Genres\Commands\UpdateImageGenre\" />
     <Folder Include="Images\Commands\DeleteImage\" />
