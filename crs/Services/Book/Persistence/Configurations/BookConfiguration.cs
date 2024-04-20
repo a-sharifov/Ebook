@@ -42,11 +42,8 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
 
         builder.OwnsOne(x => x.Price, priceBuilder =>
         {
-            priceBuilder.Property(m => m.Currency)
+            priceBuilder.Property(m => m.Value)
             .IsRequired();
-
-            priceBuilder.Property(m => m.Amount)
-            .HasColumnType("decimal(18,2)").IsRequired();
         });
 
         builder.Property(x => x.ISBN)

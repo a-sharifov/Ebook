@@ -6,7 +6,7 @@ public sealed record BookDto(
     Guid Id,
     string Title,
     int PageCount,
-    int Price,
+    decimal Price,
     string ISBN,
     int Quantity,
     int SoldUnits,

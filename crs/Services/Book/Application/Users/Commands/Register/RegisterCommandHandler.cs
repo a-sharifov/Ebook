@@ -28,7 +28,7 @@ internal sealed class RegisterCommandHandler(
 
     public async Task<Result> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var userResult = await CreateUserResultAsync(request, cancellationToken);
+        var userResult = await CreateUserAsync(request, cancellationToken);
 
         if (userResult.IsFailure)
         {
@@ -45,7 +45,7 @@ internal sealed class RegisterCommandHandler(
         return Result.Success();
     }
 
-    private async Task<Result<User>> CreateUserResultAsync(RegisterCommand request, CancellationToken cancellationToken = default)
+    private async Task<Result<User>> CreateUserAsync(RegisterCommand request, CancellationToken cancellationToken = default)
     {
         var userId = new UserId(Guid.NewGuid());
         var email = Email.Create(request.Email).Value;

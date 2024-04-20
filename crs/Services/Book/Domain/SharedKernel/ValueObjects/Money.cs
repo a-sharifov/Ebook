@@ -2,32 +2,26 @@
 
 public sealed class Money : ValueObject
 {
-    public string Currency { get; private set; }
-    public decimal Amount { get; private set; }
+    public decimal Value { get; private set; }
 
-    public bool PriceIsNegative => Amount >= 0;
-    public bool PriceIsNotNegative => !PriceIsNotNegative;
+    private Money(decimal value) =>
+        Value = value;
 
-    private Money(string currency, decimal amount) =>
-        (Currency, Amount) = (currency, amount);
-
-    public static Result<Money> Create(string currency, decimal amount)
+    public static Result<Money> Create(decimal currency)
     {
-        if (currency.IsNullOrWhiteSpace())
+        if (currency <= 0)
         {
             return Result.Failure<Money>(
-                MoneyErrors.CannotBeEmpty);
+                MoneyErrors.CannotBeZeroOrNegative);
         }
 
-        return new Money(currency, amount);
+        return new Money(currency);
     }
-
 
     public override IEnumerable<object> GetEqualityComponents()
     {
-        yield return Currency;
-        yield return Amount;
+        yield return Value;
     }
 
-    public static implicit operator decimal(Money money) => money.Amount;
+    public static implicit operator decimal(Money money) => money.Value;
 }
