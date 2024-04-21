@@ -4,7 +4,7 @@ namespace Domain.AuthorAggregate.ValueObjects;
 
 public class Pseudonym : ValueObject
 {
-    public const int MaxLength = 50;
+    public const int MaxLength = 100;
 
     public string Value { get; private set; }
 

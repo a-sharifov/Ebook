@@ -86,7 +86,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - HealthChecksUI__HealthChecks__0__Name=Book api
-      - HealthChecksUI__HealthChecks__0__Uri=http://book/health
+      - HealthChecksUI__HealthChecks__0__Uri=http://book.api:6060/health
     ports:
       - "8080:8080"
       - "8081:8081"

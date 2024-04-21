@@ -7,7 +7,6 @@ public sealed record BookDto(
     string Title,
     int PageCount,
     decimal Price,
-    string ISBN,
     int Quantity,
     int SoldUnits,
     ImageDto Poster

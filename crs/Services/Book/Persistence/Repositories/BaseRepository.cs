@@ -61,6 +61,9 @@ public abstract class BaseRepository<TEntity, TStrongestId>(
         return entities;
     }
 
+    public int Count(Expression<Func<TEntity, bool>>[] wheres) =>
+        GetEntityDbSet().Wheres(wheres).Count();
+
     public async Task<int> CountAsync(CancellationToken cancellationToken = default) =>
         await GetEntityDbSet().CountAsync(cancellationToken);
 

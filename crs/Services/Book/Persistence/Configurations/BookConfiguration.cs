@@ -12,8 +12,6 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
     {
         builder.HasKey(x => x.Id);       
 
-        builder.HasAlternateKey(x => x.ISBN);
-
         builder.Property(x => x.Id)
             .HasConversion(
             bookId => bookId.Value,
@@ -24,7 +22,7 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
             .HasConversion(
             title => title.Value,
             value => Title.Create(value).Value)
-            .HasMaxLength(Title.TitleMaxLength)
+            .HasMaxLength(Title.MaxLength)
             .IsRequired();
 
         builder.Property(x => x.Description)
@@ -46,12 +44,6 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
             .IsRequired();
         });
 
-        builder.Property(x => x.ISBN)
-            .HasConversion(
-            isbn => isbn.Value,
-            value => ISBN.Create(value).Value)
-            .IsRequired();
-
         builder.Property(x => x.Quantity)
             .HasConversion(
             quantityBook => quantityBook.Value,
@@ -69,14 +61,12 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
             .HasPrincipalKey<Image>(x => x.Id)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(x => x.Genres)
-            .WithOne()
+        builder.HasOne(x => x.Genre)
+            .WithMany()
             .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(x => x.Author)
            .WithMany(x => x.Books)
            .OnDelete(DeleteBehavior.Restrict);
-
-
     }
 }

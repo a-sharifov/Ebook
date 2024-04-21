@@ -2,5 +2,4 @@
 
 public sealed record UpdateRefreshTokenRequest(
     [Required] string Token,
-    [Required] string RefreshToken,
-    [Required] string Audience);
+    [Required] string RefreshToken);

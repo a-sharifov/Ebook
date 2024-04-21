@@ -29,6 +29,9 @@ public sealed class RefreshToken : ValueObject
         return new RefreshToken(refreshToken, expires);
     }
 
+    public static RefreshToken Empty =>
+        new(string.Empty, DateTime.UtcNow);
+
     public static implicit operator string(RefreshToken token) =>
         token.Token;
 

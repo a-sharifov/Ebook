@@ -10,7 +10,7 @@ public static class EntityFrameworkExtensions
         params Expression<Func<TEntity, object>>[]? includes)
         where TEntity : class
     {
-        if(includes == null || includes[0] == null)
+        if (includes == null || includes[0] == null)
         {
             return query;
         }
@@ -18,6 +18,24 @@ public static class EntityFrameworkExtensions
         foreach (var include in includes)
         {
             query = query.Include(include);
+        }
+
+        return query;
+    }
+
+    public static IQueryable<TEntity> Wheres<TEntity>(
+       this IQueryable<TEntity> query,
+       params Expression<Func<TEntity, bool>>[]? includes)
+       where TEntity : class
+    {
+        if (includes == null || includes[0] == null)
+        {
+            return query;
+        }
+
+        foreach (var where in includes)
+        {
+            query = query.Where(where);
         }
 
         return query;
