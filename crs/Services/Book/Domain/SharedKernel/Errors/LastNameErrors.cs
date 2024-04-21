@@ -1,6 +1,6 @@
 ﻿namespace Domain.SharedKernel.Errors;
 
-public class LastNameErrors
+public static class LastNameErrors
 {
     public static Error CannotBeEmpty =>
         new("LastName.CannotBeEmpty", "Last name cannot be empty.");

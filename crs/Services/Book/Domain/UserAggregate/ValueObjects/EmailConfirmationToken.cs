@@ -20,6 +20,9 @@ public sealed class EmailConfirmationToken : ValueObject
         return Result.Success(new EmailConfirmationToken(emailConfirmationToken));
     }
 
+    public static EmailConfirmationToken Empty =>
+        new(string.Empty);
+
     public static implicit operator EmailConfirmationToken(string token) =>
         Create(token).Value;
 

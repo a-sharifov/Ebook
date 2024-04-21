@@ -17,4 +17,5 @@ public interface IBaseRepository<TEntity, TStrongestId>
     Task<bool> IsExistsAsync(TStrongestId id, CancellationToken cancellationToken = default);
     Task DeleteByIdAsync(TStrongestId id, CancellationToken cancellationToken = default);
     Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<TStrongestId> ids, Expression<Func<TEntity, object>>[]? includes = default, CancellationToken cancellationToken = default);
+    int Count(Expression<Func<TEntity, bool>>[] wheres);
 }

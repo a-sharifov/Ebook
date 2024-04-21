@@ -41,7 +41,7 @@ public sealed class Startup(IConfiguration configuration)
         app.UseCors(SD.DefaultCorsPolicyName);
         app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseSerilogRequestLogging();
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
 
         app.MigrateDbContext<BookDbContext>();
         app.InstallSeed<SeedDefaultProject>();

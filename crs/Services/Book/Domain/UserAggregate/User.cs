@@ -14,8 +14,8 @@ public sealed class User : AggregateRoot<UserId>
     public LastName LastName { get; private set; }
     public PasswordHash PasswordHash { get; private set; }
     public PasswordSalt PasswordSalt { get; private set; }
-    public RefreshToken? RefreshToken { get; private set; }
-    public EmailConfirmationToken? EmailConfirmationToken { get; private set; }
+    public RefreshToken RefreshToken { get; private set; }
+    public EmailConfirmationToken EmailConfirmationToken { get; private set; }
     public bool IsEmailConfirmed { get; private set; }
     public Role Role { get; private set; }
     public Cart Cart { get; private set; }
@@ -34,6 +34,7 @@ public sealed class User : AggregateRoot<UserId>
         LastName lastName,
         PasswordHash passwordHash,
         PasswordSalt passwordSalt,
+        RefreshToken refreshToken,
         EmailConfirmationToken emailConfirmationToken,
         bool isEmailConfirmed,
         Role role,
@@ -46,6 +47,7 @@ public sealed class User : AggregateRoot<UserId>
         LastName = lastName;
         PasswordHash = passwordHash;
         PasswordSalt = passwordSalt;
+        RefreshToken = refreshToken;
         EmailConfirmationToken = emailConfirmationToken;
         IsEmailConfirmed = isEmailConfirmed;
         Role = role;
@@ -79,6 +81,7 @@ public sealed class User : AggregateRoot<UserId>
             lastName,
             passwordHash,
             passwordSalt,
+            RefreshToken.Empty,
             emailConfirmationToken,
             isEmailConfirmed: false,
             role,
@@ -121,7 +124,7 @@ public sealed class User : AggregateRoot<UserId>
         }
 
         IsEmailConfirmed = true;
-        EmailConfirmationToken = null;
+        EmailConfirmationToken = EmailConfirmationToken.Empty;
 
         // TODO: add domain event
         //AddDomainEvent(

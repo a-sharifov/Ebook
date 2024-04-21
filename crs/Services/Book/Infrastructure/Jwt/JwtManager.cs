@@ -21,9 +21,9 @@ public class JwtManager(IOptions<JwtOptions> options) : IJwtManager
     public int TokenExpirationTimeMinutes =>
         _jwtOptions.TokenExpirationTimeMinutes;
 
-    public string CreateTokenString(User user, string audience)
+    public string CreateTokenString(User user)
     {
-        var claims = CreateClaims(user, audience);
+        var claims = CreateClaims(user);
 
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_jwtOptions.Key));
@@ -43,13 +43,13 @@ public class JwtManager(IOptions<JwtOptions> options) : IJwtManager
         return tokenValue;
     }
 
-    private Claim[] CreateClaims(User user, string audience) =>
+    private Claim[] CreateClaims(User user) =>
         [
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Iss, _jwtOptions.Issuer),
-            new Claim(JwtRegisteredClaimNames.Aud, audience),
+            //new Claim(JwtRegisteredClaimNames.Aud, audience),
             new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
             ClaimValueTypes.Integer64),
             new Claim(ClaimTypes.Role, user.Role.Name)

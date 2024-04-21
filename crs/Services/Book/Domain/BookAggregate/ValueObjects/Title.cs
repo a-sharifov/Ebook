@@ -6,7 +6,7 @@ public class Title : ValueObject
 {
     public string Value { get; private set; }
 
-    public const int TitleMaxLength = 100;
+    public const int MaxLength = 100;
 
     private Title(string value) => Value = value;
 
@@ -18,10 +18,10 @@ public class Title : ValueObject
                 TitleErrors.CannotBeEmpty);
         }
 
-        if (value.Length > TitleMaxLength)
+        if (value.Length > MaxLength)
         {
             return Result.Failure<Title>(
-                TitleErrors.CannotBeLongerThan(TitleMaxLength));
+                TitleErrors.CannotBeLongerThan(MaxLength));
         }
 
         return new Title(value);

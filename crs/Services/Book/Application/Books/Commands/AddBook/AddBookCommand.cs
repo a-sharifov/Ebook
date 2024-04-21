@@ -5,10 +5,10 @@ public sealed record AddBookCommand(
     string Description,
     int PageCount,
     decimal Price,
-    string ISBN,
     Guid LanguageId,
     int Quantity,
-    Guid AuthorId,
+    string AuthorPseudonym,
+    Guid GenreId,
     string Poster,
-    Stream PosterStream    
+    Stream PosterStream
     ) : ICommand;

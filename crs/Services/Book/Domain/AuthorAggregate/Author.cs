@@ -1,17 +1,12 @@
 ﻿using Domain.AuthorAggregate.Ids;
 using Domain.AuthorAggregate.ValueObjects;
 using Domain.BookAggregate;
-using Domain.SharedKernel.Entities;
 
 namespace Domain.AuthorAggregate;
 
 public class Author : AggregateRoot<AuthorId>
 {
-    public FirstName FirstName { get; private set; }
-    public LastName LastName { get; private set; }
     public Pseudonym Pseudonym { get; private set; }
-    public Image Image { get; private set; }
-    public AuthorDescription Description { get; private set; }
 
     private readonly List<Book> _books = [];
     public IReadOnlyCollection<Book> Books => _books.AsReadOnly();
@@ -22,29 +17,17 @@ public class Author : AggregateRoot<AuthorId>
 
     private Author(
         AuthorId id,
-        FirstName firstName,
-        LastName lastName,
-        Pseudonym pseudonym,
-        Image image,
-        AuthorDescription description)
+        Pseudonym pseudonym)
     {
         Id = id;
-        FirstName = firstName;
-        LastName = lastName;
         Pseudonym = pseudonym;
-        Image = image;
-        Description = description;
     }
 
     public static Result<Author> Create(
         AuthorId id,
-        FirstName firstName,
-        LastName lastName,
-        Pseudonym pseudonym,
-        Image image,
-        AuthorDescription description)
+        Pseudonym pseudonym)
     {
-        var author = new Author(id, firstName, lastName, pseudonym, image, description);
+        var author = new Author(id, pseudonym);
 
         // TODO: Add domain events
 

@@ -9,7 +9,7 @@ public interface IJwtManager
     int TokenExpirationTimeMinutes { get; }
     int RefreshTokenExpirationTimeMinutes { get; }
 
-    string CreateTokenString(User user, string audience);
+    string CreateTokenString(User user);
     string UpdateTokenString(string token);
     string CreateRefreshTokenString();
     RefreshToken CreateRefreshToken();

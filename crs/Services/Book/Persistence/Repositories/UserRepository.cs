@@ -36,10 +36,11 @@ public class UserRepository(
         return user.IsEmailConfirmed;
     }
 
+    public async Task<bool> IsEmailExistAsync(Email email, CancellationToken cancellationToken = default) =>
+        await GetEntityDbSet().AnyAsync(
+            u => u.Email == email, cancellationToken);
+
     public async Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default) =>
         !await IsEmailExistAsync(email, cancellationToken);
 
-    public async Task<bool> IsEmailExistAsync(Email email, CancellationToken cancellationToken = default) =>
-     await GetEntityDbSet()
-     .AnyAsync(u => u.Email == email, cancellationToken);
 }

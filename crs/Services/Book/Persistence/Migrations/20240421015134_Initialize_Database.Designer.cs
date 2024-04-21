@@ -12,7 +12,7 @@ using Persistence.DbContexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20240420194418_Initialize_Database")]
+    [Migration("20240421015134_Initialize_Database")]
     partial class Initialize_Database
     {
         /// <inheritdoc />
@@ -30,35 +30,14 @@ namespace Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<Guid?>("ImageId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("Pseudonym")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
                     b.HasAlternateKey("Pseudonym");
-
-                    b.HasIndex("ImageId")
-                        .IsUnique();
 
                     b.ToTable("Authors");
                 });
@@ -76,12 +55,11 @@ namespace Persistence.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
-                    b.Property<Guid?>("GenreId")
+                    b.Property<Guid>("GenreId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ISBN")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid?>("GenreId1")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("LanguageId")
                         .HasColumnType("uuid");
@@ -89,7 +67,7 @@ namespace Persistence.Migrations
                     b.Property<int>("PageCount")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("PosterId")
+                    b.Property<Guid?>("PosterId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Quantity")
@@ -105,11 +83,11 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("ISBN");
-
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("GenreId");
+
+                    b.HasIndex("GenreId1");
 
                     b.HasIndex("LanguageId");
 
@@ -163,9 +141,6 @@ namespace Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("BookId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -174,8 +149,6 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasAlternateKey("Name");
-
-                    b.HasIndex("BookId");
 
                     b.ToTable("Genres");
                 });
@@ -309,16 +282,6 @@ namespace Persistence.Migrations
                     b.ToTable("Wish");
                 });
 
-            modelBuilder.Entity("Domain.AuthorAggregate.Author", b =>
-                {
-                    b.HasOne("Domain.SharedKernel.Entities.Image", "Image")
-                        .WithOne()
-                        .HasForeignKey("Domain.AuthorAggregate.Author", "ImageId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Image");
-                });
-
             modelBuilder.Entity("Domain.BookAggregate.Book", b =>
                 {
                     b.HasOne("Domain.AuthorAggregate.Author", "Author")
@@ -327,9 +290,15 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.GenreAggregate.Genre", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Domain.GenreAggregate.Genre", null)
                         .WithMany("Books")
-                        .HasForeignKey("GenreId")
+                        .HasForeignKey("GenreId1")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Domain.LanguageAggregate.Language", "Language")
@@ -341,8 +310,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.SharedKernel.Entities.Image", "Poster")
                         .WithOne()
                         .HasForeignKey("Domain.BookAggregate.Book", "PosterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.OwnsOne("Domain.SharedKernel.ValueObjects.Money", "Price", b1 =>
                         {
@@ -361,6 +329,8 @@ namespace Persistence.Migrations
                         });
 
                     b.Navigation("Author");
+
+                    b.Navigation("Genre");
 
                     b.Navigation("Language");
 
@@ -396,14 +366,6 @@ namespace Persistence.Migrations
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("Domain.GenreAggregate.Genre", b =>
-                {
-                    b.HasOne("Domain.BookAggregate.Book", null)
-                        .WithMany("Genres")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.NoAction);
-                });
-
             modelBuilder.Entity("Domain.UserAggregate.User", b =>
                 {
                     b.OwnsOne("Domain.UserAggregate.ValueObjects.RefreshToken", "RefreshToken", b1 =>
@@ -426,7 +388,8 @@ namespace Persistence.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.Navigation("RefreshToken");
+                    b.Navigation("RefreshToken")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.WishAggregate.Entities.WishItem", b =>
@@ -458,11 +421,6 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.AuthorAggregate.Author", b =>
                 {
                     b.Navigation("Books");
-                });
-
-            modelBuilder.Entity("Domain.BookAggregate.Book", b =>
-                {
-                    b.Navigation("Genres");
                 });
 
             modelBuilder.Entity("Domain.CartAggregate.Cart", b =>

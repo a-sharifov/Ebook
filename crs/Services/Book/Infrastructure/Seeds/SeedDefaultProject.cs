@@ -140,17 +140,6 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         return genre;
     }
 
-    private static Author CreateAuthor(Guid id, string firstName, string lastName, string pseudonym, Image image, string description)
-    {
-        var authorId = new AuthorId(id);
-        var authorFirstName = FirstName.Create(firstName).Value;
-        var authorLastNameAuthor = LastName.Create(lastName).Value;
-        var authorPseudonymAuthor = Pseudonym.Create(pseudonym).Value;
-        var authorDescription = AuthorDescription.Create(description).Value;
-        var author = Author.Create(authorId, authorFirstName, authorLastNameAuthor, authorPseudonymAuthor, image, authorDescription).Value;
-        return author;
-    }
-
     //private Author AddAuthor(string firstName, string lastName, string pseudonym, Image image, string description)
     //{
     //    var id = Guid.NewGuid();

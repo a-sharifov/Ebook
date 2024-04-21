@@ -4,9 +4,7 @@ using Application.Users.Commands.Register;
 using Application.Users.Commands.RetryConfirmEmailSend;
 using Application.Users.Commands.UpdateRefreshToken;
 using Application.Users.Queries.GetRoles;
-using Contracts.Enum;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Presentation.V1.Users.Models;
 
 namespace Presentation.V1.Users.Controllers;
@@ -16,14 +14,11 @@ namespace Presentation.V1.Users.Controllers;
 public sealed class UserController(ISender sender) : ApiController(sender)
 {
     [HttpPost("login")]
-    public async Task<IActionResult> Login(
-        [FromHeader] string audience,
-        [FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         var command = new LoginCommand(
             request.Email,
-            request.Password,
-            audience);
+            request.Password);
 
         var result = await _sender.Send(command);
         return result.IsSuccess ? Ok(result.Value)
@@ -52,8 +47,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
     {
         var command = new UpdateRefreshTokenCommand(
             request.Token,
-            request.RefreshToken,
-            request.Audience);
+            request.RefreshToken);
 
         var result = await _sender.Send(command);
         return result.IsSuccess ? Ok(result.Value)
@@ -90,12 +84,5 @@ public sealed class UserController(ISender sender) : ApiController(sender)
         var result = await _sender.Send(query);
         return result.IsSuccess ? Ok(result.Value)
             : HandleFailure(result);
-    }
-
-    [Authorize(Policy.User)]
-    [HttpGet("test")]
-    public IActionResult Test(IFormFile formFile)
-    {
-        return Ok("Test");
     }
 }

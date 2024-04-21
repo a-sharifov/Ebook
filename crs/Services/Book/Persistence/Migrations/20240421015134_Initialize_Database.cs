@@ -12,6 +12,32 @@ namespace Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Authors",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Pseudonym = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Authors", x => x.Id);
+                    table.UniqueConstraint("AK_Authors_Pseudonym", x => x.Pseudonym);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Genres",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Genres", x => x.Id);
+                    table.UniqueConstraint("AK_Genres_Name", x => x.Name);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Images",
                 columns: table => new
                 {
@@ -49,8 +75,8 @@ namespace Persistence.Migrations
                     LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     PasswordHash = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     PasswordSalt = table.Column<string>(type: "text", nullable: false),
-                    RefreshToken_Token = table.Column<string>(type: "text", nullable: true),
-                    RefreshToken_Expired = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    RefreshToken_Token = table.Column<string>(type: "text", nullable: false),
+                    RefreshToken_Expired = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EmailConfirmationToken = table.Column<string>(type: "text", nullable: false),
                     IsEmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
                     Role = table.Column<string>(type: "text", nullable: false)
@@ -62,24 +88,51 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Authors",
+                name: "Books",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Pseudonym = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    ImageId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false)
+                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    PageCount = table.Column<int>(type: "integer", nullable: false),
+                    Price_Value = table.Column<decimal>(type: "numeric", nullable: false),
+                    LanguageId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    SoldUnits = table.Column<int>(type: "integer", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PosterId = table.Column<Guid>(type: "uuid", nullable: true),
+                    GenreId = table.Column<Guid>(type: "uuid", nullable: false),
+                    GenreId1 = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Authors", x => x.Id);
-                    table.UniqueConstraint("AK_Authors_Pseudonym", x => x.Pseudonym);
+                    table.PrimaryKey("PK_Books", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Authors_Images_ImageId",
-                        column: x => x.ImageId,
+                        name: "FK_Books_Authors_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Authors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Books_Genres_GenreId",
+                        column: x => x.GenreId,
+                        principalTable: "Genres",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Books_Genres_GenreId1",
+                        column: x => x.GenreId1,
+                        principalTable: "Genres",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Books_Images_PosterId",
+                        column: x => x.PosterId,
                         principalTable: "Images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Books_Languages_LanguageId",
+                        column: x => x.LanguageId,
+                        principalTable: "Languages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -121,47 +174,6 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Books",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    PageCount = table.Column<int>(type: "integer", nullable: false),
-                    Price_Value = table.Column<decimal>(type: "numeric", nullable: false),
-                    LanguageId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ISBN = table.Column<string>(type: "text", nullable: false),
-                    Quantity = table.Column<int>(type: "integer", nullable: false),
-                    SoldUnits = table.Column<int>(type: "integer", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PosterId = table.Column<Guid>(type: "uuid", nullable: false),
-                    GenreId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Books", x => x.Id);
-                    table.UniqueConstraint("AK_Books_ISBN", x => x.ISBN);
-                    table.ForeignKey(
-                        name: "FK_Books_Authors_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "Authors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Books_Images_PosterId",
-                        column: x => x.PosterId,
-                        principalTable: "Images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Books_Languages_LanguageId",
-                        column: x => x.LanguageId,
-                        principalTable: "Languages",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CartItem",
                 columns: table => new
                 {
@@ -185,25 +197,6 @@ namespace Persistence.Migrations
                         principalTable: "Carts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Genres",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    BookId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Genres", x => x.Id);
-                    table.UniqueConstraint("AK_Genres_Name", x => x.Name);
-                    table.ForeignKey(
-                        name: "FK_Genres_Books_BookId",
-                        column: x => x.BookId,
-                        principalTable: "Books",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -232,12 +225,6 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Authors_ImageId",
-                table: "Authors",
-                column: "ImageId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Books_AuthorId",
                 table: "Books",
                 column: "AuthorId");
@@ -246,6 +233,11 @@ namespace Persistence.Migrations
                 name: "IX_Books_GenreId",
                 table: "Books",
                 column: "GenreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Books_GenreId1",
+                table: "Books",
+                column: "GenreId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_LanguageId",
@@ -275,11 +267,6 @@ namespace Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Genres_BookId",
-                table: "Genres",
-                column: "BookId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Wish_UserId",
                 table: "Wish",
                 column: "UserId",
@@ -294,34 +281,11 @@ namespace Persistence.Migrations
                 name: "IX_Wishes_WishId",
                 table: "Wishes",
                 column: "WishId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Books_Genres_GenreId",
-                table: "Books",
-                column: "GenreId",
-                principalTable: "Genres",
-                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Authors_Images_ImageId",
-                table: "Authors");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Books_Images_PosterId",
-                table: "Books");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Books_Authors_AuthorId",
-                table: "Books");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Books_Genres_GenreId",
-                table: "Books");
-
             migrationBuilder.DropTable(
                 name: "CartItem");
 
@@ -332,13 +296,10 @@ namespace Persistence.Migrations
                 name: "Carts");
 
             migrationBuilder.DropTable(
+                name: "Books");
+
+            migrationBuilder.DropTable(
                 name: "Wish");
-
-            migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "Authors");
@@ -347,10 +308,13 @@ namespace Persistence.Migrations
                 name: "Genres");
 
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "Languages");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

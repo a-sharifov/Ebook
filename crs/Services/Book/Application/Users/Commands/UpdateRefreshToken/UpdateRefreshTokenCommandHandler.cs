@@ -37,7 +37,7 @@ internal sealed class UpdateRefreshTokenCommandHandler(
         }
 
         var refreshToken = _jwtManager.CreateRefreshToken();
-        var userToken = _jwtManager.CreateTokenString(user, request.Audience);
+        var userToken = _jwtManager.CreateTokenString(user);
 
         user.UpdateRefreshToken(refreshToken);
 

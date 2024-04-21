@@ -22,8 +22,8 @@ internal sealed class AuthenticationAuthorizationServiceInstaller : IServiceInst
                 {
                     ValidateIssuer = true,
                     ValidIssuer = Env.AUTH_ISSUER,
-                    ValidateAudience = true,
-                    ValidAudiences = [Env.WEB_AUDIENCE],
+                    ValidateAudience = false,
+                    //ValidAudiences = [Env.WEB_AUDIENCE],
                     RoleClaimType = ClaimTypes.Role,
                     RequireExpirationTime = true,
                     ValidateLifetime = true,
