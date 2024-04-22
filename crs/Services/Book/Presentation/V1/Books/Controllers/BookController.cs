@@ -1,8 +1,5 @@
 ﻿using Application.Books.Commands.AddBook;
 using Application.Books.Commands.DeleteBook;
-using Contracts.Enum;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Presentation.V1.Books.Models;
 
 namespace Presentation.V1.Books.Controllers;
@@ -12,8 +9,10 @@ namespace Presentation.V1.Books.Controllers;
 public sealed class BookController(ISender sender) : ApiController(sender)
 {
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] AddBookRequest request)
+    public async Task<IActionResult> Add([FromForm] AddBookRequest request)
     {
+        using var stream = request.Poster.OpenReadStream();
+
         var command = new AddBookCommand(
             request.Title,
             request.Description,
@@ -23,8 +22,8 @@ public sealed class BookController(ISender sender) : ApiController(sender)
             request.Quantity,
             request.AuthorPseudonym,
             request.GenreId,
-            request.Poster.Name,
-            request.Poster.OpenReadStream()
+            request.Poster.FileName,
+            stream
             );
 
         var result = await _sender.Send(command);
@@ -42,12 +41,5 @@ public sealed class BookController(ISender sender) : ApiController(sender)
 
         return result.IsSuccess ? Ok(result)
             : HandleFailure(result);
-    }
-
-    [Authorize(Policy.User)]
-    [HttpGet("test")]
-    public IActionResult Test(IFormFile formFile)
-    {
-        return Ok("Test");
     }
 }

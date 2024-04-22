@@ -1,5 +1,4 @@
 ﻿using Domain.Core.UnitOfWorks.Interfaces;
-using Domain.UserAggregate;
 using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Repositories;
@@ -28,6 +27,12 @@ internal sealed class ConfirmEmailCommandHandler(
 
         var user = await _repository.GetByIdAsync(userId, cancellationToken: cancellationToken);
 
+        if (user.IsEmailConfirmed)
+        {
+            return Result.Failure(
+                UserErrors.UserIsConfirmEmail);
+        }
+
         var requestEmailConfirmationTokenResult =
             EmailConfirmationToken.Create(request.EmailConfirmationToken);
 
@@ -40,6 +45,7 @@ internal sealed class ConfirmEmailCommandHandler(
                 confirmEmailResult.Error);
         }
 
+        await _repository.UpdateAsync(user, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
         return Result.Success();

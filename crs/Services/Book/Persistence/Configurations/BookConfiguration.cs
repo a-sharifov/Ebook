@@ -1,4 +1,5 @@
-﻿using Domain.BookAggregate;
+﻿using Domain.AuthorAggregate;
+using Domain.BookAggregate;
 using Domain.BookAggregate.Ids;
 using Domain.BookAggregate.ValueObjects;
 using Domain.SharedKernel.Entities;
@@ -62,11 +63,14 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.Genre)
-            .WithMany()
+            .WithMany(x => x.Books)
             .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(x => x.Author)
            .WithMany(x => x.Books)
            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(x => x.Language)
+            .WithMany();
     }
 }

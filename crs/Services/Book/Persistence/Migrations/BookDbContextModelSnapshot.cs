@@ -55,9 +55,6 @@ namespace Persistence.Migrations
                     b.Property<Guid>("GenreId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("GenreId1")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("LanguageId")
                         .HasColumnType("uuid");
 
@@ -83,8 +80,6 @@ namespace Persistence.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("GenreId");
-
-                    b.HasIndex("GenreId1");
 
                     b.HasIndex("LanguageId");
 
@@ -207,7 +202,6 @@ namespace Persistence.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("EmailConfirmationToken")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
@@ -288,15 +282,10 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.GenreAggregate.Genre", "Genre")
-                        .WithMany()
+                        .WithMany("Books")
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("Domain.GenreAggregate.Genre", null)
-                        .WithMany("Books")
-                        .HasForeignKey("GenreId1")
-                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Domain.LanguageAggregate.Language", "Language")
                         .WithMany()
@@ -385,8 +374,7 @@ namespace Persistence.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.Navigation("RefreshToken")
-                        .IsRequired();
+                    b.Navigation("RefreshToken");
                 });
 
             modelBuilder.Entity("Domain.WishAggregate.Entities.WishItem", b =>

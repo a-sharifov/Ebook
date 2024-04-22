@@ -9,10 +9,10 @@ internal sealed class AddImageCommandValidator : AbstractValidator<AddImageComma
     {
         RuleFor(x => x.BucketName)
             .MaximumLength(BucketName.MaxLength)
+            .Must(ImageBucket.IsNameExists)
             .NotEmpty();
 
         RuleFor(x => x.Name)
-            .Must(ImageBucket.IsNameExists)
             .MaximumLength(ImageName.MaxLength)
             .NotEmpty();
 

@@ -27,7 +27,7 @@ internal sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
             .IsRequired();
 
         builder.HasMany(x => x.Books)
-            .WithOne()
+            .WithOne(x => x.Genre)
             .OnDelete(DeleteBehavior.NoAction);
     }
 }

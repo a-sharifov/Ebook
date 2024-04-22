@@ -9,5 +9,5 @@ public sealed record BookDto(
     decimal Price,
     int Quantity,
     int SoldUnits,
-    ImageDto Poster
+    string PosterUrl
     );

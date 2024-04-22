@@ -75,9 +75,9 @@ namespace Persistence.Migrations
                     LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     PasswordHash = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     PasswordSalt = table.Column<string>(type: "text", nullable: false),
-                    RefreshToken_Token = table.Column<string>(type: "text", nullable: false),
-                    RefreshToken_Expired = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EmailConfirmationToken = table.Column<string>(type: "text", nullable: false),
+                    RefreshToken_Token = table.Column<string>(type: "text", nullable: true),
+                    RefreshToken_Expired = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    EmailConfirmationToken = table.Column<string>(type: "text", nullable: true),
                     IsEmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
                     Role = table.Column<string>(type: "text", nullable: false)
                 },
@@ -101,8 +101,7 @@ namespace Persistence.Migrations
                     SoldUnits = table.Column<int>(type: "integer", nullable: false),
                     AuthorId = table.Column<Guid>(type: "uuid", nullable: false),
                     PosterId = table.Column<Guid>(type: "uuid", nullable: true),
-                    GenreId = table.Column<Guid>(type: "uuid", nullable: false),
-                    GenreId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    GenreId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -116,11 +115,6 @@ namespace Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_Books_Genres_GenreId",
                         column: x => x.GenreId,
-                        principalTable: "Genres",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Books_Genres_GenreId1",
-                        column: x => x.GenreId1,
                         principalTable: "Genres",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -233,11 +227,6 @@ namespace Persistence.Migrations
                 name: "IX_Books_GenreId",
                 table: "Books",
                 column: "GenreId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Books_GenreId1",
-                table: "Books",
-                column: "GenreId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_LanguageId",

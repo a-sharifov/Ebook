@@ -34,6 +34,6 @@ internal sealed class AddBookCommandValidator : AbstractValidator<AddBookCommand
             .NotEmpty();
 
         RuleFor(x => x.PosterStream)
-            .NotEmpty();
+            .NotNull();
     }
 }

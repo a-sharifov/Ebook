@@ -6,6 +6,7 @@ using Domain.UserAggregate.Ids;
 using Domain.SharedKernel.ValueObjects;
 using Domain.CartAggregate;
 using Domain.WishAggregate;
+using Contracts.Extensions;
 
 namespace Persistence.Configurations;
 
@@ -59,9 +60,8 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         });
 
         builder.Property(x => x.EmailConfirmationToken).HasConversion(
-            token => token.Value,
-            value => EmailConfirmationToken.Create(value).Value)
-            .IsRequired();
+            token => token == null ? null : token.Value,
+            value => value == null ? null : EmailConfirmationToken.Create(value).Value);
 
         builder.Property(x => x.IsEmailConfirmed).IsRequired();
 

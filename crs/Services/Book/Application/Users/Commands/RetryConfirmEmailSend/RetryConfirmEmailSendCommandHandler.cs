@@ -1,4 +1,5 @@
-﻿using Domain.UserAggregate.Errors;
+﻿using Domain.Core.UnitOfWorks.Interfaces;
+using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
 using Infrastructure.Emails.Interfaces;
@@ -9,12 +10,14 @@ namespace Application.Users.Commands.RetryConfirmEmailSend;
 public class RetryConfirmEmailSendCommandHandler(
     IUserRepository repository,
     IHashingService hashingService,
-    IIdentityEmailService identityEmailService)
+    IIdentityEmailService identityEmailService,
+    IUnitOfWork unitOfWork)
     : ICommandHandler<RetryConfirmEmailSendCommand>
 {
     private readonly IUserRepository _repository = repository;
     private readonly IHashingService _hashingService = hashingService;
     private readonly IIdentityEmailService _identityEmailService = identityEmailService;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<Result> Handle(RetryConfirmEmailSendCommand request, CancellationToken cancellationToken)
     {
@@ -40,6 +43,8 @@ public class RetryConfirmEmailSendCommandHandler(
                 RetryEmailConfirmationResult.Error);
         }
 
+        await _repository.UpdateAsync(user, cancellationToken);
+        await _unitOfWork.Commit(cancellationToken);
         await _identityEmailService.SendConfirmationEmailAsync(user, request.ReturnUrl, cancellationToken);
 
         return Result.Success();

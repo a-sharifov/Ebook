@@ -14,8 +14,8 @@ public sealed class User : AggregateRoot<UserId>
     public LastName LastName { get; private set; }
     public PasswordHash PasswordHash { get; private set; }
     public PasswordSalt PasswordSalt { get; private set; }
-    public RefreshToken RefreshToken { get; private set; }
-    public EmailConfirmationToken EmailConfirmationToken { get; private set; }
+    public RefreshToken? RefreshToken { get; private set; }
+    public EmailConfirmationToken? EmailConfirmationToken { get; private set; }
     public bool IsEmailConfirmed { get; private set; }
     public Role Role { get; private set; }
     public Cart Cart { get; private set; }
@@ -34,7 +34,6 @@ public sealed class User : AggregateRoot<UserId>
         LastName lastName,
         PasswordHash passwordHash,
         PasswordSalt passwordSalt,
-        RefreshToken refreshToken,
         EmailConfirmationToken emailConfirmationToken,
         bool isEmailConfirmed,
         Role role,
@@ -47,9 +46,8 @@ public sealed class User : AggregateRoot<UserId>
         LastName = lastName;
         PasswordHash = passwordHash;
         PasswordSalt = passwordSalt;
-        RefreshToken = refreshToken;
-        EmailConfirmationToken = emailConfirmationToken;
         IsEmailConfirmed = isEmailConfirmed;
+        EmailConfirmationToken = emailConfirmationToken;
         Role = role;
         Cart = cart;
         Wish = wish;
@@ -62,8 +60,8 @@ public sealed class User : AggregateRoot<UserId>
         LastName lastName,
         PasswordHash passwordHash,
         PasswordSalt passwordSalt,
-        EmailConfirmationToken emailConfirmationToken,
         bool isEmailUnique,
+        EmailConfirmationToken emailConfirmationToken,
         Role role,
         Cart cart,
         Wish wish)
@@ -81,7 +79,6 @@ public sealed class User : AggregateRoot<UserId>
             lastName,
             passwordHash,
             passwordSalt,
-            RefreshToken.Empty,
             emailConfirmationToken,
             isEmailConfirmed: false,
             role,
@@ -93,6 +90,7 @@ public sealed class User : AggregateRoot<UserId>
 
         return user;
     }
+
 
     public static Result Login(User user, bool passwordIsCorrect)
     {
@@ -115,16 +113,16 @@ public sealed class User : AggregateRoot<UserId>
     }
 
 
-    public Result ConfirmEmail(EmailConfirmationToken refreshToken)
+    public Result ConfirmEmail(EmailConfirmationToken confirmationToken)
     {
-        if (EmailConfirmationToken != refreshToken)
+        if (EmailConfirmationToken != confirmationToken)
         {
             return Result.Failure(
                 UserErrors.EmailConfirmationtokenIsnotCorrect);
         }
 
         IsEmailConfirmed = true;
-        EmailConfirmationToken = EmailConfirmationToken.Empty;
+        EmailConfirmationToken = null;
 
         // TODO: add domain event
         //AddDomainEvent(
