@@ -9,6 +9,7 @@ public sealed class CartMappingConfig : IMappingConfig
         TypeAdapterConfig<Cart, CartDto>
        .NewConfig()
        .Map(dest => dest.Id, src => src.Id.Value)
-       .Map(dest => dest.Items, src => src.Items);
+       .Map(dest => dest.Items, src => src.Items)
+       .Map(dest => dest.TotalPrice, src => src.TotalPrice);
 }
 

@@ -6,20 +6,21 @@ using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
 using Infrastructure.Hashing.Interfaces;
 using Infrastructure.Jwt.Interfaces;
+using Persistence;
 
 namespace Application.Users.Commands.Login;
 
 internal sealed class LoginCommandHandler(
     IUserRepository repository,
-    IUnitOfWork unitOfWork,
     IHashingService hashingService,
-    IJwtManager jwtManager)
+    IJwtManager jwtManager,
+    IUnitOfWork unitOfWork)
     : ICommandHandler<LoginCommand, LoginCommanResponse>
 {
     private readonly IUserRepository _repository = repository; 
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IHashingService _hashingService = hashingService;
     private readonly IJwtManager _jwtManager = jwtManager;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<Result<LoginCommanResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
@@ -59,14 +60,14 @@ internal sealed class LoginCommandHandler(
     private async Task<bool> IsEmailExistAsync(string userEmail, CancellationToken cancellationToken = default)
     {
         var email = Email.Create(userEmail).Value;
-        var isEmailExist = await _repository.IsEmailExistAsync(email, cancellationToken);
+        var isEmailExist = await _repository.IsExistAsync(email, cancellationToken);
         return isEmailExist;
     }
 
     private async Task<User> GetUserByEmailAsync(string userEmail, CancellationToken cancellationToken = default)
     {
         var email = Email.Create(userEmail).Value;
-        var user = await _repository.GetByEmailAsync(email, cancellationToken: cancellationToken);
+        var user = await _repository.GetAsync(email, cancellationToken: cancellationToken);
         return user;
     }
 

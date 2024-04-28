@@ -24,6 +24,7 @@ internal sealed class WishItemConfiguration : IEntityTypeConfiguration<WishItem>
 
         builder.HasOne(x => x.Book)
             .WithMany()
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
     }
 }

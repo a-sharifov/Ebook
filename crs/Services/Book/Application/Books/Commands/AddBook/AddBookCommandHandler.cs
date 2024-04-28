@@ -69,7 +69,7 @@ internal sealed class AddBookCommandHandler(
 
     private async Task<Result<Book>> CreateBookAsync(
         AddBookCommand request,
-        Guid existsImageId,
+        Guid existImageId,
         CancellationToken cancellationToken)
     {
         var id = new BookId(Guid.NewGuid());
@@ -81,13 +81,13 @@ internal sealed class AddBookCommandHandler(
         var soldUnits = SoldUnits.Create(0).Value;
 
         var languageId = new LanguageId(request.LanguageId);
-        var language = await _languageRepository.GetByIdAsync(languageId, cancellationToken: cancellationToken);
+        var language = await _languageRepository.GetAsync(languageId, cancellationToken: cancellationToken);
 
         var genreId = new GenreId(request.GenreId);
-        var genres = await _genreRepository.GetByIdAsync(genreId, cancellationToken: cancellationToken);
+        var genre = await _genreRepository.GetAsync(genreId, cancellationToken: cancellationToken);
 
-        var imageId = new ImageId(existsImageId);
-        var image = await _imageRepository.GetByIdAsync(imageId, cancellationToken: cancellationToken);
+        var imageId = new ImageId(existImageId);
+        var image = await _imageRepository.GetAsync(imageId, cancellationToken: cancellationToken);
 
         var pseudonym = Pseudonym.Create(request.AuthorPseudonym).Value;
         var isAuthorExists = await _authorRepository.IsExistsAsync(pseudonym, cancellationToken);
@@ -97,7 +97,7 @@ internal sealed class AddBookCommandHandler(
             Author.Create(new AuthorId(Guid.NewGuid()), pseudonym).Value;
 
         var book = Book.Create(
-            id, title, description, pageCount, price, language, quantity, soldUnits, author, image, genres).Value;
+            id, title, description, pageCount, price, language, quantity, soldUnits, author, image, genre).Value;
 
         return book;
     }

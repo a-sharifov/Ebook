@@ -6,5 +6,5 @@ public static class GenreNameErrors
         new("GenreName.CannotBeEmpty", "Genre name cannot be empty.");
 
     public static Error CannotBeLongerThan(int maxLength) =>
-        new("GenreName.CannotBeLongerThan", $"Genre name name cannot be longer than {maxLength} characters");
+        new("GenreName.CannotBeLongerThan", $"Genre name name cannot be longer than {maxLength} characters.");
 }

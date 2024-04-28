@@ -2,6 +2,7 @@
 using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Ids;
 using Domain.WishAggregate.Entities;
+using Domain.WishAggregate.Errors;
 using Domain.WishAggregate.Ids;
 
 namespace Domain.WishAggregate;
@@ -33,10 +34,12 @@ public class Wish : AggregateRoot<WishId>
 
     public Result AddItem(WishItem wish)
     {
-        if (_items.Any(w => w.Book == wish.Book))
+        var isExist = _items.Any(w => w.Book.Id == wish.Book.Id);
+
+        if (isExist)
         {
             return Result.Failure(
-                UserErrors.BookIsAlreadyInWishList);
+                WishErrors.ThisBookIsExist);
         }
 
         _items.Add(wish);
@@ -46,14 +49,15 @@ public class Wish : AggregateRoot<WishId>
 
     public Result RemoveItem(BookId bookId)
     {
-        var wish = _items.FirstOrDefault(w => w.Book.Id == bookId);
+        var isExist = _items.Any(wish => wish.Book.Id == bookId);
 
-        if (wish is null)
+        if (!isExist)
         {
             return Result.Failure(
-                UserErrors.BookIsNotInWishList);
+               UserErrors.BookIsNotInWishList);
         }
 
+        var wish = _items.First(w => w.Book.Id == bookId);
         _items.Remove(wish);
 
         return Result.Success();

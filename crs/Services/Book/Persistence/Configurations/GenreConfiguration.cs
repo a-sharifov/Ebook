@@ -28,6 +28,6 @@ internal sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
 
         builder.HasMany(x => x.Books)
             .WithOne(x => x.Genre)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

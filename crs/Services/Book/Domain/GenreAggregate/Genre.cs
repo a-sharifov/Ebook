@@ -1,7 +1,6 @@
 ﻿using Domain.BookAggregate;
 using Domain.GenreAggregate.Ids;
 using Domain.GenreAggregate.ValueObjects;
-using Domain.SharedKernel.Entities;
 
 namespace Domain.GenreAggregate;
 

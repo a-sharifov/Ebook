@@ -60,17 +60,22 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
         builder.HasOne(x => x.Poster)
             .WithOne()
             .HasPrincipalKey<Image>(x => x.Id)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+
+        builder.HasOne(x => x.Language)
+            .WithMany(x => x.Books)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
 
         builder.HasOne(x => x.Genre)
-            .WithMany(x => x.Books)
-            .OnDelete(DeleteBehavior.NoAction);
+           .WithMany(x => x.Books)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
 
         builder.HasOne(x => x.Author)
            .WithMany(x => x.Books)
-           .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne(x => x.Language)
-            .WithMany();
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
     }
 }

@@ -20,10 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Books\Queries\GetBooksByGenre\" />
-    <Folder Include="Books\Queries\GetBooksByLanguage\" />
-    <Folder Include="Books\Queries\GetBooksByAuthor\" />
-    <Folder Include="Genres\Commands\DeleteGenreById\" />
+    <Folder Include="Carts\Commands\DeleteProductInCart\" />
+    <Folder Include="Carts\Commands\UpdateCountProductInCart\" />
     <Folder Include="Images\Commands\DeleteImage\" />
   </ItemGroup>
 

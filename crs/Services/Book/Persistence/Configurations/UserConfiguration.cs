@@ -55,11 +55,12 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
             refreshTokenBuilder.Property(x => x.Token)
             .IsRequired();
 
-            refreshTokenBuilder.Property(x => x.Expired)
+            refreshTokenBuilder.Property(x => x.ExpiredTime)
             .IsRequired();
         });
 
-        builder.Property(x => x.EmailConfirmationToken).HasConversion(
+        builder.Property(x => x.EmailConfirmationToken)
+            .HasConversion(
             token => token == null ? null : token.Value,
             value => value == null ? null : EmailConfirmationToken.Create(value).Value);
 
@@ -76,11 +77,13 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasOne(x => x.Cart)
             .WithOne()
             .HasForeignKey<Cart>(x => x.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
 
         builder.HasOne(x => x.Wish)
             .WithOne()
             .HasForeignKey<Wish>(x => x.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
     }
 }

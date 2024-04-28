@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="V1\Authors\" />
+    <Folder Include="V1\Carts\Models\" />
   </ItemGroup>
 
 </Project>

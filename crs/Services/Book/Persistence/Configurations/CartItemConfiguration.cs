@@ -25,8 +25,8 @@ internal sealed class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
 
         builder.HasOne(x => x.Book)
             .WithMany()
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
 
         builder.Property(x => x.Quantity)
             .HasConversion(

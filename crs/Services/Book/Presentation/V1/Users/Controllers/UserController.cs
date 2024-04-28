@@ -21,6 +21,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             request.Password);
 
         var result = await _sender.Send(command);
+
         return result.IsSuccess ? Ok(result.Value)
             : HandleFailure(result);
     }
@@ -37,6 +38,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             request.ReturnUrl);
 
         var result = await _sender.Send(command);
+
         return result.IsSuccess ? Ok()
             : HandleFailure(result);
     }
@@ -50,6 +52,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             request.RefreshToken);
 
         var result = await _sender.Send(command);
+
         return result.IsSuccess ? Ok(result.Value)
             : HandleFailure(result);
     }
@@ -62,6 +65,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             request.ReturnUrl);
 
         var result = await _sender.Send(command);
+
         return result.IsSuccess ? Ok()
             : HandleFailure(result);
     }
@@ -72,6 +76,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
         var command = new ConfirmEmailCommand(request.UserId, request.EmailConfirmationToken);
 
         var result = await _sender.Send(command);
+
         return result.IsSuccess ? Redirect(request.ReturnUrl)
             : HandleFailure(result);
     }
@@ -82,6 +87,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
         var query = new GetRolesQuery();
 
         var result = await _sender.Send(query);
+
         return result.IsSuccess ? Ok(result.Value)
             : HandleFailure(result);
     }

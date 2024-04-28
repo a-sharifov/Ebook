@@ -13,14 +13,15 @@ internal sealed class GetUserByIdQueryHandler(IUserRepository repository)
     public async Task<Result<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
         var userId = new UserId(request.Id);
+        var isExist = await _repository.IsExistAsync(userId, cancellationToken);
 
-        var user = await _repository.GetByIdAsync(userId, cancellationToken: cancellationToken);
-
-        if (user is null)
+        if (!isExist)
         {
             return Result.Failure<UserDto>(
                 UserErrors.UserDoesNotExist);
         }
+
+        var user = await _repository.GetAsync(userId, cancellationToken: cancellationToken);
 
         var userDto = user.Adapt<UserDto>();
 

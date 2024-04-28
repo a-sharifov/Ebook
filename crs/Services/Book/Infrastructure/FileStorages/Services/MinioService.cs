@@ -24,20 +24,7 @@ public class MinioService(IMinioClient minioClient, IOptions<BaseUrlOptions> url
             .WithObjectSize(fileStream.Length)
             .WithObject(fileName);
 
-        try
-        {
-            await _minioClient.PutObjectAsync(args, cancellationToken);
-
-        }
-        catch (Exception e)
-        {
-            for (int i = 0; i < 1100; i++)
-            {
-                await Console.Out.WriteLineAsync(e.Message);
-
-            }
-            throw;
-        }
+        await _minioClient.PutObjectAsync(args, cancellationToken);
     }
 
     public async Task DeleteFileAsync(

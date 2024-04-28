@@ -45,6 +45,7 @@ public class JwtManager(IOptions<JwtOptions> options) : IJwtManager
 
     private Claim[] CreateClaims(User user) =>
         [
+            new Claim("id", user.Id.Value.ToString()),
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

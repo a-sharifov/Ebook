@@ -15,6 +15,8 @@ using Domain.UserAggregate.Ids;
 using Domain.UserAggregate;
 using Domain.SharedKernel.Ids;
 using Domain.SharedKernel.Entities;
+using Domain.WishAggregate.Ids;
+using Domain.WishAggregate;
 
 namespace Api.Configurations;
 
@@ -29,5 +31,6 @@ internal sealed class CachedServiceInstaller : IServiceInstaller
         services.AddTransient<ICachedEntityService<Language, LanguageId>, CachedEntityService<Language, LanguageId>>();
         services.AddTransient<ICachedEntityService<User, UserId>, CachedEntityService<User, UserId>>();
         services.AddTransient<ICachedEntityService<Image, ImageId>, CachedEntityService<Image, ImageId>>();
+        services.AddTransient<ICachedEntityService<Wish, WishId>, CachedEntityService<Wish, WishId>>();
     }
 }

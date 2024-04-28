@@ -61,7 +61,7 @@ namespace Persistence.Migrations
                     b.Property<int>("PageCount")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("PosterId")
+                    b.Property<Guid>("PosterId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Quantity")
@@ -93,6 +93,9 @@ namespace Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ExpirationTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -278,17 +281,17 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.AuthorAggregate.Author", "Author")
                         .WithMany("Books")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.GenreAggregate.Genre", "Genre")
                         .WithMany("Books")
                         .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.LanguageAggregate.Language", "Language")
-                        .WithMany()
+                        .WithMany("Books")
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -296,7 +299,8 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.SharedKernel.Entities.Image", "Poster")
                         .WithOne()
                         .HasForeignKey("Domain.BookAggregate.Book", "PosterId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.OwnsOne("Domain.SharedKernel.ValueObjects.Money", "Price", b1 =>
                         {
@@ -359,7 +363,7 @@ namespace Persistence.Migrations
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<DateTime>("Expired")
+                            b1.Property<DateTime>("ExpiredTime")
                                 .HasColumnType("timestamp with time zone");
 
                             b1.Property<string>("Token")
@@ -414,6 +418,11 @@ namespace Persistence.Migrations
                 });
 
             modelBuilder.Entity("Domain.GenreAggregate.Genre", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("Domain.LanguageAggregate.Language", b =>
                 {
                     b.Navigation("Books");
                 });

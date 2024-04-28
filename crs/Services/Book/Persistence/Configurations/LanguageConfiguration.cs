@@ -23,14 +23,18 @@ internal sealed class LanguageConfiguration : IEntityTypeConfiguration<Language>
             .HasConversion(
             name => name.Value,
             value => LanguageName.Create(value).Value)
-            .HasMaxLength(LanguageName.LanguageNameMaxLength)
+            .HasMaxLength(LanguageName.MaxLength)
             .IsRequired();
 
         builder.Property(x => x.Code)
             .HasConversion(
             code => code.Value,
             value => LanguageCode.Create(value).Value)
-            .HasMaxLength(LanguageCode.LanguageCodeMaxLength)
+            .HasMaxLength(LanguageCode.MaxLength)
             .IsRequired();
+
+        builder.HasMany(x => x.Books)
+           .WithOne(x => x.Language)
+           .OnDelete(DeleteBehavior.Cascade); 
     }
 }

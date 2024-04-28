@@ -51,7 +51,7 @@ public sealed class IdentityEmailService
                 user.LastName.Value,
                 user.Id.Value.ToString(),
                 user.Email.Value,
-                user.EmailConfirmationToken.Value,
+                user.EmailConfirmationToken!.Value,
                 returnUrl);
 
         await SendConfirmationEmailAsync(request, cancellationToken);

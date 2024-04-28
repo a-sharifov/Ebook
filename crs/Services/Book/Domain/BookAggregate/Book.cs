@@ -4,6 +4,8 @@ using Domain.BookAggregate.ValueObjects;
 using Domain.SharedKernel.Entities;
 using Domain.GenreAggregate;
 using Domain.LanguageAggregate;
+using Domain.AuthorAggregate.Ids;
+using Domain.GenreAggregate.Ids;
 
 namespace Domain.BookAggregate;
 
@@ -69,6 +71,11 @@ public class Book : AggregateRoot<BookId>
         //TODO: Add domain events
 
         return book;
+    }
+
+    public void UpdateQuantity(QuantityBook quantity)
+    {
+        Quantity = quantity;
     }
 
 }

@@ -4,5 +4,6 @@ namespace Application.Common.DTOs.Carts;
 
 public sealed record CartDto(
     Guid Id,
-    IEnumerable<CartItemDto> Items
+    IEnumerable<CartItemDto> Items,
+    decimal TotalPrice 
     );

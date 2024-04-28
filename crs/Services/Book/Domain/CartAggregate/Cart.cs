@@ -1,8 +1,8 @@
-﻿using Domain.CartAggregate.Entities;
+﻿using Domain.BookAggregate.ValueObjects;
+using Domain.CartAggregate.Entities;
 using Domain.CartAggregate.Errors;
 using Domain.CartAggregate.Ids;
 using Domain.CartAggregate.ValueObjects;
-using Domain.UserAggregate;
 using Domain.UserAggregate.Ids;
 
 namespace Domain.CartAggregate;
@@ -13,6 +13,8 @@ public class Cart : AggregateRoot<CartId>
     public UserId UserId { get; private set; }
     private readonly List<CartItem> _items = [];
     public IReadOnlyCollection<CartItem> Items => _items.AsReadOnly();
+    public DateTime? ExpirationTime { get; private set; }
+    public decimal TotalPrice => CalculateTotalPrice();
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private Cart() { }
@@ -32,10 +34,10 @@ public class Cart : AggregateRoot<CartId>
 
     public Result AddItem(CartItem item)
     {
-        var isExistInCart = _items.Exists(x => x.Id == item.Id);
+        var isExistInCart = _items.Exists(x => x.Book.Id == item.Book.Id);
         if (isExistInCart)
         {
-            item = _items.Single(x => x.Id == item.Id);
+            item = _items.First(x => x.Book.Id == item.Book.Id);
             var cartItemQuantityResult = CartItemQuantity.Create(item.Quantity.Value + 1);
             return cartItemQuantityResult.IsSuccess ?
                 item.UpdateQuantity(cartItemQuantityResult.Value) : cartItemQuantityResult;
@@ -68,7 +70,14 @@ public class Cart : AggregateRoot<CartId>
         return cartItem.UpdateQuantity(itemQuantity);
     }
 
-    public void Clear() => _items.Clear();
+    public void Clear()
+    {
+        foreach (var item in _items)
+        {
+            item.Book.UpdateQuantity(QuantityBook.Create
+                (item.Quantity.Value + item.Book.Quantity.Value).Value);
+        }
+    }
 
     public decimal CalculateTotalPrice()
     {

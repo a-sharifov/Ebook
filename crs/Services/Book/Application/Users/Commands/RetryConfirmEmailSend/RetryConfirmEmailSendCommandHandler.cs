@@ -22,7 +22,7 @@ public class RetryConfirmEmailSendCommandHandler(
     public async Task<Result> Handle(RetryConfirmEmailSendCommand request, CancellationToken cancellationToken)
     {
         var email = Email.Create(request.Email).Value;
-        var isEmailExists = await _repository.IsEmailExistAsync(email, cancellationToken);
+        var isEmailExists = await _repository.IsExistAsync(email, cancellationToken);
 
         if (!isEmailExists)
         {
@@ -31,7 +31,7 @@ public class RetryConfirmEmailSendCommandHandler(
         }
 
         var user = await _repository
-            .GetByEmailAsync(email, cancellationToken: cancellationToken);
+            .GetAsync(email, cancellationToken: cancellationToken);
 
         var confirmationEmailToken = _hashingService.GenerateToken();
         var RetryEmailConfirmationResult =
