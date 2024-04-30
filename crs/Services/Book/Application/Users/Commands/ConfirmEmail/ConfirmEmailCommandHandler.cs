@@ -1,5 +1,4 @@
 ﻿using Domain.Core.UnitOfWorks.Interfaces;
-using Domain.UserAggregate;
 using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Repositories;
@@ -8,17 +7,17 @@ using Domain.UserAggregate.ValueObjects;
 namespace Application.Users.Commands.ConfirmEmail;
 
 internal sealed class ConfirmEmailCommandHandler(
-    IUnitOfWork unitOfWork, 
-    IUserRepository repository) 
+    IUserRepository repository, 
+    IUnitOfWork unitofWork)
     : ICommandHandler<ConfirmEmailCommand>
 {
     private readonly IUserRepository _repository = repository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IUnitOfWork _unitofWork = unitofWork;
 
     public async Task<Result> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
         var userId = new UserId(request.UserId);
-        var isExists = await _repository.IsExistsAsync(userId, cancellationToken);
+        var isExists = await _repository.IsExistAsync(userId, cancellationToken);
 
         if (!isExists)
         {
@@ -26,7 +25,13 @@ internal sealed class ConfirmEmailCommandHandler(
                 UserErrors.UserDoesNotExist);
         }
 
-        var user = await _repository.GetByIdAsync(userId, cancellationToken: cancellationToken);
+        var user = await _repository.GetAsync(userId, cancellationToken: cancellationToken);
+
+        if (user.IsEmailConfirmed)
+        {
+            return Result.Failure(
+                UserErrors.UserIsConfirmEmail);
+        }
 
         var requestEmailConfirmationTokenResult =
             EmailConfirmationToken.Create(request.EmailConfirmationToken);
@@ -40,7 +45,8 @@ internal sealed class ConfirmEmailCommandHandler(
                 confirmEmailResult.Error);
         }
 
-        await _unitOfWork.Commit(cancellationToken);
+        await _repository.UpdateAsync(user, cancellationToken);
+        await _unitofWork.Commit(cancellationToken);
 
         return Result.Success();
     }

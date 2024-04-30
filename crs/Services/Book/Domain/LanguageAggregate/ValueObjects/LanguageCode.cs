@@ -5,7 +5,7 @@ namespace Domain.LanguageAggregate.ValueObjects;
 public class LanguageCode : ValueObject
 {
     public string Value { get; private set; }
-    public const int LanguageCodeMaxLength = 35;
+    public const int MaxLength = 35;
 
     private LanguageCode(string value) => Value = value;
 
@@ -17,10 +17,10 @@ public class LanguageCode : ValueObject
                 LanguageCodeErrors.CannotBeEmpty);
         }
 
-        if (value.Length > LanguageCodeMaxLength)
+        if (value.Length > MaxLength)
         {
             return Result.Failure<LanguageCode>(
-                LanguageCodeErrors.CannotBeLongerThan(LanguageCodeMaxLength));
+                LanguageCodeErrors.CannotBeLongerThan(MaxLength));
         }
 
         return new LanguageCode(value);

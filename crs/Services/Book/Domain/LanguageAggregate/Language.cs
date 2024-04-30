@@ -1,4 +1,5 @@
-﻿using Domain.LanguageAggregate.Ids;
+﻿using Domain.BookAggregate;
+using Domain.LanguageAggregate.Ids;
 using Domain.LanguageAggregate.ValueObjects;
 
 namespace Domain.LanguageAggregate;
@@ -7,6 +8,8 @@ public class Language : AggregateRoot<LanguageId>
 {
     public LanguageName Name { get; private set; }
     public LanguageCode Code { get; private set; }
+    private readonly List<Book> _books = [];
+    public IReadOnlyCollection<Book> Books => _books.AsReadOnly();
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private Language() { }

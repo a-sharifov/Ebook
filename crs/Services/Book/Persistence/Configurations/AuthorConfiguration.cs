@@ -27,7 +27,7 @@ internal sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
             .IsRequired();
 
         builder.HasMany(x => x.Books)
-            .WithOne()
-            .OnDelete(DeleteBehavior.NoAction);
+            .WithOne(x => x.Author)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

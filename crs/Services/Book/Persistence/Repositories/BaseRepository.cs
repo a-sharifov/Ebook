@@ -5,13 +5,15 @@ using Domain.Core.StrongestIds;
 using Persistence.DbContexts;
 using Infrasctrurcture.Core.Extensions;
 using System.Linq.Expressions;
+using Contracts.Paginations;
 
 namespace Persistence.Repositories;
 
 public abstract class BaseRepository<TEntity, TStrongestId>(
     BookDbContext dbContext,
     ICachedEntityService<TEntity, TStrongestId> cached,
-    TimeSpan expirationTime)
+    TimeSpan expirationTime,
+    bool enableBaseCaching = true)
     : IBaseRepository<TEntity, TStrongestId>
     where TEntity : Entity<TStrongestId>
     where TStrongestId : class, IStrongestId
@@ -19,104 +21,114 @@ public abstract class BaseRepository<TEntity, TStrongestId>(
     protected readonly string _entityName = typeof(TEntity).Name;
     protected readonly BookDbContext _dbContext = dbContext;
     protected readonly ICachedEntityService<TEntity, TStrongestId> _cached = cached;
-    protected readonly TimeSpan _expirationTime = expirationTime;
+    protected readonly TimeSpan _cachingBaseExpirationTime = expirationTime;
+    protected readonly bool _enableBaseCaching = enableBaseCaching;
 
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default) =>
         await GetEntityDbSet().AddAsync(entity, cancellationToken);
 
     public async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await _cached.DeleteAsync(entity.Id, cancellationToken);
+        if (_enableBaseCaching)
+        {
+            await _cached.DeleteAsync(entity.Id, cancellationToken);
+        }
+
         _dbContext.Remove(entity);
     }
 
     public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         _dbContext.Update(entity);
-        await _cached.RefreshAsync(entity.Id, cancellationToken);
+
+        if (_enableBaseCaching)
+        {
+            await _cached.SetAsync(
+                entity, cancellationToken: cancellationToken);
+        }
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync(
-        Expression<Func<TEntity, object>>[]? includes = default, 
         CancellationToken cancellationToken = default) =>
          await GetEntityDbSet()
-        .Includes(includes)
         .ToListAsync(cancellationToken: cancellationToken);
 
-    public async Task<IEnumerable<TEntity>> GetPagedAsync(
-        Expression<Func<TEntity, object>>[]? includes, 
-        int skip, 
-        int take, 
+    protected async Task<PagedList<TEntity>> GetPagedAsync(
+        int pageNumber,
+        int pageSize,
+        Expression<Func<TEntity, bool>>[]? wheres = default,
+        Expression<Func<TEntity, object>>[]? includes = default,
         CancellationToken cancellationToken = default)
     {
+        var skip = GetSkip(pageNumber, pageSize);
+
         var entities = await GetEntityDbSet()
+            .AsNoTracking()
             .Skip(skip)
-            .Take(take)
+            .Take(pageSize)
+            .Wheres(wheres)
             .Includes(includes)
             .ToListAsync(cancellationToken);
 
-        await _cached
-            .SetAsync(entities, _expirationTime, cancellationToken);
+        var count = Count(wheres);
 
-        return entities;
+        var pagedList = new PagedList<TEntity>(entities, count, pageNumber, pageSize);
+        return pagedList;
     }
 
-    public int Count(Expression<Func<TEntity, bool>>[] wheres) =>
+    public int Count(Expression<Func<TEntity, bool>>[]? wheres = default) =>
         GetEntityDbSet().Wheres(wheres).Count();
 
     public async Task<int> CountAsync(CancellationToken cancellationToken = default) =>
         await GetEntityDbSet().CountAsync(cancellationToken);
 
-    public async Task<TEntity> GetByIdAsync(
-        TStrongestId id, 
-        Expression<Func<TEntity, object>>[]? includes = default, 
+    public async Task<TEntity> GetAsync(
+        TStrongestId id,
         CancellationToken cancellationToken = default)
     {
         var entity = await _cached.GetAsync(id, cancellationToken);
 
-        if (entity is not null)
+        if (_enableBaseCaching)
         {
-            return entity;
+            if (entity is not null)
+            {
+                _dbContext.Attach(entity);
+                return entity;
+            }
         }
 
         entity = await GetEntityDbSet()
-            .Includes(includes)
             .FirstAsync(c => c.Id == id, cancellationToken);
 
-        await _cached.SetAsync(entity, _expirationTime, cancellationToken);
+        if (_enableBaseCaching)
+        {
+            await _cached.SetAsync(
+                entity, _cachingBaseExpirationTime, cancellationToken);
+        }
+
         return entity;
     }
 
-    public async Task<bool> IsExistsAsync(TStrongestId id, CancellationToken cancellationToken = default) =>
-        await GetByIdAsync(id, cancellationToken: cancellationToken) is not null;
+    public async Task<bool> IsExistAsync(TStrongestId id, CancellationToken cancellationToken = default) =>
+        await GetEntityDbSet().AnyAsync(x => x.Id == id, cancellationToken: cancellationToken);
 
-    public async Task DeleteByIdAsync(
-        TStrongestId id, 
+    public async Task DeleteAsync(
+        TStrongestId id,
         CancellationToken cancellationToken = default)
     {
-        await _cached.DeleteAsync(id, cancellationToken);
+        if (_enableBaseCaching)
+        {
+            await _cached.DeleteAsync(id, cancellationToken);
+        }
 
         await GetEntityDbSet()
             .Where(entity => entity.Id == id)
             .ExecuteDeleteAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<TEntity>> GetByIdsAsync(
-        IEnumerable<TStrongestId> ids,
-        Expression<Func<TEntity, object>>[]? includes = default,
-        CancellationToken cancellationToken = default)
-    {
-        var entities = await GetEntityDbSet()
-            .AsNoTracking()
-            .Where(x => ids.Contains(x.Id))
-            .Includes(includes)
-            .ToListAsync(cancellationToken);
-
-        await _cached.SetAsync(entities, cancellationToken: cancellationToken);
-
-        return entities;
-    }
-
-    public DbSet<TEntity> GetEntityDbSet() => 
+    protected DbSet<TEntity> GetEntityDbSet() =>
         _dbContext.Set<TEntity>();
+
+    protected int GetSkip(int pageNumber, int pageSize) =>
+        (pageNumber - 1) * pageSize;
 }

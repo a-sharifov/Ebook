@@ -39,7 +39,6 @@ internal sealed class RegisterCommandHandler(
 
         await _repository.AddAsync(user, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
-
         await _identityEmailService.SendConfirmationEmailAsync(user, request.ReturnUrl, cancellationToken);
 
         return Result.Success();
@@ -78,8 +77,8 @@ internal sealed class RegisterCommandHandler(
             lastName,
             passwordHash,
             passwordSalt,
-            emailConfirmationToken,
             isEmailUnique,
+            emailConfirmationToken,
             role,
             cart,
             wish);

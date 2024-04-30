@@ -1,7 +1,17 @@
-﻿using Domain.CartAggregate.Ids;
+﻿using Domain.BookAggregate.Ids;
+using Domain.CartAggregate.Entities;
+using Domain.CartAggregate.Ids;
+using Domain.UserAggregate.Ids;
 
 namespace Domain.CartAggregate.Repositories;
 
 public interface ICartRepository : IBaseRepository<Cart, CartId>
 {
+    Task<bool> BookIsExistInCartAsync(UserId userId, BookId bookId, CancellationToken cancellationToken = default);
+    Task<Cart> GetAsync(UserId id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Cart>> GetExpiredAsync(int take, CancellationToken cancellationToken = default);
+    Task<int> GetTotalQuantityBookAsync(UserId id, CancellationToken cancellationToken = default);
+    Task<bool> IsExistAsync(CartItemId itemId, CancellationToken cancellationToken);
+    Task DeleteAsync(CartItemId itemId, CancellationToken cancellationToken = default);
+    Task<CartItem> GetAsync(CartItemId itemId, CancellationToken cancellationToken = default);
 }

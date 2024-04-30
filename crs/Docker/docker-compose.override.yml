@@ -63,7 +63,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=6060
       - ASPNETCORE_HTTPS_PORTS=6061
-      - POSTGRE_CONNECTION_STRING=Server=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TimeZone=UTC;
+      - POSTGRE_CONNECTION_STRING=Server=postgres;Port=5432;Include Error Detail=True;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TimeZone=UTC;
       - REDIS_CONNECTION_STRING=redis:6379,password=${REDIS_PASSWORD}
       - AUTH_ISSUER=${AUTH_ISSUER}
       - WEB_AUDIENCE=${WEB_AUDIENCE}

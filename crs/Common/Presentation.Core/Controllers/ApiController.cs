@@ -4,6 +4,7 @@ using Domain.Core.Results.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Presentation.Core.Controllers;
 
@@ -82,4 +83,11 @@ public abstract class ApiController : ControllerBase
                 { nameof(errors),  errors  }
             }
         };
+
+    protected Guid GetUserId()
+    {
+        var nameIdClaim = User.Claims.First(x => x.Type == "id");
+        var id = Guid.Parse(nameIdClaim.Value);
+        return id;
+    }
 }

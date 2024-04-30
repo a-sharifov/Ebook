@@ -34,4 +34,8 @@ public static class UserErrors
 
     public static Error BookIsNotInWishList =>
         new("User.BookIsNotInWishList", $"Book is not in wish list.");
+
+    public static Error UserIsConfirmEmail =>
+        new("User.UserIsConfirmed", $"User is confirm email.");
+
 }

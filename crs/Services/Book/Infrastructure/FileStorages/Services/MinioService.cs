@@ -21,7 +21,8 @@ public class MinioService(IMinioClient minioClient, IOptions<BaseUrlOptions> url
         var args = new PutObjectArgs()
             .WithBucket(bucketName)
             .WithStreamData(fileStream)
-            .WithFileName(fileName);
+            .WithObjectSize(fileStream.Length)
+            .WithObject(fileName);
 
         await _minioClient.PutObjectAsync(args, cancellationToken);
     }
@@ -35,7 +36,7 @@ public class MinioService(IMinioClient minioClient, IOptions<BaseUrlOptions> url
             .WithBucket(bucketName)
             .WithObject(objectName);
 
-         await _minioClient.RemoveObjectAsync(args, cancellationToken);
+        await _minioClient.RemoveObjectAsync(args, cancellationToken);
     }
 
     public async Task CreateBucketAsync(string bucketName, CancellationToken cancellationToken = default)
@@ -49,7 +50,7 @@ public class MinioService(IMinioClient minioClient, IOptions<BaseUrlOptions> url
     public void AddDefaultPolicyBucket(string bucketName)
     {
         string accessPolicy = $@"{{""Version"": ""2012-10-17"",""Statement"": [{{""Action"": [""s3:GetBucketLocation""],""Effect"": ""Allow"",""Principal"": {{""AWS"": [""*""]}},""Resource"": [""arn:aws:s3:::{bucketName}""],""Sid"": """"}},{{""Action"": [""s3:ListBucket""],""Effect"": ""Allow"",""Principal"": {{""AWS"": [""*""]}},""Resource"": [""arn:aws:s3:::{bucketName}""],""Sid"": """"}},{{""Action"": [""s3:GetObject""],""Effect"": ""Allow"",""Principal"": {{""AWS"": [""*""]}},""Resource"": [""arn:aws:s3:::{bucketName}/*""],""Sid"": """"}}]}}";
-        
+
         var args = new SetPolicyArgs()
                .WithBucket(bucketName)
                .WithPolicy(accessPolicy);
@@ -89,7 +90,7 @@ public class MinioService(IMinioClient minioClient, IOptions<BaseUrlOptions> url
         _minioClient.PutObjectAsync(args).GetAwaiter().GetResult();
     }
 
-    public void CreateBucket(string bucketName) => 
+    public void CreateBucket(string bucketName) =>
         CreateBucketAsync(bucketName).GetAwaiter().GetResult();
 
     public void UploadFile(string bucketName, string path)

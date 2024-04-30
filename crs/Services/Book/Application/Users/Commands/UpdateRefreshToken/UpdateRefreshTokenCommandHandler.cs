@@ -3,25 +3,26 @@ using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
 using Infrastructure.Jwt.Interfaces;
+using Persistence;
 
 namespace Application.Users.Commands.UpdateRefreshToken;
 
 internal sealed class UpdateRefreshTokenCommandHandler(
     IUserRepository repository,
-    IUnitOfWork unitOfWork,
-    IJwtManager jwtManager) :
+    IJwtManager jwtManager,
+    IUnitOfWork unitOfWork) :
     ICommandHandler<UpdateRefreshTokenCommand, UpdateRefreshTokenCommandResponse>
 {
     private readonly IUserRepository _repository = repository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IJwtManager _jwtManager = jwtManager;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<Result<UpdateRefreshTokenCommandResponse>> Handle(UpdateRefreshTokenCommand request, CancellationToken cancellationToken)
     {
         var emailString = _jwtManager.GetEmailFromToken(request.Token);
         var emailResult = Email.Create(emailString);
 
-        var user = await _repository.GetByEmailAsync(emailResult.Value, cancellationToken: cancellationToken);
+        var user = await _repository.GetAsync(emailResult.Value, cancellationToken: cancellationToken);
 
         if (user is null ||
             user.RefreshToken?.Token != request.RefreshToken)
@@ -30,7 +31,7 @@ internal sealed class UpdateRefreshTokenCommandHandler(
                 UserErrors.RefreshTokenIsNotExists);
         }
 
-        if(user.RefreshToken.IsExpired)
+        if (user.RefreshToken.IsExpired)
         {
             return Result.Failure<UpdateRefreshTokenCommandResponse>(
                 UserErrors.RefreshTokenIsExpired);

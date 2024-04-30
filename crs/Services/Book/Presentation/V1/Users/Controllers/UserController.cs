@@ -3,7 +3,6 @@ using Application.Users.Commands.Login;
 using Application.Users.Commands.Register;
 using Application.Users.Commands.RetryConfirmEmailSend;
 using Application.Users.Commands.UpdateRefreshToken;
-using Application.Users.Queries.GetRoles;
 using Microsoft.AspNetCore.Authorization;
 using Presentation.V1.Users.Models;
 
@@ -21,6 +20,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             request.Password);
 
         var result = await _sender.Send(command);
+
         return result.IsSuccess ? Ok(result.Value)
             : HandleFailure(result);
     }
@@ -37,6 +37,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             request.ReturnUrl);
 
         var result = await _sender.Send(command);
+
         return result.IsSuccess ? Ok()
             : HandleFailure(result);
     }
@@ -50,6 +51,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             request.RefreshToken);
 
         var result = await _sender.Send(command);
+
         return result.IsSuccess ? Ok(result.Value)
             : HandleFailure(result);
     }
@@ -62,6 +64,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             request.ReturnUrl);
 
         var result = await _sender.Send(command);
+
         return result.IsSuccess ? Ok()
             : HandleFailure(result);
     }
@@ -72,17 +75,8 @@ public sealed class UserController(ISender sender) : ApiController(sender)
         var command = new ConfirmEmailCommand(request.UserId, request.EmailConfirmationToken);
 
         var result = await _sender.Send(command);
+
         return result.IsSuccess ? Redirect(request.ReturnUrl)
-            : HandleFailure(result);
-    }
-
-    [HttpGet("roles")]
-    public async Task<IActionResult> GetRoles()
-    {
-        var query = new GetRolesQuery();
-
-        var result = await _sender.Send(query);
-        return result.IsSuccess ? Ok(result.Value)
             : HandleFailure(result);
     }
 }

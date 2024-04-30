@@ -14,6 +14,7 @@ public sealed class JsonSerializer
     private static JsonSerializerSettings GetSettings =>
        new()
        {
+           ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
            TypeNameHandling = TypeNameHandling.All,
            //constructorHandling: Specifies how constructors
            //are used when initializing objects during deserialization by the JsonSerializer.

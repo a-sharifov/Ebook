@@ -20,7 +20,7 @@ public class WishItem : Entity<WishItemId>
         WishId = wishId;
     }
 
-    public static WishItem Create(WishItemId id, Book book, WishId wishId)
+    public static Result<WishItem> Create(WishItemId id, Book book, WishId wishId)
     {
         var wish = new WishItem(id, book, wishId);
 

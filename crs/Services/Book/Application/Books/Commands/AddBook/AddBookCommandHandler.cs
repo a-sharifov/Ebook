@@ -13,6 +13,8 @@ using Domain.GenreAggregate.Repositories;
 using Domain.LanguageAggregate.Ids;
 using Domain.LanguageAggregate.Repositories;
 using Domain.SharedKernel.Enumerations;
+using Domain.SharedKernel.Ids;
+using Domain.SharedKernel.Repositories;
 using Domain.SharedKernel.ValueObjects;
 using MediatR;
 
@@ -24,13 +26,15 @@ internal sealed class AddBookCommandHandler(
     IBookRepository bookRepository,
     IAuthorRepository authorRepository,
     IGenreRepository genreRepository,
-    ILanguageRepository languageRepository)
+    ILanguageRepository languageRepository,
+    IImageRepository imageRepository)
     : ICommandHandler<AddBookCommand>
 {
     private readonly ISender _sender = sender;
     private readonly IAuthorRepository _authorRepository = authorRepository;
     private readonly IGenreRepository _genreRepository = genreRepository;
     private readonly ILanguageRepository _languageRepository = languageRepository;
+    private readonly IImageRepository _imageRepository = imageRepository;
     private readonly IBookRepository _bookRepository = bookRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
@@ -39,15 +43,16 @@ internal sealed class AddBookCommandHandler(
         var addImageCommand =
             new AddImageCommand(ImageBucket.Books, request.PosterStream, request.Poster);
 
-        var imageDto = await _sender.Send(addImageCommand, cancellationToken);
+        var imageDtoResult = await _sender.Send(addImageCommand, cancellationToken);
 
-        if (imageDto.IsFailure)
+        if (imageDtoResult.IsFailure)
         {
-            return imageDto;
+            return imageDtoResult;
         }
 
-        var image = imageDto.Value.Adapt<Image>();
-        var bookResult = await CreateBookAsync(request, image, cancellationToken);
+        var imageId = imageDtoResult.Value.Id;
+
+        var bookResult = await CreateBookAsync(request, imageId, cancellationToken);
 
         if (bookResult.IsFailure)
         {
@@ -64,7 +69,7 @@ internal sealed class AddBookCommandHandler(
 
     private async Task<Result<Book>> CreateBookAsync(
         AddBookCommand request,
-        Image image,
+        Guid existImageId,
         CancellationToken cancellationToken)
     {
         var id = new BookId(Guid.NewGuid());
@@ -76,20 +81,23 @@ internal sealed class AddBookCommandHandler(
         var soldUnits = SoldUnits.Create(0).Value;
 
         var languageId = new LanguageId(request.LanguageId);
-        var language = await _languageRepository.GetByIdAsync(languageId, cancellationToken: cancellationToken);
+        var language = await _languageRepository.GetAsync(languageId, cancellationToken: cancellationToken);
 
-        var genreId =  new GenreId(request.GenreId);
-        var genres = await _genreRepository.GetByIdAsync(genreId, cancellationToken: cancellationToken);
+        var genreId = new GenreId(request.GenreId);
+        var genre = await _genreRepository.GetAsync(genreId, cancellationToken: cancellationToken);
+
+        var imageId = new ImageId(existImageId);
+        var image = await _imageRepository.GetAsync(imageId, cancellationToken: cancellationToken);
 
         var pseudonym = Pseudonym.Create(request.AuthorPseudonym).Value;
-        var isAuthorExists = await _authorRepository.IsExistsAsync(pseudonym, cancellationToken);
+        var isAuthorExists = await _authorRepository.IsExistAsync(pseudonym, cancellationToken);
 
         var author =
             isAuthorExists ? await _authorRepository.GetAsync(pseudonym, cancellationToken) :
             Author.Create(new AuthorId(Guid.NewGuid()), pseudonym).Value;
 
         var book = Book.Create(
-            id, title, description, pageCount, price, language, quantity, soldUnits, author, image, genres).Value;
+            id, title, description, pageCount, price, language, quantity, soldUnits, author, image, genre).Value;
 
         return book;
     }

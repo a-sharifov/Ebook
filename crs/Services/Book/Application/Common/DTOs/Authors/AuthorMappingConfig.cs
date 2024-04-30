@@ -9,5 +9,5 @@ public sealed class AuthorMappingConfig : IMappingConfig
         TypeAdapterConfig<Author, AuthorDto>
             .NewConfig()
             .Map(dest => dest.Id, src => src.Id.Value)
-            .Map(dest => dest.Pseudonym, src => src.Pseudonym);
+            .Map(dest => dest.Pseudonym, src => src.Pseudonym.Value);
 }

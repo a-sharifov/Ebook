@@ -4,6 +4,7 @@ using Domain.BookAggregate.ValueObjects;
 using Domain.SharedKernel.Entities;
 using Domain.GenreAggregate;
 using Domain.LanguageAggregate;
+using Newtonsoft.Json.Linq;
 
 namespace Domain.BookAggregate;
 
@@ -71,4 +72,50 @@ public class Book : AggregateRoot<BookId>
         return book;
     }
 
+    public void UpdateQuantity(QuantityBook quantity)
+    {
+        Quantity = quantity;
+    }
+
+    public Result Increment()
+    {
+        var quantityBookResult = QuantityBook.Create(Quantity.Value + 1);
+
+        if (quantityBookResult.IsFailure)
+        {
+            return Result.Failure(
+                quantityBookResult.Error);
+        }
+
+        Quantity = quantityBookResult.Value;
+        return Result.Success();
+    }
+
+    public Result AddQuantity(QuantityBook quantity)
+    {
+        var quantityBookResult = QuantityBook.Create(Quantity.Value + quantity.Value);
+
+        if (quantityBookResult.IsFailure)
+        {
+            return Result.Failure(
+                quantityBookResult.Error);
+        }
+
+        Quantity = quantityBookResult.Value;
+        return Result.Success();
+    }
+
+    public Result Decrement()
+    {
+        var quantityBookResult = QuantityBook.Create(Quantity.Value - 1);
+
+        if (quantityBookResult.IsFailure)
+        {
+            return Result.Failure(
+                quantityBookResult.Error);
+        }
+
+        Quantity = quantityBookResult.Value;
+        return Result.Success();
+    }
 }

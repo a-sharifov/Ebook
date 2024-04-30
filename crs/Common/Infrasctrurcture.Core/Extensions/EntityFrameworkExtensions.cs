@@ -28,7 +28,7 @@ public static class EntityFrameworkExtensions
        params Expression<Func<TEntity, bool>>[]? includes)
        where TEntity : class
     {
-        if (includes == null || includes[0] == null)
+        if (includes == null /*|| includes[0] == null*/)
         {
             return query;
         }

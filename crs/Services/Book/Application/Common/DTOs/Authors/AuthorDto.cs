@@ -2,9 +2,5 @@
 
 public sealed record AuthorDto(
     Guid Id,
-    string FirstName,
-    string LastName,
-    string Pseudonym,
-    string Image,
-    string Description
+    string Pseudonym
     );

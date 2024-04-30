@@ -5,14 +5,14 @@ namespace Domain.UserAggregate.ValueObjects;
 public sealed class RefreshToken : ValueObject
 {
     public string Token { get; private set; }
-    public DateTime Expired { get; private set; }
+    public DateTime ExpiredTime { get; private set; }
 
-    public bool IsExpired => DateTime.UtcNow >= Expired;
+    public bool IsExpired => DateTime.UtcNow >= ExpiredTime;
 
-    private RefreshToken(string token, DateTime expired) =>
-        (Token, Expired) = (token, expired);
+    private RefreshToken(string token, DateTime expiredTime) =>
+        (Token, ExpiredTime) = (token, expiredTime);
 
-    public static Result<RefreshToken> Create(string refreshToken, DateTime expires)
+    public static Result<RefreshToken> Create(string refreshToken, DateTime expiredTime)
     {
         if (string.IsNullOrWhiteSpace(refreshToken))
         {
@@ -20,13 +20,13 @@ public sealed class RefreshToken : ValueObject
                 RefreshTokenErrors.CannotBeEmpty);
         }
 
-        if (expires < DateTime.UtcNow)
+        if (expiredTime < DateTime.UtcNow)
         {
             return Result.Failure<RefreshToken>(
                 RefreshTokenErrors.CannotBeExpired);
         }
 
-        return new RefreshToken(refreshToken, expires);
+        return new RefreshToken(refreshToken, expiredTime);
     }
 
     public static RefreshToken Empty =>
@@ -39,6 +39,6 @@ public sealed class RefreshToken : ValueObject
     public override IEnumerable<object> GetEqualityComponents()
     {
         yield return Token;
-        yield return Expired;
+        yield return ExpiredTime;
     }
 }
