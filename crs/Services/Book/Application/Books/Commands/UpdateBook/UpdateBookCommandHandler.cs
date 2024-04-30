@@ -21,6 +21,7 @@ using Domain.SharedKernel.Enumerations;
 
 namespace Application.Books.Commands.UpdateBook;
 
+//TODO: change logic.
 internal sealed class UpdateBookCommandHandler(
     IBookRepository bookRepository,
     ISender sender,
@@ -97,9 +98,10 @@ internal sealed class UpdateBookCommandHandler(
 
         var imageId = new ImageId(existImageId);
         var image = await _imageRepository.GetAsync(imageId, cancellationToken: cancellationToken);
+        await _imageRepository.UpdateAsync(image, cancellationToken);
 
         var pseudonym = Pseudonym.Create(request.AuthorPseudonym).Value;
-        var isAuthorExists = await _authorRepository.IsExistsAsync(pseudonym, cancellationToken);
+        var isAuthorExists = await _authorRepository.IsExistAsync(pseudonym, cancellationToken);
 
         var author =
             isAuthorExists ? await _authorRepository.GetAsync(pseudonym, cancellationToken) :

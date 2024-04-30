@@ -69,7 +69,7 @@ public sealed class BookController(ISender sender) : ApiController(sender)
             : HandleFailure(result);
     }
 
-    [Authorize(Policy.Admin)]
+    //[Authorize(Policy.Admin)]
     [HttpPut]
     public async Task<IActionResult> Update([FromForm] UpdateBookRequest request)
     {

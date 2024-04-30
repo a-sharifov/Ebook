@@ -1,4 +1,5 @@
 ﻿using Domain.BookAggregate.Errors;
+using Domain.CartAggregate.ValueObjects;
 
 namespace Domain.BookAggregate.ValueObjects;
 

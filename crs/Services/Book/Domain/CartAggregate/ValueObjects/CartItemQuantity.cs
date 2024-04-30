@@ -4,7 +4,7 @@ namespace Domain.CartAggregate.ValueObjects;
 
 public class CartItemQuantity : ValueObject
 {
-    public int Value { get; }
+    public int Value { get; private set; }
 
     private CartItemQuantity(int value) => Value = value;
 
@@ -19,8 +19,13 @@ public class CartItemQuantity : ValueObject
         return new CartItemQuantity(quantity);
     }
 
+    public static CartItemQuantity Default() => new(1);
+
     public override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    public static implicit operator int(CartItemQuantity quantity) =>
+        quantity.Value;
 }

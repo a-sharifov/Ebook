@@ -63,6 +63,7 @@ public abstract class BaseRepository<TEntity, TStrongestId>(
         var skip = GetSkip(pageNumber, pageSize);
 
         var entities = await GetEntityDbSet()
+            .AsNoTracking()
             .Skip(skip)
             .Take(pageSize)
             .Wheres(wheres)

@@ -1,8 +1,8 @@
-﻿using Application.Books.Queries.GetBook;
-using Application.Wishes.Commands.AddBookInWish;
+﻿using Application.Wishes.Commands.AddBookInWish;
 using Application.Wishes.Commands.DeleteBookInWish;
 using Application.Wishes.Queries.GetWish;
 using Microsoft.AspNetCore.Authorization;
+
 namespace Presentation.V1.Wishes.Controllers;
 
 [Authorize]
@@ -13,8 +13,8 @@ public sealed class WishController(ISender sender) : ApiController(sender)
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var id = GetUserId();
-        var query = new GetWishQuery(id);
+        var userId = GetUserId();
+        var query = new GetWishQuery(userId);
 
         var result = await _sender.Send(query);
 
@@ -25,8 +25,8 @@ public sealed class WishController(ISender sender) : ApiController(sender)
     [HttpPut("{bookId:guid}")]
     public async Task<IActionResult> AddBook(Guid bookId)
     {
-        var id = GetUserId();
-        var command = new AddBookInWishCommand(id, bookId);
+        var userId = GetUserId();
+        var command = new AddBookInWishCommand(userId, bookId);
 
         var result = await _sender.Send(command);
 
@@ -37,8 +37,8 @@ public sealed class WishController(ISender sender) : ApiController(sender)
     [HttpDelete("{bookId:guid}")]
     public async Task<IActionResult> DeleteBook(Guid bookId)
     {
-        var id = GetUserId();
-        var command = new DeleteBookInWishCommand(id, bookId);
+        var userId = GetUserId();
+        var command = new DeleteBookInWishCommand(userId, bookId);
 
         var result = await _sender.Send(command);
 

@@ -11,8 +11,8 @@ internal sealed class GetCartQueryHandler(ICartRepository repository)
 
     public async Task<Result<CartDto>> Handle(GetCartQuery request, CancellationToken cancellationToken)
     {
-        var id = new UserId(request.UserId);
-        var cart = await _repository.GetAsync(id, cancellationToken);
+        var userId = new UserId(request.UserId);
+        var cart = await _repository.GetAsync(userId, cancellationToken);
         var cartDto = cart.Adapt<CartDto>();
 
         return cartDto;

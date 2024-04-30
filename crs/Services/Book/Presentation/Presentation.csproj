@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="V1\Carts\Models\" />
+    <Folder Include="V1\Wishes\Models\" />
   </ItemGroup>
 
 </Project>

@@ -16,7 +16,7 @@ public class WishRepository(
         expirationTime: TimeSpan.FromMinutes(20),
         enableBaseCaching: false), IWishRepository
 {
-    public async Task<Wish> GetAsync(UserId id, CancellationToken cancellationToken = default)
+    public async Task<Wish> GetAsync(UserId userId, CancellationToken cancellationToken = default)
     {
         var query = GetEntityDbSet()
             .Include(x => x.Items)
@@ -33,7 +33,7 @@ public class WishRepository(
             .ThenInclude(x => x.Author);
 
         var wish = await query.FirstAsync(
-          x => x.UserId == id, cancellationToken: cancellationToken);
+          x => x.UserId == userId, cancellationToken: cancellationToken);
 
         return wish;
     }

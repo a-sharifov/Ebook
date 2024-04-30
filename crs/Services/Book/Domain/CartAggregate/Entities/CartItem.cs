@@ -1,4 +1,5 @@
 ﻿using Domain.BookAggregate;
+using Domain.BookAggregate.ValueObjects;
 using Domain.CartAggregate.Errors;
 using Domain.CartAggregate.Ids;
 using Domain.CartAggregate.ValueObjects;
@@ -30,15 +31,45 @@ public class CartItem : Entity<CartItemId>
         return cartItem;
     }
 
+    //change logic 
     public Result UpdateQuantity(CartItemQuantity quantity)
     {
-        if (quantity.Value > Book.Quantity.Value)
+        if (quantity.Value > Book.Quantity.Value + Quantity.Value)
         {
             return Result.Failure(
                 CartItemErrors.QuantityExceedsBookQuantity);
         }
 
+        var quantityBook = QuantityBook.Create(
+            Quantity.Value + Book.Quantity.Value - quantity.Value).Value;
+
+        Book.UpdateQuantity(quantityBook);
         Quantity = quantity;
+
+        return Result.Success();
+    }
+
+    internal Result Increment()
+    {
+        var bookDecrementResult = Book.Decrement();
+
+        if (bookDecrementResult.IsFailure)
+        {
+            return Result.Failure(
+                bookDecrementResult.Error);
+        }
+
+        //TODO: fix
+        var itemQuantityResult = CartItemQuantity.Create(Quantity.Value + 1);
+
+        if (itemQuantityResult.IsFailure)
+        {
+            return Result.Failure(
+                itemQuantityResult.Error);
+        }
+
+        Quantity = itemQuantityResult.Value;
+
         return Result.Success();
     }
 

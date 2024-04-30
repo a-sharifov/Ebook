@@ -90,7 +90,7 @@ internal sealed class AddBookCommandHandler(
         var image = await _imageRepository.GetAsync(imageId, cancellationToken: cancellationToken);
 
         var pseudonym = Pseudonym.Create(request.AuthorPseudonym).Value;
-        var isAuthorExists = await _authorRepository.IsExistsAsync(pseudonym, cancellationToken);
+        var isAuthorExists = await _authorRepository.IsExistAsync(pseudonym, cancellationToken);
 
         var author =
             isAuthorExists ? await _authorRepository.GetAsync(pseudonym, cancellationToken) :

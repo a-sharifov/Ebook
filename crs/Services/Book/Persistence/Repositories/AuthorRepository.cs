@@ -26,9 +26,10 @@ public class AuthorRepository(
         return author;
     }
 
-    public async Task<bool> IsExistsAsync(Pseudonym pseudonym, CancellationToken cancellationToken = default)
+    public async Task<bool> IsExistAsync(Pseudonym pseudonym, CancellationToken cancellationToken = default)
     {
         var isExists = await GetEntityDbSet()
+            .AsNoTracking()
            .Where(x => x.Pseudonym == pseudonym)
            .AnyAsync(cancellationToken: cancellationToken);
 
