@@ -1,5 +1,6 @@
 ﻿using Application.Wishes.Commands.AddBookInWish;
 using Application.Wishes.Commands.DeleteBookInWish;
+using Application.Wishes.Queries.BookInWIsh;
 using Application.Wishes.Queries.GetWish;
 using Microsoft.AspNetCore.Authorization;
 
@@ -43,6 +44,18 @@ public sealed class WishController(ISender sender) : ApiController(sender)
         var result = await _sender.Send(command);
 
         return result.IsSuccess ? Ok()
+          : HandleFailure(result);
+    }
+
+    [HttpGet("book-in-wish/{bookId:guid}")]
+    public async Task<IActionResult> InWish(Guid bookId)
+    {
+        var userId = GetUserId();
+        var query = new BookInWishQuery(userId, bookId);
+
+        var result = await _sender.Send(query);
+
+        return result.IsSuccess ? Ok(result.Value)
           : HandleFailure(result);
     }
 }
