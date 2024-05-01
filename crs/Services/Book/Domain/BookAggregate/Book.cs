@@ -72,9 +72,10 @@ public class Book : AggregateRoot<BookId>
         return book;
     }
 
-    public void UpdateQuantity(QuantityBook quantity)
+    public Result UpdateQuantity(QuantityBook quantity)
     {
         Quantity = quantity;
+        return Result.Success();
     }
 
     public Result Increment()

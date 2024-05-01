@@ -11,7 +11,4 @@ public interface ICartRepository : IBaseRepository<Cart, CartId>
     Task<Cart> GetAsync(UserId id, CancellationToken cancellationToken = default);
     Task<IEnumerable<Cart>> GetExpiredAsync(int take, CancellationToken cancellationToken = default);
     Task<int> GetTotalQuantityBookAsync(UserId id, CancellationToken cancellationToken = default);
-    Task<bool> IsExistAsync(CartItemId itemId, CancellationToken cancellationToken);
-    Task DeleteAsync(CartItemId itemId, CancellationToken cancellationToken = default);
-    Task<CartItem> GetAsync(CartItemId itemId, CancellationToken cancellationToken = default);
 }

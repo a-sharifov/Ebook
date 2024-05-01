@@ -1,11 +1,10 @@
 ﻿using Application.Carts.Commands.AddBookInCart;
-using Application.Carts.Commands.DeleteBookInCart;
+using Application.Carts.Commands.DeleteItemInCart;
+using Application.Carts.Commands.UpdateQuantityBookInCart;
 using Application.Carts.Queries.BookInCart;
 using Application.Carts.Queries.GetCart;
 using Application.Carts.Queries.GetQuantityBookCart;
 using Microsoft.AspNetCore.Authorization;
-using System.Reactive.Subjects;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Presentation.V1.Carts.Controllers;
 
@@ -26,23 +25,6 @@ public sealed class CartController(ISender sender) : ApiController(sender)
             : HandleFailure(result);
     }
 
-    [HttpPut("{bookId:guid}")]
-    public async Task<IActionResult> AddBook(Guid bookId)
-    {
-        var userId = GetUserId();
-        var command = new AddProductInCartCommand(userId, bookId);
-
-        var result = await _sender.Send(command);
-
-        return result.IsSuccess ? Ok() 
-            : HandleFailure(result);
-    }
-
-    //[HttpPut]
-    //public async Task<IActionResult> Clear(Guid id)
-    //{
-
-    //}
 
     [HttpGet("book-in-cart/{bookId:guid}")]
     public async Task<IActionResult> BookInCart(Guid bookId)
@@ -67,6 +49,29 @@ public sealed class CartController(ISender sender) : ApiController(sender)
 
         return result.IsSuccess ? Ok(result.Value)
             : HandleFailure(result);
+    }
+
+    [HttpPost("{bookId:guid}")]
+    public async Task<IActionResult> AddBook(Guid bookId)
+    {
+        var userId = GetUserId();
+        var command = new AddProductInCartCommand(userId, bookId);
+
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? Ok()
+            : HandleFailure(result);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateQuantityBookItem(Guid id)
+    {
+        var command = new UpdateQuantityBookInCart(id, 10);
+
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? Ok()
+          : HandleFailure(result);
     }
 
     [HttpDelete("delete-item/{itemId:guid}")]

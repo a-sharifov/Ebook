@@ -84,32 +84,4 @@ public class CartRepository(
 
         return item;
     }
-
-    public async Task<bool> IsExistAsync(CartItemId itemId, CancellationToken cancellationToken)
-    {
-        var isExist = await _dbContext.Carts.SelectMany(x => x.Items)
-            .AsNoTracking()
-            .Where(x => x.Id == itemId)
-            .AnyAsync(cancellationToken);
-
-        return isExist;
-    }
-
-    public async Task DeleteAsync(CartItemId itemId, CancellationToken cancellationToken = default)
-    {
-        await _dbContext.Carts.SelectMany(x => x.Items)
-            .Where(x => x.Id == itemId)
-            .ExecuteDeleteAsync(cancellationToken);
-    }
-     
-    public async Task<CartItem> GetAsync(CartItemId itemId, CancellationToken cancellationToken = default)
-    {
-        var cartItem = await _dbContext.Carts.SelectMany(x => x.Items)
-            .AsNoTracking()
-            .Where(x => x.Id == itemId)
-            .Include(x => x.Book)
-            .FirstAsync(cancellationToken: cancellationToken);
-
-        return cartItem;
-    }
 }

@@ -40,17 +40,11 @@ public class Cart : AggregateRoot<CartId>
         if (isExistInCart)
         {
             item = Items.First(x => x.Book.Id == item.Book.Id);
-            return item.Increment();
+            var incrementResult = item.Increment();
+            return incrementResult;
         }
 
-        var incrementResult = item.Increment();
-
-        if (incrementResult.IsFailure)
-        {
-            return Result.Failure(
-                incrementResult.Error);
-        }
-
+        item.Book.Decrement();
         _items.Add(item);
         return Result.Success();
     }
@@ -66,19 +60,11 @@ public class Cart : AggregateRoot<CartId>
 
         var item = _items.First(x => x.Id == itemId);
 
-        if(item.Quantity == 1)
+        if (item.Quantity == 1)
         {
             _items.Remove(item);
             return Result.Success();
         }
-
-        //var decrementResult = item.Dicrement();
-
-        //if (decrementResult.IsFailure)
-        //{
-        //    return Result.Failure(
-        //        decrementResult.Error);
-        //}
 
         _items.Remove(item);
 
