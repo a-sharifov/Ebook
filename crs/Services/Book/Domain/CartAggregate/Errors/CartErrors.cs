@@ -7,5 +7,4 @@ public static class CartErrors
 
     public static Error ItemAlreadyExists =>
         new("Cart.ItemAlreadyExists", "The item already exists in the cart.");
-
 }

@@ -40,10 +40,18 @@ public class CartItem : Entity<CartItemId>
                 CartItemErrors.QuantityExceedsBookQuantity);
         }
 
-        var quantityBook = QuantityBook.Create(
-            Quantity.Value + Book.Quantity.Value - quantity.Value).Value;
+        var quantityBookResult = QuantityBook.Create(
+            Quantity.Value + Book.Quantity.Value - quantity.Value);
 
-        Book.UpdateQuantity(quantityBook);
+        if (quantityBookResult.IsFailure)
+        {
+            return Result.Failure(
+                quantityBookResult.Error);
+        }
+
+        var updateQuantityBook = Book.UpdateQuantity(
+            quantityBookResult.Value);
+
         Quantity = quantity;
 
         return Result.Success();
@@ -59,7 +67,6 @@ public class CartItem : Entity<CartItemId>
                 bookDecrementResult.Error);
         }
 
-        //TODO: fix
         var itemQuantityResult = CartItemQuantity.Create(Quantity.Value + 1);
 
         if (itemQuantityResult.IsFailure)

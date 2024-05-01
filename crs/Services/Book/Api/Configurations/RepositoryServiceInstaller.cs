@@ -18,6 +18,7 @@ internal sealed class RepositoryServiceInstaller : IServiceInstaller
         services.AddTransient<IAuthorRepository, AuthorRepository>();
         services.AddTransient<IBookRepository, BookRepository>();
         services.AddTransient<ICartRepository, CartRepository>();
+        services.AddTransient<ICartItemRepository, CartItemRepository>();
         services.AddTransient<IGenreRepository, GenreRepository>();
         services.AddTransient<ILanguageRepository, LanguageRepository>();
         services.AddTransient<IUserRepository, UserRepository>();

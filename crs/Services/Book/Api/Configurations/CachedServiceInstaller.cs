@@ -17,6 +17,7 @@ using Domain.SharedKernel.Ids;
 using Domain.SharedKernel.Entities;
 using Domain.WishAggregate.Ids;
 using Domain.WishAggregate;
+using Domain.CartAggregate.Entities;
 
 namespace Api.Configurations;
 
@@ -27,6 +28,7 @@ internal sealed class CachedServiceInstaller : IServiceInstaller
         services.AddTransient<ICachedEntityService<Author, AuthorId>, CachedEntityService<Author, AuthorId>>();
         services.AddTransient<ICachedEntityService<Book, BookId>, CachedEntityService<Book, BookId>>();
         services.AddTransient<ICachedEntityService<Cart, CartId>, CachedEntityService<Cart, CartId>>();
+        services.AddTransient<ICachedEntityService<CartItem, CartItemId>, CachedEntityService<CartItem, CartItemId>>();
         services.AddTransient<ICachedEntityService<Genre, GenreId>, CachedEntityService<Genre, GenreId>>();
         services.AddTransient<ICachedEntityService<Language, LanguageId>, CachedEntityService<Language, LanguageId>>();
         services.AddTransient<ICachedEntityService<User, UserId>, CachedEntityService<User, UserId>>();
