@@ -9,7 +9,7 @@ using Persistence.DbContexts;
 
 namespace Persistence.Repositories;
 
-public class CartRepository(
+public sealed class CartRepository(
     BookDbContext dbContext,
     ICachedEntityService<Cart, CartId> cached)
     : BaseRepository<Cart, CartId>(

@@ -7,7 +7,7 @@ using Persistence.DbContexts;
 
 namespace Persistence.Repositories;
 
-public class GenreRepository(
+public sealed class GenreRepository(
     BookDbContext dbContext,
     ICachedEntityService<Genre, GenreId> cached)
     : BaseRepository<Genre, GenreId>(

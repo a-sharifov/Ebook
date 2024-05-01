@@ -8,7 +8,7 @@ using Persistence.DbContexts;
 
 namespace Persistence.Repositories;
 
-public class WishRepository(
+public sealed class WishRepository(
     BookDbContext dbContext,
     ICachedEntityService<Wish, WishId> cached)
     : BaseRepository<Wish, WishId>(

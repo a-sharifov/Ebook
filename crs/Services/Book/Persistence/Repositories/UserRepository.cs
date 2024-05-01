@@ -7,7 +7,7 @@ using Persistence.DbContexts;
 
 namespace Persistence.Repositories;
 
-public class UserRepository(
+public sealed class UserRepository(
     BookDbContext dbContext,
     ICachedEntityService<User, UserId> cached)
     : BaseRepository<User, UserId>(

@@ -6,7 +6,7 @@ using Domain.SharedKernel.Repositories;
 
 namespace Persistence.Repositories;
 
-public class ImageRepository(
+public sealed class ImageRepository(
     BookDbContext dbContext,
     ICachedEntityService<Image, ImageId> cached)
     : BaseRepository<Image, ImageId>(

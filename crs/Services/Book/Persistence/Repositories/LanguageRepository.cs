@@ -6,7 +6,7 @@ using Persistence.DbContexts;
 
 namespace Persistence.Repositories;
 
-public class LanguageRepository(
+public sealed class LanguageRepository(
     BookDbContext dbContext,
     ICachedEntityService<Language, LanguageId> cached)
     : BaseRepository<Language, LanguageId>(
