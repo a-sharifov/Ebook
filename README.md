@@ -13,4 +13,4 @@ Check out our [documentation](/docs) for more details on the project setup and u
 
 If you have any questions or suggestions, feel free to reach out to me.
 
-This project is licensed under the [Apache 2.0 License](LICENSE).
+This project is licensed under the [Apache 2.0 License](https://github.com/a-sharifov/Ebook/blob/master/LICENSE.txt).
