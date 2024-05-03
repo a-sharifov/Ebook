@@ -25,7 +25,7 @@ public sealed class LanguageController(ISender sender) : ApiController(sender)
 
     [Authorize(Policy.Admin)]
     [HttpPost]
-    public async Task<IActionResult> Post(AddLanquageRequest request)
+    public async Task<IActionResult> Post([FromBody] AddLanquageRequest request)
     {
         var command = new AddLanquageCommand(request.Name, request.Code);
 

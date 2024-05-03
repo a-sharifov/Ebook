@@ -11,9 +11,10 @@ namespace Domain.CartAggregate;
 public class Cart : AggregateRoot<CartId>
 {
     public UserId UserId { get; private set; }
+    public CartExpirationTime? ExpirationTime { get; private set; }
+
     private readonly List<CartItem> _items = [];
     public IReadOnlyCollection<CartItem> Items => _items.AsReadOnly();
-    public DateTime? ExpirationTime { get; private set; }
 
     public decimal TotalPrice => CalculateTotalPrice();
 
@@ -30,22 +31,39 @@ public class Cart : AggregateRoot<CartId>
     public static Result<Cart> Create(CartId id, UserId userId)
     {
         var cart = new Cart(id, userId);
+
         return Result.Success(cart);
     }
 
+    //TODO: change logic.
     public Result AddItem(CartItem item)
     {
+        ExpirationTime = CartExpirationTime.Default();
         var isExistInCart = _items.Exists(x => x.Book.Id == item.Book.Id);
 
         if (isExistInCart)
         {
             item = Items.First(x => x.Book.Id == item.Book.Id);
             var incrementResult = item.Increment();
+
+            if (incrementResult.IsSuccess)
+            {
+                ExpirationTime = CartExpirationTime.Default();
+            }
+
             return incrementResult;
         }
 
-        item.Book.Decrement();
+        var decrementResult = item.Book.Decrement();
+
+        if (decrementResult.IsFailure)
+        {
+            return decrementResult;
+        }
+
         _items.Add(item);
+        ExpirationTime = CartExpirationTime.Default();
+
         return Result.Success();
     }
 
@@ -58,14 +76,12 @@ public class Cart : AggregateRoot<CartId>
             return Result.Failure(CartErrors.ItemNotFound);
         }
 
-        var item = _items.First(x => x.Id == itemId);
-
-        if (item.Quantity == 1)
+        if (_items.Count != 1)
         {
-            _items.Remove(item);
-            return Result.Success();
+            ExpirationTime = CartExpirationTime.Default();
         }
 
+        var item = _items.First(x => x.Id == itemId);
         _items.Remove(item);
 
         return Result.Success();
@@ -81,8 +97,15 @@ public class Cart : AggregateRoot<CartId>
         }
 
         var cartItem = _items.First(x => x.Id == itemId);
+        var updateQuantityResult = cartItem.UpdateQuantity(itemQuantity);
 
-        return cartItem.UpdateQuantity(itemQuantity);
+        if (updateQuantityResult.IsFailure)
+        {
+            return updateQuantityResult;
+        }
+
+        ExpirationTime = CartExpirationTime.Default();
+        return Result.Success();
     }
 
     public void Clear()
@@ -92,6 +115,9 @@ public class Cart : AggregateRoot<CartId>
             item.Book.UpdateQuantity(QuantityBook.Create
                 (item.Quantity.Value + item.Book.Quantity.Value).Value);
         }
+
+        _items.Clear();
+        ExpirationTime = null;
     }
 
     private decimal CalculateTotalPrice()

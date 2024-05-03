@@ -38,4 +38,6 @@ public static class UserErrors
     public static Error UserIsConfirmEmail =>
         new("User.UserIsConfirmed", $"User is confirm email.");
 
+    public static Error IsCurrentEmail =>
+      new("User.IsCurrentEmail", $"Is current email.");
 }

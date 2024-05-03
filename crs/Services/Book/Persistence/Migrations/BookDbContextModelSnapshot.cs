@@ -344,7 +344,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.BookAggregate.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.CartAggregate.Cart", null)

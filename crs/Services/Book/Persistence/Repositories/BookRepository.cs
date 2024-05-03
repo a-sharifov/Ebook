@@ -9,7 +9,7 @@ using Persistence.Filters;
 
 namespace Persistence.Repositories;
 
-public class BookRepository(
+public sealed class BookRepository(
     BookDbContext dbContext,
     ICachedEntityService<Book, BookId> cached)
     : BaseRepository<Book, BookId>(

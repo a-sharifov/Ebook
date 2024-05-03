@@ -1,21 +1,30 @@
-﻿using Domain.CartAggregate.Repositories;
-using Domain.Core.UnitOfWorks.Interfaces;
+﻿using Domain.CartAggregate;
+using Microsoft.EntityFrameworkCore;
+using Persistence.DbContexts;
 using Quartz;
 
 namespace Infrastructure.BackgroundJobs;
 
 [DisallowConcurrentExecution]
-public sealed class CartExpirationCleanupJob(
-    ICartRepository cartRepository,
-    IUnitOfWork unitOfWork) : IJob
+public sealed class CartExpirationCleanupJob(BookDbContext dbContext) : IJob
 {
-    private readonly ICartRepository _cartRepository = cartRepository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly BookDbContext _dbContext = dbContext;
 
     public async Task Execute(IJobExecutionContext context)
     {
-        //_cartRepository.GetDeleteExpiredAsync();
+        //var cart = await _dbContext
+        //    .Set<Cart>()
+        //    .Where(x => x.ExpirationTime != null && x.ExpirationTime > DateTime.UtcNow)
+        //    .Include(x => x.Items)
+        //    .ThenInclude(x => x.Book)
+        //    .FirstOrDefaultAsync(context.CancellationToken);
 
-        await Console.Out.WriteLineAsync("Hello world!");
+        //if (cart is null)
+        //{
+        //    return;
+        //}
+
+        //cart.Clear();
+        //await _dbContext.SaveChangesAsync(context.CancellationToken);
     }
 }

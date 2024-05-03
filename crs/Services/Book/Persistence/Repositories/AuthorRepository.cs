@@ -7,7 +7,7 @@ using Persistence.DbContexts;
 
 namespace Persistence.Repositories;
 
-public class AuthorRepository(
+public sealed class AuthorRepository(
     BookDbContext dbContext,
     ICachedEntityService<Author, AuthorId> cached)
     : BaseRepository<Author, AuthorId>(

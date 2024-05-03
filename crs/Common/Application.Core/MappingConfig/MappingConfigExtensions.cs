@@ -24,7 +24,7 @@ public static class MappingConfigExtensions
         .DefinedTypes
         .Where(IsServiceInstaller)
         .Select(x => (IMappingConfig)Activator.CreateInstance(x)!)
-        .Foreach(x => x.Configure());
+        .ForEach(x => x.Configure());
 
     /// <summary>
     /// Check if the given type is a service installer.
