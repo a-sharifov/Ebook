@@ -2,7 +2,7 @@
 
 public sealed record GetBooksRequest(
     [Required] int PageSize,
-    int PageNumber = 0,
+    int PageNumber = 1,
     decimal MinPrice = 0,
     decimal MaxPrice = 0,
     string? Title = default,

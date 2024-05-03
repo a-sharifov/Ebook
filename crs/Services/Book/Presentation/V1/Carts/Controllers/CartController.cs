@@ -30,7 +30,6 @@ public sealed class CartController(ISender sender) : ApiController(sender)
     public async Task<IActionResult> BookInCart(Guid bookId)
     {
         var userId = GetUserId();
-
         var query = new BookInCartQuery(userId, bookId);
 
         var result = await _sender.Send(query);
@@ -63,10 +62,10 @@ public sealed class CartController(ISender sender) : ApiController(sender)
             : HandleFailure(result);
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateQuantityBookItem(Guid id)
+    [HttpPut("items/{itemId:guid}")]
+    public async Task<IActionResult> UpdateQuantityBookItem(Guid itemId, [FromBody] int quantity)
     {
-        var command = new UpdateQuantityBookInCart(id, 10);
+        var command = new UpdateQuantityBookInCart(itemId, quantity);
 
         var result = await _sender.Send(command);
 
@@ -74,7 +73,7 @@ public sealed class CartController(ISender sender) : ApiController(sender)
           : HandleFailure(result);
     }
 
-    [HttpDelete("delete-item/{itemId:guid}")]
+    [HttpDelete("items/{itemId:guid}")]
     public async Task<IActionResult> DeleteItemInCart(Guid itemId)
     {
         var command = new DeleteItemInCartCommand(itemId);
