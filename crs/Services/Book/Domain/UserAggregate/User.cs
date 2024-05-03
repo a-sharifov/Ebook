@@ -143,9 +143,16 @@ public sealed class User : AggregateRoot<UserId>
         return Result.Success();
     }
 
-    public void ChangeEmail(Email email)
+    public Result ChangeEmail(Email email)
     {
+        if(Email == email)
+        {
+            return Result.Failure(
+                UserErrors.IsCurrentEmail);
+        }
+
         Email = email;
+        return Result.Success();
     }
 
     public void UpdateRefreshToken(RefreshToken refreshToken) =>
