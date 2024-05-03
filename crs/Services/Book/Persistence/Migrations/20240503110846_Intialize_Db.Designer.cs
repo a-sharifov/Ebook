@@ -12,7 +12,7 @@ using Persistence.DbContexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20240502101439_Intialize_Db")]
+    [Migration("20240503110846_Intialize_Db")]
     partial class Intialize_Db
     {
         /// <inheritdoc />
@@ -347,7 +347,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.BookAggregate.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.CartAggregate.Cart", null)

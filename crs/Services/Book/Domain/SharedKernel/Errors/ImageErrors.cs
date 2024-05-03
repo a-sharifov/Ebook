@@ -6,5 +6,5 @@ public static class ImageErrors
         new("Image.CannotBeEmpty", "Image name cannot be empty");
 
     public static Error IsNotExist =>
-        new("Image.IsNotExist", "Is not exist.");
+        new("Image.IsNotExist", "Image is not exist.");
 }

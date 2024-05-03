@@ -95,7 +95,7 @@ public sealed class BookController(ISender sender) : ApiController(sender)
             : HandleFailure(result);
     }
 
-    [Authorize(Policy.Admin)]
+    //[Authorize(Policy.Admin)]
     [HttpDelete("{id:guid}")] 
     public async Task<IActionResult> Delete(Guid id)
     {

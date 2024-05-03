@@ -84,7 +84,7 @@ internal sealed class AddBookCommandHandler(
             return Result.Failure<Book>(languageResult.Error);
         }
 
-        var genreResult = await GetGenreAsync(request.LanguageId, cancellationToken);
+        var genreResult = await GetGenreAsync(request.GenreId, cancellationToken);
 
         if (genreResult.IsFailure)
         {
