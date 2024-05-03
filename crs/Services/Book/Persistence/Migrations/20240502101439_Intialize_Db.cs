@@ -5,7 +5,7 @@
 namespace Persistence.Migrations;
 
 /// <inheritdoc />
-public partial class Initialize_Database : Migration
+public partial class Intialize_Db : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)

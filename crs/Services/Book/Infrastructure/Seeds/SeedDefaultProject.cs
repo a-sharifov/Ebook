@@ -1,7 +1,4 @@
-﻿using Domain.AuthorAggregate.Ids;
-using Domain.AuthorAggregate.ValueObjects;
-using Domain.AuthorAggregate;
-using Domain.GenreAggregate.Ids;
+﻿using Domain.GenreAggregate.Ids;
 using Domain.GenreAggregate.ValueObjects;
 using Domain.GenreAggregate;
 using Domain.LanguageAggregate.Ids;
@@ -14,18 +11,6 @@ using Infrastructure.Core.Seeds;
 using Infrastructure.FileStorages.Interfaces;
 using Persistence.DbContexts;
 using Domain.SharedKernel.Entities;
-using Domain.UserAggregate;
-using Contracts.Enumerations;
-using MimeKit.Cryptography;
-using Domain.CartAggregate.Ids;
-using Domain.CartAggregate;
-using Domain.Core.Repositories.Interfaces;
-using Domain.UserAggregate.Ids;
-using Domain.UserAggregate.ValueObjects;
-using Domain.WishAggregate.Ids;
-using Domain.WishAggregate;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System.Threading;
 
 namespace Infrastructure.Seeds;
 
@@ -44,8 +29,6 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         }
 
         AddBuckets();
-        UploadGenresImages();
-
         AddLanguages();
         AddGenres();
 
@@ -69,14 +52,6 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         AddLanguage("English", "en");
         AddLanguage("Russian", "ru");
         AddLanguage("Azerbaijani", "az");
-    }
-
-    private void UploadGenresImages()
-    {
-        var defaultGenreImagesPath = Path.Combine(
-           AssemblyReference.AssemblyPath, "Seeds", "images", "genres");
-
-        _fileService.UploadFilesInBasePath(ImageBucket.Genres, defaultGenreImagesPath);
     }
 
     private void AddGenres()

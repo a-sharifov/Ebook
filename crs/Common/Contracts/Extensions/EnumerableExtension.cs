@@ -11,7 +11,7 @@ public static class EnumerableExtension
     /// <typeparam name="T"> The type.</typeparam>
     /// <param name="values"> The enumerable value</param>
     /// <param name="action"> The action.</param>
-    public static void Foreach<T>(this IEnumerable<T> values, Action<T> action)
+    public static void ForEach<T>(this IEnumerable<T> values, Action<T> action)
     {
         foreach (var value in values)
         {

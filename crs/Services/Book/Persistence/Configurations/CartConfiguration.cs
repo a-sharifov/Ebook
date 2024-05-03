@@ -1,7 +1,9 @@
 ﻿using Domain.CartAggregate;
 using Domain.CartAggregate.Ids;
+using Domain.CartAggregate.ValueObjects;
 using Domain.UserAggregate.Ids;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Persistence.Configurations.Converters;
 
 namespace Persistence.Configurations;
 
@@ -22,6 +24,9 @@ internal sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
             buyerId => buyerId.Value,
             value => new UserId(value))
             .IsRequired();
+
+        builder.Property(x => x.ExpirationTime)
+            .HasConversion<CartExpirationTimeConverter>();
 
         builder.HasMany(x => x.Items)
             .WithOne()

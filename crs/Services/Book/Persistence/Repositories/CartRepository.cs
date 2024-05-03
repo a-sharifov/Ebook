@@ -55,8 +55,8 @@ public sealed class CartRepository(
     public async Task<IEnumerable<Cart>> GetExpiredAsync(int take, CancellationToken cancellationToken = default)
     {
         var carts = await GetEntityDbSet()
-            .AsNoTracking()
-            .Where(x => x.ExpirationTime >= DateTime.UtcNow)
+            //.AsNoTracking()
+            .Where(x => x.ExpirationTime.Value >= DateTime.UtcNow)
             .Take(take)
             .ToListAsync(cancellationToken: cancellationToken);
 

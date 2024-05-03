@@ -12,8 +12,8 @@ using Persistence.DbContexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20240426114720_Initialize_Database")]
-    partial class Initialize_Database
+    [Migration("20240502101439_Intialize_Db")]
+    partial class Intialize_Db
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

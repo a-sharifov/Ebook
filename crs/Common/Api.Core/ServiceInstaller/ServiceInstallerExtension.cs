@@ -25,7 +25,7 @@ public static class ServiceInstallerExtension
         .DefinedTypes
         .Where(IsServiceInstaller)
         .Select(x => (IServiceInstaller)Activator.CreateInstance(x)!)
-        .Foreach(x => x.Install(services, configuration));
+        .ForEach(x => x.Install(services, configuration));
 
     /// <summary>
     /// Check if the given type is a service installer.

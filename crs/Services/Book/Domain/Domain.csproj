@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="UserAggregate\Errors\" />
     <Folder Include="UserAggregate\ValueObjects\" />
   </ItemGroup>
 
