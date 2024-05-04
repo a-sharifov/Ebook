@@ -7,5 +7,5 @@ internal sealed class BaseUrlOptionsSetup
      : IConfigureOptions<BaseUrlOptions>
 {
     public void Configure(BaseUrlOptions options) => 
-        options.BaseUrl = $"127.0.0.1:9000";
+        options.BaseUrl = @"http://127.0.0.1:9001";
 }

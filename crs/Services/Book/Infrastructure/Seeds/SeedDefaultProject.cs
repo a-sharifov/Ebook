@@ -20,6 +20,12 @@ using Domain.WishAggregate.Ids;
 using Domain.WishAggregate;
 using Domain.CartAggregate.Ids;
 using Domain.CartAggregate;
+using Domain.AuthorAggregate;
+using Domain.AuthorAggregate.Ids;
+using Domain.AuthorAggregate.ValueObjects;
+using Domain.BookAggregate;
+using Domain.BookAggregate.Ids;
+using Domain.BookAggregate.ValueObjects;
 
 namespace Infrastructure.Seeds;
 
@@ -39,11 +45,45 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         }
 
         AddDefaultBuckets();
-        AddDefaultLanguages();
-        AddDefaultGenres();
-        AddDefaultUsers();
+        UploadBookImages();
+
+        AddUser("admin@gmail.com", "admin", "admin", "admin", Role.Admin);
+        AddUser("user@gmail.com", "user", "user", "user", Role.User);
+
+        var LiAuthor = AddAuthor("Li");
+        var BenAuthor = AddAuthor("Ben");
+        var StivenAuthor = AddAuthor("Stiven");
+
+        var englishLanguage = AddLanguage("English", "en");
+        var russianLanguage = AddLanguage("Russian", "ru");
+        var azerbaijaniLanguage = AddLanguage("Azerbaijani", "az");
+
+        var fantasyGenre = AddGenre("Fantasy");
+        var classicGenre = AddGenre("Classic");
+        var romanceGenre = AddGenre("Romance");
+        var horrorGenre = AddGenre("Horror");
+
+        var book1 = AddBook("Book1", "Description for Book1", 200, 9.99m, englishLanguage, 100, 10, LiAuthor, AddImage(ImageBucket.Books, "default.jpg", true), fantasyGenre);
+        var book2 = AddBook("Book2", "Description for Book2", 300, 14.99m, russianLanguage, 80, 15, BenAuthor, AddImage(ImageBucket.Books, "default.jpg", true), classicGenre);
+        var book3 = AddBook("Book3", "Description for Book3", 150, 7.99m, azerbaijaniLanguage, 60, 5, StivenAuthor, AddImage(ImageBucket.Books, "default.jpg", true), romanceGenre);
+        var book4 = AddBook("Book4", "Description for Book4", 250, 12.99m, englishLanguage, 70, 8, BenAuthor, AddImage(ImageBucket.Books, "default.jpg", true), horrorGenre);
+        var book5 = AddBook("Book5", "Description for Book5", 180, 8.99m, russianLanguage, 120, 20, LiAuthor, AddImage(ImageBucket.Books, "default.jpg", true), fantasyGenre);
+        var book6 = AddBook("Book6", "Description for Book6", 270, 11.99m, englishLanguage, 90, 12, StivenAuthor, AddImage(ImageBucket.Books, "default.jpg", true), classicGenre);
+        var book7 = AddBook("Book7", "Description for Book7", 220, 10.99m, russianLanguage, 85, 6, BenAuthor, AddImage(ImageBucket.Books, "default.jpg", true), romanceGenre);
+        var book8 = AddBook("Book8", "Description for Book8", 190, 9.49m, azerbaijaniLanguage, 95, 7, LiAuthor, AddImage(ImageBucket.Books, "default.jpg", true), horrorGenre);
+        var book9 = AddBook("Book9", "Description for Book9", 230, 13.99m, englishLanguage, 75, 9, StivenAuthor, AddImage(ImageBucket.Books, "default.jpg", true), classicGenre);
+        var book10 = AddBook("Book10", "Description for Book10", 160, 8.49m, russianLanguage, 110, 11, BenAuthor, AddImage(ImageBucket.Books, "default.jpg", true), romanceGenre);
+
 
         _dbContext.SaveChanges();
+    }
+
+    private void UploadBookImages()
+    {
+        var defaultBookImagesPath = Path.Combine(
+           AssemblyReference.AssemblyPath, "Seeds", "images", "books");
+
+        _fileService.UploadFilesInBasePath(ImageBucket.Books, defaultBookImagesPath);
     }
 
     private void AddDefaultBuckets()
@@ -55,33 +95,6 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
             _fileService.CreateBucket(bucket);
             _fileService.AddDefaultPolicyBucket(bucket);
         }
-    }
-
-    private void AddDefaultBooks()
-    {
-
-    }
-
-    private void AddDefaultLanguages()
-    {
-
-        AddLanguage("English", "en");
-        AddLanguage("Russian", "ru");
-        AddLanguage("Azerbaijani", "az");
-    }
-
-    private void AddDefaultGenres()
-    {
-        AddGenre("Fantasy");
-        AddGenre("Classic");
-        AddGenre("Romance");
-        AddGenre("Horror");
-    }
-
-    private void AddDefaultUsers()
-    {
-        AddUser("admin@gmail.com", "admin", "admin", "admin", Role.Admin);
-        AddUser("user@gmail.com", "user", "user", "user", Role.User);
     }
 
     /////////////////////////////////////////////////////////////
@@ -117,6 +130,39 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         var genre = CreateGenre(id, name);
         _dbContext.Add(genre);
         return genre;
+    }
+
+    private Book AddBook(string title,
+        string description,
+        int pageCount,
+        decimal price,
+        Language language,
+        int quantity,
+        int soldUnits,
+        Author author,
+        Image image,
+        Genre genre)
+    {
+        var id = Guid.NewGuid();
+        var book = CreateBook(id, title, description, pageCount, price, language, quantity, soldUnits, author, image, genre);
+        _dbContext.Add(book);
+        return book;
+    }
+
+    private Author AddAuthor(string pseudonym)
+    {
+        var id = Guid.NewGuid();
+        var author = CreateAuthor(id, pseudonym);
+        _dbContext.Add(author);
+        return author;
+    }
+
+    private Author CreateAuthor(Guid id, string pseudonym)
+    {
+        var authorId = new AuthorId(id);
+        var authorPseudonym = Pseudonym.Create(pseudonym).Value;
+        var author = Author.Create(authorId, authorPseudonym).Value;
+        return author;
     }
 
     private User CreateUser(Guid id, string email, string firstName, string lastName, string password, Role role)
@@ -179,63 +225,42 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         return genre;
     }
 
-    //private Author AddAuthor(string firstName, string lastName, string pseudonym, Image image, string description)
-    //{
-    //    var id = Guid.NewGuid();
-    //    var author = CreateAuthor(id, firstName, lastName, pseudonym, image, description);
-    //    _dbContext.Add(author);
-    //    return author;
-    //}
+    private Book CreateBook(
+        Guid id, 
+        string title, 
+        string description, 
+        int pageCount, 
+        decimal price, 
+        Language language,
+        int quantity,
+        int soldUnits, 
+        Author author, 
+        Image image, 
+        Genre genre)
+    {
+        var bookId = new BookId(id);
+        var bookTitle = Title.Create(title).Value;
+        var bookDescription = BookDescription.Create(description).Value;
+        var bookPageCount = PageCount.Create(pageCount).Value;
+        var bookPrice = Money.Create(price).Value;
+        var quantityBook = QuantityBook.Create(quantity).Value;
+        var bookSoldUnits = SoldUnits.Create(soldUnits).Value;
 
-    //private User CreateUser(
-    //    Guid id,
-    //    string email,
-    //    string firstName,
-    //    string lastName,
-    //    string password,
-    //    Role role,
-    //    bool isEmailConfirmed)
-    //{
-    //    var userId = new UserId(Guid.NewGuid());
-    //    var emailUser = Email.Create(email).Value;
-    //    var firstNameUser = FirstName.Create(firstName).Value;
-    //    var lastNameUser = LastName.Create(lastName).Value;
+        var book = Book.Create(
+            bookId, 
+            bookTitle, 
+            bookDescription, 
+            bookPageCount, 
+            bookPrice, 
+            language, 
+            quantityBook, 
+            bookSoldUnits, 
+            author, 
+            image, 
+            genre).Value;
 
-    //    var generateSalt = _hashingService.GenerateSalt();
-    //    var passwordSalt = PasswordSalt.Create(generateSalt).Value;
+        return book;
+    }
 
-    //    var hash = _hashingService.Hash(password, generateSalt);
-    //    var passwordHash = PasswordHash.Create(hash).Value;
 
-    //    var role = Role.User;
-
-    //    var isEmailUnique = await _repository
-    //        .IsEmailUniqueAsync(email, cancellationToken);
-
-    //    if (!isEmailUnique)
-    //    {
-
-    //    }
-
-    //    var cartId = new CartId(Guid.NewGuid());
-    //    var cart = Cart.Create(cartId, userId).Value;
-
-    //    var wishId = new WishId(Guid.NewGuid());
-    //    var wish = Wish.Create(wishId, userId).Value;
-
-    //    var user = User.Create(
-    //        userId,
-    //        email,
-    //        firstNameUser,
-    //        lastNameUser,
-    //        passwordHash,
-    //        passwordSalt,
-    //        emailConfirmationToken,
-    //        isEmailUnique,
-    //        role,
-    //        cart,
-    //        wish);
-
-    //    return user;
-    //}
 }

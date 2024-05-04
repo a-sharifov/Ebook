@@ -83,7 +83,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
     }
 
     [Authorize]
-    [HttpPost]
+    [HttpPost("update-password")]
     public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
     {
         var userId = GetUserId();
