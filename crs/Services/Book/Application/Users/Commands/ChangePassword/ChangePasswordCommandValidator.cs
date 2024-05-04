@@ -1,8 +1,8 @@
-﻿namespace Application.Users.Commands.UpdatePassword;
+﻿namespace Application.Users.Commands.ChangePassword;
 
-internal sealed class UpdatePasswordCommandValidator : AbstractValidator<UpdatePasswordCommand>
+internal sealed class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCommand>
 {
-    public UpdatePasswordCommandValidator()
+    public ChangePasswordCommandValidator()
     {
         RuleFor(x => x.UserId)
             .NotEmpty();
