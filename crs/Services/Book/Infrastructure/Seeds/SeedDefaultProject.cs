@@ -11,13 +11,24 @@ using Infrastructure.Core.Seeds;
 using Infrastructure.FileStorages.Interfaces;
 using Persistence.DbContexts;
 using Domain.SharedKernel.Entities;
+using Domain.UserAggregate;
+using Contracts.Enumerations;
+using Domain.UserAggregate.Ids;
+using Domain.UserAggregate.ValueObjects;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Infrastructure.Hashing.Interfaces;
+using Domain.WishAggregate.Ids;
+using Domain.WishAggregate;
+using Domain.CartAggregate.Ids;
+using Domain.CartAggregate;
 
 namespace Infrastructure.Seeds;
 
-public class SeedDefaultProject(BookDbContext dbContext, IFileService fileService) : ISeeder
+public class SeedDefaultProject(BookDbContext dbContext, IFileService fileService, IHashingService hashingService) : ISeeder
 {
     private readonly BookDbContext _dbContext = dbContext;
     private readonly IFileService _fileService = fileService;
+    private readonly IHashingService _hashingService = hashingService;
 
     public void Seed()
     {
@@ -28,14 +39,15 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
             return;
         }
 
-        AddBuckets();
-        AddLanguages();
-        AddGenres();
+        AddDefaultBuckets();
+        AddDefaultLanguages();
+        AddDefaultGenres();
+        AddDefaultUsers();
 
         _dbContext.SaveChanges();
     }
 
-    private void AddBuckets()
+    private void AddDefaultBuckets()
     {
         var buckets = ImageBucket.GetNames();
 
@@ -46,7 +58,7 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         }
     }
 
-    private void AddLanguages()
+    private void AddDefaultLanguages()
     {
 
         AddLanguage("English", "en");
@@ -54,7 +66,7 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         AddLanguage("Azerbaijani", "az");
     }
 
-    private void AddGenres()
+    private void AddDefaultGenres()
     {
         AddGenre("Fantasy");
         AddGenre("Classic");
@@ -62,7 +74,55 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         AddGenre("Horror");
     }
 
+    private void AddDefaultUsers()
+    {
+        AddUser("admin@gmail.com", "admin", "admin", "admin", Role.Admin);
+        AddUser("user@gmail.com", "user", "user", "user", Role.User);
+    }
+
     /////////////////////////////////////////////////////////////
+
+    private User AddUser(string email, string firstName, string lastName, string password, Role role)
+    {
+        var id = Guid.NewGuid();
+    
+        var user = CreateUser(id, email, firstName, lastName, password, role);
+        _dbContext.Add(user);
+        return user;
+    }
+
+    private User CreateUser(Guid id, string email, string firstName, string lastName, string password, Role role)
+    {
+        var userId = new UserId(id);
+        var userEmail = Email.Create(email).Value;
+        var userFirstName = FirstName.Create(firstName).Value;
+        var userLastName = LastName.Create(lastName).Value;
+
+        var generateSalt = _hashingService.GenerateSalt();
+        var passwordSalt = PasswordSalt.Create(generateSalt).Value;
+
+        var hash = _hashingService.Hash(password, generateSalt);
+        var passwordHash = PasswordHash.Create(hash).Value;
+
+        var wishId = new WishId(Guid.NewGuid());
+        var wish = Wish.Create(wishId, userId).Value;
+
+        var cartId = new CartId(Guid.NewGuid());
+        var cart = Cart.Create(cartId, userId).Value;
+
+        var user = User.Create(
+            userId, 
+            userEmail, 
+            userFirstName, 
+            userLastName, 
+            passwordHash, 
+            passwordSalt, 
+            role, 
+            cart, 
+            wish).Value;
+
+        return user;
+    }
 
     private Language AddLanguage(string name, string code)
     {
