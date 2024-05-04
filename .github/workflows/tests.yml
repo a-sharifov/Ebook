@@ -1,0 +1,40 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      statuses: write
+      checks: write
+      contents: write
+      pull-requests: write
+      actions: write
+
+    steps:
+    - uses: actions/checkout@v4.1.1
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4.0.0
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies solution
+      run: dotnet restore ./Ebook.sln
+      
+    - name: Build solution
+      run: dotnet build ./Ebook.sln --configuration Debug
+      
+    - name: Test
+      run: dotnet test ./Ebook.sln --configuration Debug --logger "trx;LogFileName=test-results.trx" || true
+      
+    - name: Test Report
+      uses:  dorny/test-reporter@v1.7.0
+      if: always()
+      with:
+        name: DotNET Tests
+        path: "**/test-results.trx"                            
+        reporter: dotnet-trx
+        fail-on-error: true
