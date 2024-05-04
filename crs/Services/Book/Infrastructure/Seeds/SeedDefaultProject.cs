@@ -43,6 +43,9 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         AddDefaultGenres();
         AddDefaultUsers();
 
+        var defaultGenreImagesPath = Path.Combine(
+           AssemblyReference.AssemblyPath, "Seeds", "images", "books");
+
         _dbContext.SaveChanges();
     }
 
@@ -118,6 +121,8 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         _dbContext.Add(genre);
         return genre;
     }
+
+
 
     private User CreateUser(Guid id, string email, string firstName, string lastName, string password, Role role)
     {
