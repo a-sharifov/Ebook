@@ -2,6 +2,7 @@
 using Application.Users.Commands.Login;
 using Application.Users.Commands.Register;
 using Application.Users.Commands.RetryConfirmEmailSend;
+using Application.Users.Commands.UpdatePassword;
 using Application.Users.Commands.UpdateRefreshToken;
 using Microsoft.AspNetCore.Authorization;
 using Presentation.V1.Users.Models;
@@ -71,11 +72,28 @@ public sealed class UserController(ISender sender) : ApiController(sender)
     [HttpPost("confirm-email")]
     public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailRequest request)
     {
-        var command = new ConfirmEmailCommand(request.UserId, request.EmailConfirmationToken);
+        var command = new ConfirmEmailCommand(
+            request.UserId,
+            request.EmailConfirmationToken);
 
         var result = await _sender.Send(command);
 
         return result.IsSuccess ? Redirect(request.ReturnUrl)
+            : HandleFailure(result);
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
+    {
+        var userId = GetUserId();
+        var command = new UpdatePasswordCommand(userId,
+            request.OldPassword,
+            request.NewPassword);
+
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? Ok()
             : HandleFailure(result);
     }
 }

@@ -24,11 +24,10 @@ internal sealed class UpdateRefreshTokenCommandHandler(
 
         var user = await _repository.GetAsync(emailResult.Value, cancellationToken: cancellationToken);
 
-        if (user is null ||
-            user.RefreshToken?.Token != request.RefreshToken)
+        if (user.RefreshToken?.Token != request.RefreshToken)
         {
             return Result.Failure<UpdateRefreshTokenCommandResponse>(
-                UserErrors.RefreshTokenIsNotExists);
+                UserErrors.RefreshTokenIsNotCorrect);
         }
 
         if (user.RefreshToken.IsExpired)

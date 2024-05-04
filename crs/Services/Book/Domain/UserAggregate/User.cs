@@ -28,6 +28,30 @@ public sealed class User : AggregateRoot<UserId>
 
     private User(
         UserId id,
+      Email email,
+      FirstName firstName,
+      LastName lastName,
+      PasswordHash passwordHash,
+      PasswordSalt passwordSalt,
+      bool isEmailConfirmed,
+      Role role,
+      Cart cart,
+      Wish wish)
+    {
+        Id = id;
+        Email = email;
+        FirstName = firstName;
+        LastName = lastName;
+        PasswordHash = passwordHash;
+        PasswordSalt = passwordSalt;
+        IsEmailConfirmed = isEmailConfirmed;
+        Role = role;
+        Cart = cart;
+        Wish = wish;
+    }
+
+    private User(
+        UserId id,
         Email email,
         FirstName firstName,
         LastName lastName,
@@ -37,19 +61,10 @@ public sealed class User : AggregateRoot<UserId>
         bool isEmailConfirmed,
         Role role,
         Cart cart,
-        Wish wish)
+        Wish wish) 
+        : this(id, email, firstName, lastName, passwordHash, passwordSalt, isEmailConfirmed, role, cart, wish)
     {
-        Id = id;
-        Email = email;
-        FirstName = firstName;
-        LastName = lastName;
-        PasswordHash = passwordHash;
-        PasswordSalt = passwordSalt;
-        IsEmailConfirmed = isEmailConfirmed;
         EmailConfirmationToken = emailConfirmationToken;
-        Role = role;
-        Cart = cart;
-        Wish = wish;
     }
 
     public static Result<User> Create(
@@ -80,6 +95,35 @@ public sealed class User : AggregateRoot<UserId>
             passwordSalt,
             emailConfirmationToken,
             isEmailConfirmed: false,
+            role,
+            cart,
+            wish);
+
+        //user.AddDomainEvent(
+        //    new UserCreatedDomainEvent(Guid.NewGuid(), id));
+
+        return user;
+    }
+
+    public static Result<User> Create(
+      UserId id,
+      Email email,
+      FirstName firstName,
+      LastName lastName,
+      PasswordHash passwordHash,
+      PasswordSalt passwordSalt,
+      Role role,
+      Cart cart,
+      Wish wish)
+    {
+        var user = new User(
+            id,
+            email,
+            firstName,
+            lastName,
+            passwordHash,
+            passwordSalt,
+            isEmailConfirmed: true,
             role,
             cart,
             wish);
@@ -157,4 +201,18 @@ public sealed class User : AggregateRoot<UserId>
 
     public void UpdateRefreshToken(RefreshToken refreshToken) =>
         RefreshToken = refreshToken;
+
+    public Result UpdatePassword(PasswordHash passwordHash, PasswordSalt passwordSalt, bool oldPasswordIsCorrect)
+    {
+        if (!oldPasswordIsCorrect)
+        {
+            return Result.Failure(
+                UserErrors.OldPasswordIsNotCorrect);
+        }
+
+        PasswordHash = passwordHash;
+        PasswordSalt = passwordSalt;
+
+        return Result.Success();
+    }
 }
