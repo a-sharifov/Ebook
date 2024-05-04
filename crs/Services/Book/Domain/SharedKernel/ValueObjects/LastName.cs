@@ -30,4 +30,7 @@ public sealed class LastName : ValueObject
     {
         yield return Value;
     }
+
+    public static implicit operator string(LastName lastName) =>
+        lastName.Value;
 }
