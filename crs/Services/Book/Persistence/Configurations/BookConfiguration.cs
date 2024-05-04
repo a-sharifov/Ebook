@@ -4,6 +4,7 @@ using Domain.BookAggregate.Ids;
 using Domain.BookAggregate.ValueObjects;
 using Domain.SharedKernel.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Persistence.Configurations;
 
@@ -57,6 +58,7 @@ internal sealed class BookConfiguration : IEntityTypeConfiguration<Book>
             value => SoldUnits.Create(value).Value)
             .IsRequired();
 
+        //TODO: Change WithOne to WithMany
         builder.HasOne(x => x.Poster)
             .WithOne()
             .HasPrincipalKey<Image>(x => x.Id)
