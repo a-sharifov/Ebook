@@ -48,6 +48,8 @@ public class JwtManager(IOptions<JwtOptions> options) : IJwtManager
             new Claim("id", user.Id.Value.ToString()),
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
+            new Claim(JwtRegisteredClaimNames.FamilyName, user.FirstName.Value),
+            new Claim(JwtRegisteredClaimNames.GivenName, user.LastName.Value),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Iss, _jwtOptions.Issuer),
             //new Claim(JwtRegisteredClaimNames.Aud, audience),

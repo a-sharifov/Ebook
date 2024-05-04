@@ -34,7 +34,7 @@ public abstract class ApiController : ControllerBase
     protected IActionResult HandleFailure(Result result)
     {
         if (result.IsSuccess)
-        {
+        { 
             throw new InvalidCastException();
         }
 

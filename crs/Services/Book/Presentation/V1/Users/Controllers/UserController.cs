@@ -42,7 +42,6 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             : HandleFailure(result);
     }
 
-    [Authorize]
     [HttpPut("update-refresh-token")]
     public async Task<IActionResult> UpdateRefreshToken([FromBody] UpdateRefreshTokenRequest request)
     {
