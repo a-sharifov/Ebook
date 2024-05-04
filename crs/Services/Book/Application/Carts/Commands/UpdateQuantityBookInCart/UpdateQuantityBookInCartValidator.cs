@@ -8,6 +8,6 @@ internal sealed class UpdateQuantityBookInCartValidator : AbstractValidator<Upda
             .NotEmpty();
 
         RuleFor(x => x.Quantity)
-            .GreaterThan(0);
+            .GreaterThanOrEqualTo(0);
     }
 } 

@@ -201,4 +201,18 @@ public sealed class User : AggregateRoot<UserId>
 
     public void UpdateRefreshToken(RefreshToken refreshToken) =>
         RefreshToken = refreshToken;
+
+    public Result UpdatePassword(PasswordHash passwordHash, PasswordSalt passwordSalt, bool oldPasswordIsCorrect)
+    {
+        if (!oldPasswordIsCorrect)
+        {
+            return Result.Failure(
+                UserErrors.OldPasswordIsNotCorrect);
+        }
+
+        PasswordHash = passwordHash;
+        PasswordSalt = passwordSalt;
+
+        return Result.Success();
+    }
 }

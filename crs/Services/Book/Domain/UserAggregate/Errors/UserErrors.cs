@@ -11,13 +11,16 @@ public static class UserErrors
     public static Error PasswordIsNotCorrect =>
         new("User.PasswordIsNotCorrect", $"Password is not correct.");
 
+    public static Error OldPasswordIsNotCorrect =>
+      new("User.OldPasswordIsNotCorrect", $"Old password is not correct.");
+
     public static Error UserDoesNotExist =>
         new("User.UserDoesNotExist", $"User does not exist.");
 
     public static Error EmailIsNotExists(string email) => 
         new("User.EmailIsNotExists", $"Email {email} is not exists.");
 
-    public static Error RefreshTokenIsNotExists =>
+    public static Error RefreshTokenIsNotCorrect =>
         new("User.RefreshTokenIsNotExists", $"Refresh token is not exists.");
 
     public static Error RefreshTokenIsExpired => 

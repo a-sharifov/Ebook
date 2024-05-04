@@ -15,7 +15,6 @@ using Domain.UserAggregate;
 using Contracts.Enumerations;
 using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.ValueObjects;
-using Org.BouncyCastle.Asn1.Ocsp;
 using Infrastructure.Hashing.Interfaces;
 using Domain.WishAggregate.Ids;
 using Domain.WishAggregate;
@@ -58,6 +57,11 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         }
     }
 
+    private void AddDefaultBooks()
+    {
+
+    }
+
     private void AddDefaultLanguages()
     {
 
@@ -91,6 +95,30 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         return user;
     }
 
+    private Image AddImage(ImageBucket bucket, string name, bool isUnigueName = false)
+    {
+        var id = Guid.NewGuid();
+        var image = CreateImage(id, bucket, name, isUnigueName);
+        _dbContext.Add(image);
+        return image;
+    }
+
+    private Language AddLanguage(string name, string code)
+    {
+        var id = Guid.NewGuid();
+        var language = CreateLanguage(id, name, code);
+        _dbContext.Add(language);
+        return language;
+    }
+
+    private Genre AddGenre(string name)
+    {
+        var id = Guid.NewGuid();
+        var genre = CreateGenre(id, name);
+        _dbContext.Add(genre);
+        return genre;
+    }
+
     private User CreateUser(Guid id, string email, string firstName, string lastName, string password, Role role)
     {
         var userId = new UserId(id);
@@ -111,25 +139,17 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         var cart = Cart.Create(cartId, userId).Value;
 
         var user = User.Create(
-            userId, 
-            userEmail, 
-            userFirstName, 
-            userLastName, 
-            passwordHash, 
-            passwordSalt, 
-            role, 
-            cart, 
+            userId,
+            userEmail,
+            userFirstName,
+            userLastName,
+            passwordHash,
+            passwordSalt,
+            role,
+            cart,
             wish).Value;
 
         return user;
-    }
-
-    private Language AddLanguage(string name, string code)
-    {
-        var id = Guid.NewGuid();
-        var language = CreateLanguage(id, name, code);
-        _dbContext.Add(language);
-        return language;
     }
 
     private static Language CreateLanguage(Guid id, string name, string code)
@@ -151,27 +171,11 @@ public class SeedDefaultProject(BookDbContext dbContext, IFileService fileServic
         return image;
     }
 
-    private Image AddImage(ImageBucket bucket, string name, bool isUnigueName = false)
-    {
-        var id = Guid.NewGuid();
-        var image = CreateImage(id, bucket, name, isUnigueName);
-        _dbContext.Add(image);
-        return image;
-    }
-
     private static Genre CreateGenre(Guid id, string name)
     {
         var genreId = new GenreId(id);
         var genreName = GenreName.Create(name).Value;
         var genre = Genre.Create(genreId, genreName).Value;
-        return genre;
-    }
-
-    private Genre AddGenre(string name)
-    {
-        var id = Guid.NewGuid();
-        var genre = CreateGenre(id, name);
-        _dbContext.Add(genre);
         return genre;
     }
 
