@@ -18,7 +18,7 @@ internal sealed class AddAuthorCommandHandler(
     public async Task<Result> Handle(AddAuthorCommand request, CancellationToken cancellationToken)
     {
         var pseudonym = Pseudonym.Create(request.Pseudonym).Value;
-        var isExist = await _repository.IsExistAsync(pseudonym);
+        var isExist = await _repository.IsExistAsync(pseudonym, cancellationToken);
 
         if (isExist)
         {
