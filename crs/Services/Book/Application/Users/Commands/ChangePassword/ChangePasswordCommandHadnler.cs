@@ -6,19 +6,19 @@ using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
 using Infrastructure.Hashing.Interfaces;
 
-namespace Application.Users.Commands.UpdatePassword;
+namespace Application.Users.Commands.ChangePassword;
 
-internal sealed class UpdatePasswordCommandHadnler(
+internal sealed class ChangePasswordCommandHadnler(
     IUnitOfWork unitOfWork,
     IUserRepository userRepository,
     IHashingService hashingService)
-    : ICommandHandler<UpdatePasswordCommand>
+    : ICommandHandler<ChangePasswordCommand>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IHashingService _hashingService = hashingService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<Result> Handle(UpdatePasswordCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
         var id = new UserId(request.UserId);
         var user = await _userRepository.GetAsync(id, cancellationToken);

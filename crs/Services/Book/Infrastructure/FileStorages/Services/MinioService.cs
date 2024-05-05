@@ -4,6 +4,9 @@ using Minio.DataModel.Args;
 using Contracts.Extensions;
 using Microsoft.Extensions.Options;
 using Infrastructure.FileStorages.Options;
+using System.Threading;
+using Domain.SharedKernel.ValueObjects;
+using Infrastructure.FileStorages.Policies;
 
 namespace Infrastructure.FileStorages.Services;
 
@@ -49,7 +52,8 @@ public class MinioService(IMinioClient minioClient, IOptions<BaseUrlOptions> url
 
     public void AddDefaultPolicyBucket(string bucketName)
     {
-        string accessPolicy = $@"{{""Version"": ""2012-10-17"",""Statement"": [{{""Action"": [""s3:GetBucketLocation""],""Effect"": ""Allow"",""Principal"": {{""AWS"": [""*""]}},""Resource"": [""arn:aws:s3:::{bucketName}""],""Sid"": """"}},{{""Action"": [""s3:ListBucket""],""Effect"": ""Allow"",""Principal"": {{""AWS"": [""*""]}},""Resource"": [""arn:aws:s3:::{bucketName}""],""Sid"": """"}},{{""Action"": [""s3:GetObject""],""Effect"": ""Allow"",""Principal"": {{""AWS"": [""*""]}},""Resource"": [""arn:aws:s3:::{bucketName}/*""],""Sid"": """"}}]}}";
+        var accessPolicy = File.ReadAllText(PolicyPath.DefautPolicy)
+            .Replace("{{bucketName}}", bucketName);
 
         var args = new SetPolicyArgs()
                .WithBucket(bucketName)

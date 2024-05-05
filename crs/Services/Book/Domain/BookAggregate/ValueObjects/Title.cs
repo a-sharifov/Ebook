@@ -1,4 +1,5 @@
 ﻿using Domain.BookAggregate.Errors;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Domain.BookAggregate.ValueObjects;
 
@@ -32,5 +33,6 @@ public class Title : ValueObject
         yield return Value;
     }
 
-
+    public static implicit operator string(Title title) =>
+        title.Value;
 }

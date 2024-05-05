@@ -12,7 +12,7 @@ public class BookFiltersBuilder
 
         if (request.Title is not null)
         {
-            filters.Add(x => x.Title.Value == request.Title);
+            filters.Add(x => x.Title == request.Title);
         }
 
         if (request.AuthorId != default)

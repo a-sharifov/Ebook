@@ -119,4 +119,5 @@ public class Book : AggregateRoot<BookId>
         Quantity = quantityBookResult.Value;
         return Result.Success();
     }
+
 }

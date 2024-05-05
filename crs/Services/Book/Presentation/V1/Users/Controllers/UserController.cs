@@ -2,7 +2,7 @@
 using Application.Users.Commands.Login;
 using Application.Users.Commands.Register;
 using Application.Users.Commands.RetryConfirmEmailSend;
-using Application.Users.Commands.UpdatePassword;
+using Application.Users.Commands.ChangePassword;
 using Application.Users.Commands.UpdateRefreshToken;
 using Microsoft.AspNetCore.Authorization;
 using Presentation.V1.Users.Models;
@@ -83,11 +83,11 @@ public sealed class UserController(ISender sender) : ApiController(sender)
     }
 
     [Authorize]
-    [HttpPost("update-password")]
-    public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         var userId = GetUserId();
-        var command = new UpdatePasswordCommand(userId,
+        var command = new ChangePasswordCommand(userId,
             request.OldPassword,
             request.NewPassword);
 
