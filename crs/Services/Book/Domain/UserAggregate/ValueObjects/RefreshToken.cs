@@ -7,7 +7,7 @@ public sealed class RefreshToken : ValueObject
     public string Token { get; private set; }
     public DateTime ExpiredTime { get; private set; }
 
-    public bool IsExpired => DateTime.UtcNow >= ExpiredTime;
+    public bool IsExpired => DateTime.UtcNow <= ExpiredTime;
 
     private RefreshToken(string token, DateTime expiredTime) =>
         (Token, ExpiredTime) = (token, expiredTime);
