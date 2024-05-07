@@ -22,16 +22,8 @@ public sealed class JwtBlackListMiddleware(
             return;
         }
 
-        var problemDetails = new ProblemDetails
-        {
-            Status = StatusCodes.Status401Unauthorized,
-            Title = "User unauthorized.",
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
-        };
-
+      
         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-
-        await context.Response.WriteAsJsonAsync(problemDetails);
     }
 
 }

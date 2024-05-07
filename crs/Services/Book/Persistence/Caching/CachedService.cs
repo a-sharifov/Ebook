@@ -41,16 +41,6 @@ public class CachedService(IDistributedCache cache) : ICachedService
         await _cache.SetStringAsync(key, serializeObject, options, cancellationToken);
     }
 
-    //public async Task<bool> IsExistAsync(bool key)
-    //{
-
-    //}
-
-    //public async Task SetString(string value)
-    //{
-
-    //} 
-
     public async Task RefreshAsync(string key, CancellationToken cancellationToken = default) =>
         await _cache.RefreshAsync(key, cancellationToken);
 
