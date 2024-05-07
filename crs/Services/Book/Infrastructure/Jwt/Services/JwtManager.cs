@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Infrastructure.Jwt;
+namespace Infrastructure.Jwt.Services;
 
 public class JwtManager(IOptions<JwtOptions> options) : IJwtManager
 {
@@ -78,6 +78,10 @@ public class JwtManager(IOptions<JwtOptions> options) : IJwtManager
     public string GetEmailFromToken(string token) =>
         GetClaimsInToken(token)
         .First(x => x.Type == JwtRegisteredClaimNames.Email).Value;
+
+     public string GetJtiFromToken(string token) =>
+      GetClaimsInToken(token)
+        .First(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
 
     public RefreshToken CreateRefreshToken()
     {

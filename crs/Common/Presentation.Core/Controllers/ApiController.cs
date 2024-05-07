@@ -90,4 +90,7 @@ public abstract class ApiController : ControllerBase
         var id = Guid.Parse(nameIdClaim.Value);
         return id;
     }
+
+    protected string GetBearerToken() =>
+        Request.Headers["Authorization"].First()!["Bearer ".Length..];
 }

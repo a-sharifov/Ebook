@@ -52,17 +52,6 @@ public sealed class CartRepository(
         return cart;
     }
 
-    public async Task<IEnumerable<Cart>> GetExpiredAsync(int take, CancellationToken cancellationToken = default)
-    {
-        var carts = await GetEntityDbSet()
-            //.AsNoTracking()
-            .Where(x => x.ExpirationTime.Value >= DateTime.UtcNow)
-            .Take(take)
-            .ToListAsync(cancellationToken: cancellationToken);
-
-        return carts;
-    }
-
     public async Task<int> GetTotalQuantityBookAsync(UserId userId, CancellationToken cancellationToken = default)
     {
         var quantity = await GetEntityDbSet()

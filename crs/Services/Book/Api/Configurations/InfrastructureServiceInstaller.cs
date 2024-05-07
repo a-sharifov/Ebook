@@ -9,12 +9,13 @@ using Infrastructure.FileStorages.Options;
 using Infrastructure.FileStorages.Services;
 using Infrastructure.Hashing;
 using Infrastructure.Hashing.Interfaces;
-using Infrastructure.Jwt;
 using Infrastructure.Jwt.Interfaces;
+using Infrastructure.Jwt.Services;
 using Infrastructure.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.DbContexts;
+using StackExchange.Redis;
 
 namespace Api.Configurations;
 
@@ -42,6 +43,7 @@ internal sealed class InfrastructureServiceInstaller : IServiceInstaller
         services.AddTransient<IIdentityEmailService, IdentityEmailService>();
         services.AddTransient<IHashingService, HashingService>();
         services.AddTransient<IJwtManager, JwtManager>();
+        services.AddTransient<IJwtBlacklistManager, JwtBlacklistManager>();
         services.AddTransient<IFileService, MinioService>();
 
         services.AddTransient<IUnitOfWork, UnitOfWork>();

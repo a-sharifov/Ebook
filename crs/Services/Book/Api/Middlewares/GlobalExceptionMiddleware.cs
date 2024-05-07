@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Api.Core.Middlewares;
+namespace Api.Middlewares;
 
 /// <summary>
 /// Class for exception handling middleware.
@@ -38,12 +38,12 @@ public sealed class ExceptionHandlingMiddleware(
         {
             _logger.LogError(ex, "the error: {ErrorMessage}", ex.Message);
 
-            var problemDetails = new ProblemDetails
-            {
-                Status = StatusCodes.Status500InternalServerError,
-                Title = "An error occurred while processing your request.",
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
-            };
+                var problemDetails = new ProblemDetails
+                {
+                    Status = StatusCodes.Status500InternalServerError,
+                    Title = "An error occurred while processing your request.",
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                };
 
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 

@@ -29,6 +29,7 @@ public class CachedService(IDistributedCache cache) : ICachedService
         await _cache.RefreshAsync(key, cancellationToken);
         return JsonSerializer.DeserializeObject<T>(result);
     }
+
     public async Task SetAsync<T>(
         string key,
         T value,
@@ -37,9 +38,18 @@ public class CachedService(IDistributedCache cache) : ICachedService
     {
         var serializeObject = JsonSerializer.SerializeObject(value);
         var options = GetOptions(expirationTime);
-
         await _cache.SetStringAsync(key, serializeObject, options, cancellationToken);
     }
+
+    //public async Task<bool> IsExistAsync(bool key)
+    //{
+
+    //}
+
+    //public async Task SetString(string value)
+    //{
+
+    //} 
 
     public async Task RefreshAsync(string key, CancellationToken cancellationToken = default) =>
         await _cache.RefreshAsync(key, cancellationToken);

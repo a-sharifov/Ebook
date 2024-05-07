@@ -49,6 +49,7 @@ internal sealed class AddBookInWishCommandHandler(
         }
 
         await _wishRepository.UpdateAsync(wish, cancellationToken);
+        await _bookRepository.UpdateAsync(book, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
         return Result.Success();

@@ -6,6 +6,7 @@ using Application.Users.Commands.ChangePassword;
 using Application.Users.Commands.UpdateRefreshToken;
 using Microsoft.AspNetCore.Authorization;
 using Presentation.V1.Users.Models;
+using Application.Users.Commands.Logout;
 
 namespace Presentation.V1.Users.Controllers;
 
@@ -90,6 +91,19 @@ public sealed class UserController(ISender sender) : ApiController(sender)
         var command = new ChangePasswordCommand(userId,
             request.OldPassword,
             request.NewPassword);
+
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? Ok()
+            : HandleFailure(result);
+    }
+
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        var bearerToken = GetBearerToken();
+        var command = new LogoutCommand(bearerToken);
 
         var result = await _sender.Send(command);
 

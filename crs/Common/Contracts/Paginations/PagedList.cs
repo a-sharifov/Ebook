@@ -41,10 +41,9 @@ public class PagedList<TItem>
     /// </summary>
     public bool HasNext => CurrentPage < TotalPages;
 
-    public PagedList()
-    {
-        
-    }
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    private PagedList() {}
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PagedList{T}"/> class.

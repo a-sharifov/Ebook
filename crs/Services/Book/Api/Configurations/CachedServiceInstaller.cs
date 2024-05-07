@@ -25,6 +25,7 @@ internal sealed class CachedServiceInstaller : IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
+        services.AddTransient<ICachedService, CachedService>();
         services.AddTransient<ICachedEntityService<Author, AuthorId>, CachedEntityService<Author, AuthorId>>();
         services.AddTransient<ICachedEntityService<Book, BookId>, CachedEntityService<Book, BookId>>();
         services.AddTransient<ICachedEntityService<Cart, CartId>, CachedEntityService<Cart, CartId>>();

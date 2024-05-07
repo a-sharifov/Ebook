@@ -15,4 +15,5 @@ public interface IJwtManager
     RefreshToken CreateRefreshToken();
     IEnumerable<Claim> GetClaimsInToken(string token);
     string GetEmailFromToken(string oldToken);
+    string GetJtiFromToken(string token);
 }
