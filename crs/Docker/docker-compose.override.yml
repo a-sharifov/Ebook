@@ -62,7 +62,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=6060
-      - ASPNETCORE_HTTPS_PORTS=6061
       - POSTGRE_CONNECTION_STRING=Server=postgres;Port=5432;Include Error Detail=True;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TimeZone=UTC;
       - REDIS_CONNECTION_STRING=redis:6379,password=${REDIS_PASSWORD}
       - AUTH_ISSUER=${AUTH_ISSUER}
@@ -89,9 +88,14 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - HealthChecksUI__HealthChecks__0__Name=Book api
       - HealthChecksUI__HealthChecks__0__Uri=http://book.api:6060/health
+      - HealthChecksUI__Webhooks__0__Name=Telegram
+      - HealthChecksUI__Webhooks__0__Uri=https://api.telegram.org/bot7068509342:AAFfPER1lVpWE_DCg2wbT4wxbHLCFRYnTsE/sendMessage?chat_id=-1002117285251
+      - HealthChecksUI__Webhooks__0__Payload={"parse_mode":"Markdown", "text":"[[LIVENESS]]:[[FAILURE]] - Description:[[DESCRIPTIONS]] [Click here](https://127.0.0.1:8081/healthchecks-ui)"}
+      - HealthChecksUI__Webhooks__0__RestoredPayload={"parse_mode":"Markdown", "text":"[[LIVENESS]]:HEALTH! [Click here](https://127.0.0.1:8081/healthchecks-ui)"}
+      - HealthChecksUI__EvaluationTimeInSeconds=10
     ports:
-      - "8080:8080"
       - "8081:8081"
+      - "8080:8080"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

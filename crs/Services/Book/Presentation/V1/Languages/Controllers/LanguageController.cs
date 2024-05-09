@@ -1,7 +1,8 @@
 ﻿using Application.Languages.Commands.AddLanguage;
 using Application.Languages.Commands.DeleteLanguage;
 using Application.Languages.Commands.UpdateLanguage;
-using Application.Languages.Queries.GetLanguages;
+using Application.Languages.Queries.GetAllLanguages;
+using Application.Languages.Queries.GetLanguageById;
 using Contracts.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Presentation.V1.Languages.Models;
@@ -15,7 +16,18 @@ public sealed class LanguageController(ISender sender) : ApiController(sender)
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var query = new GetLanguagesQuery();
+        var query = new GetAllLanguagesQuery();
+
+        var result = await _sender.Send(query);
+
+        return result.IsSuccess ? Ok(result.Value)
+           : HandleFailure(result);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Get(Guid id)
+    {
+        var query = new GetLanguageByIdQuery(id);
 
         var result = await _sender.Send(query);
 

@@ -1,6 +1,7 @@
 ﻿using Domain.CartAggregate;
 using Microsoft.EntityFrameworkCore;
 using Persistence.DbContexts;
+using Persistence.Repositories;
 using Quartz;
 
 namespace Infrastructure.BackgroundJobs;
@@ -14,18 +15,18 @@ public sealed class CartExpirationCleanupJob(BookDbContext dbContext) : IJob
     {
         var cart = await _dbContext
             .Set<Cart>()
+            .AsNoTracking()
             .Where(x => x.ExpirationTime != null && x.ExpirationTime > DateTime.UtcNow)
-            .Include(x => x.Items)
-            .ThenInclude(x => x.Book)
-            .FirstOrDefaultAsync(context.CancellationToken);
+            .FirstOrDefaultAsync();
 
-        if (cart is null)
+        if(cart is null)
         {
             return;
         }
 
-        cart.Clear();
+        await _dbContext.CartItems.Where(x => x.CartId == cart.Id)
+            .ExecuteDeleteAsync();
+
         await _dbContext.SaveChangesAsync(context.CancellationToken);
-    
     }
 }

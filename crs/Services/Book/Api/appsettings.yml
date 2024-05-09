@@ -18,7 +18,7 @@ Serilog:
 
 Jwt:
   RefreshTokenExpirationTimeMinutes: 2000
-  TokenExpirationTimeMinutes: 15
+  TokenExpirationTimeMinutes: 40
 
 Swagger:
   Title: "Book api"

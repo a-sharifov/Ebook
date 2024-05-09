@@ -24,7 +24,9 @@ internal sealed class InfrastructureServiceInstaller : IServiceInstaller
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<BookDbContext>(options =>
-        options.UseNpgsql(Env.POSTGRE_CONNECTION_STRING));
+         options.UseNpgsql(Env.POSTGRE_CONNECTION_STRING)
+         //.UseTriggers(x => x.AddTrigger<BookItemBeforeTrigger>())
+         );
 
         services.AddStackExchangeRedisCache(options =>
         options.Configuration = Env.REDIS_CONNECTION_STRING);
