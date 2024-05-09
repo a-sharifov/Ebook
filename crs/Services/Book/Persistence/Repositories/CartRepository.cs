@@ -32,7 +32,6 @@ public sealed class CartRepository(
     public async Task<Cart> GetAsync(UserId userId, CancellationToken cancellationToken = default)
     {
         var query = GetEntityDbSet()
-            //.AsNoTracking()
           .Include(x => x.Items)
             .ThenInclude(x => x.Book)
             .ThenInclude(x => x.Genre)
