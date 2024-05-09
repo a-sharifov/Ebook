@@ -28,9 +28,6 @@ internal sealed class InfrastructureServiceInstaller : IServiceInstaller
          //.UseTriggers(x => x.AddTrigger<BookItemBeforeTrigger>())
          );
 
-        services.AddStackExchangeRedisCache(options =>
-        options.Configuration = Env.REDIS_CONNECTION_STRING);
-
         //TODO: fix problem with Scrutor
         //services.Scan(selector =>
         //selector.FromAssemblies(
