@@ -1,13 +1,13 @@
 ﻿using Application.Common.DTOs.Genres;
 using Domain.GenreAggregate.Repositories;
 
-namespace Application.Genres.Queries.GetGenres;
+namespace Application.Genres.Queries.GetAllGenres;
 
-internal sealed class GetGenresQueryHandler(IGenreRepository repository) : IQueryHandler<GetGenresQuery, IEnumerable<GenreDto>>
+internal sealed class GetAllGenresQueryHandler(IGenreRepository repository) : IQueryHandler<GetAllGenresQuery, IEnumerable<GenreDto>>
 {
     private readonly IGenreRepository _repository = repository;
 
-    public async Task<Result<IEnumerable<GenreDto>>> Handle(GetGenresQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<GenreDto>>> Handle(GetAllGenresQuery request, CancellationToken cancellationToken)
     {
         var genres = await _repository.GetAllAsync(cancellationToken: cancellationToken);
 

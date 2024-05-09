@@ -1,9 +1,9 @@
 ﻿using Application.Common.DTOs.Books;
 using Contracts.Paginations;
 
-namespace Application.Books.Queries.GetBooks;
+namespace Application.Books.Queries.GetPagedListBooks;
 
-public sealed record GetBooksQuery(
+public sealed record GetPagedListBooksQuery(
     int PageNumber,
     int PageSize,
     decimal MinPrice = 0,

@@ -19,6 +19,10 @@ public static class Env
     public static string SERVER_SECRET_KEY => GetEnvironmentVariable("SERVER_SECRET_KEY");
     public static string SERVER_ENDPOINT => GetEnvironmentVariable("SERVER_ENDPOINT");
 
+    // Google open id
+    public static string GOOGLE_ID => GetEnvironmentVariable("GOOGLE_ID");
+    public static string GOOGLE_SECRET => GetEnvironmentVariable("GOOGLE_SECRET");
+
     private static string GetEnvironmentVariable(string key) =>
         Environment.GetEnvironmentVariable(key) ??
        throw new Exception($"Environment variable {key} not found");

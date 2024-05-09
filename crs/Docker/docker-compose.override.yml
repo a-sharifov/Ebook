@@ -62,7 +62,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=6060
-      - ASPNETCORE_HTTPS_PORTS=6061
       - POSTGRE_CONNECTION_STRING=Server=postgres;Port=5432;Include Error Detail=True;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TimeZone=UTC;
       - REDIS_CONNECTION_STRING=redis:6379,password=${REDIS_PASSWORD}
       - AUTH_ISSUER=${AUTH_ISSUER}
@@ -71,6 +70,8 @@ services:
       - IDENTITY_ENDPOINT=${IDENTITY_ENDPOINT}
       - SERVER_ACCESS_KEY=${MINIO_ACCESS_KEY}
       - SERVER_SECRET_KEY=${MINIO_SECRET_KEY}
+      - GOOGLE_ID=${GOOGLE_ID}
+      - GOOGLE_SECRET=${GOOGLE_SECRET}
       - SERVER_ENDPOINT=minio
     ports:
       - "6060:6060"
@@ -85,11 +86,21 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      - Email__From=${EMAIL_FROM} 
+      - Email__Host=${EMAIL_HOST}
+      - Email__Port=${EMAIL_PORT}
+      - Email__Username=${EMAIL_USERNAME}
+      - Email__Password=${EMAIL_PASSWORD}
       - HealthChecksUI__HealthChecks__0__Name=Book api
       - HealthChecksUI__HealthChecks__0__Uri=http://book.api:6060/health
+      - HealthChecksUI__Webhooks__0__Name=Telegram
+      - HealthChecksUI__Webhooks__0__Uri=https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}
+      - HealthChecksUI__Webhooks__0__Payload=${TELEGRAM_PAYLOAD}
+      - HealthChecksUI__Webhooks__0__RestoredPayload=${TELEGRAM_RESTORED_PAYLOAD}
+      - HealthChecksUI__EvaluationTimeInSeconds=10
     ports:
-      - "8080:8080"
       - "8081:8081"
+      - "8080:8080"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

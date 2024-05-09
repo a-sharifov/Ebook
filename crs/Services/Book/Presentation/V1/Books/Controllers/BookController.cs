@@ -1,8 +1,8 @@
 ﻿using Application.Books.Commands.AddBook;
 using Application.Books.Commands.DeleteBook;
 using Application.Books.Commands.UpdateBook;
-using Application.Books.Queries.GetBook;
-using Application.Books.Queries.GetBooks;
+using Application.Books.Queries.GetBookById;
+using Application.Books.Queries.GetPagedListBooks;
 using Contracts.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Presentation.V1.Books.Models;
@@ -16,7 +16,7 @@ public sealed class BookController(ISender sender) : ApiController(sender)
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] GetBooksRequest request)
     {
-        var query = new GetBooksQuery(
+        var query = new GetPagedListBooksQuery(
             request.PageNumber,
             request.PageSize,
             request.MinPrice,
@@ -36,7 +36,7 @@ public sealed class BookController(ISender sender) : ApiController(sender)
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(Guid id)
     {
-        var query = new GetBookQuery(id);
+        var query = new GetBookByIdQuery(id);
 
         var result = await _sender.Send(query);
 

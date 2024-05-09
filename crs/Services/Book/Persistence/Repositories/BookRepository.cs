@@ -37,14 +37,20 @@ public sealed class BookRepository(
 
     public new async Task<Book> GetAsync(BookId id, CancellationToken cancellationToken = default)
     {
-        var book = await _cached.GetAsync(id, cancellationToken) ?? await GetEntityDbSet().Includes(
+        var book = await _cached.GetAsync(id, cancellationToken) ?? 
+            await GetEntityDbSet()
+            .AsNoTracking()
+            .Includes(
             x => x.Language,
             x => x.Author,
             x => x.Genre,
             x => x.Poster
-            ).FirstAsync(x => x.Id == id, cancellationToken: cancellationToken);
+            )
+            .FirstAsync(x => x.Id == id, cancellationToken: cancellationToken);
 
+        _dbContext.Attach(book);
         await _cached.SetAsync(book, _cachingBaseExpirationTime, cancellationToken);
+
         return book;
     }
 }

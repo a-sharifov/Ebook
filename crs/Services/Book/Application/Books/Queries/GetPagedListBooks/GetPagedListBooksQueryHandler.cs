@@ -3,15 +3,15 @@ using Contracts.Paginations;
 using Domain.BookAggregate.Repositories;
 using Domain.BookAggregate.Repositories.Requests;
 
-namespace Application.Books.Queries.GetBooks;
+namespace Application.Books.Queries.GetPagedListBooks;
 
-internal sealed class GetBooksQueryHandler(
+internal sealed class GetPagedListBooksQueryHandler(
     IBookRepository repository) 
-    : IQueryHandler<GetBooksQuery, PagedList<BookDto>>
+    : IQueryHandler<GetPagedListBooksQuery, PagedList<BookDto>>
 {
     private readonly IBookRepository _repository = repository;
 
-    public async Task<Result<PagedList<BookDto>>> Handle(GetBooksQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PagedList<BookDto>>> Handle(GetPagedListBooksQuery request, CancellationToken cancellationToken)
     {
         var filterRequest = new BookFilterRequest(
             request.MinPrice,

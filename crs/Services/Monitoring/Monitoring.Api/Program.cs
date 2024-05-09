@@ -7,7 +7,10 @@ builder.Services
     .AddHealthChecksUI()
     .AddInMemoryStorage();
 
+
 var app = builder.Build();
+
+app.UseHttpsRedirection();
 
 if (app.Environment.IsDevelopment())
 {

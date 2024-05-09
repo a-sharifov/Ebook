@@ -9,12 +9,13 @@ using Infrastructure.FileStorages.Options;
 using Infrastructure.FileStorages.Services;
 using Infrastructure.Hashing;
 using Infrastructure.Hashing.Interfaces;
-using Infrastructure.Jwt;
 using Infrastructure.Jwt.Interfaces;
+using Infrastructure.Jwt.Services;
 using Infrastructure.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.DbContexts;
+using StackExchange.Redis;
 
 namespace Api.Configurations;
 
@@ -23,10 +24,9 @@ internal sealed class InfrastructureServiceInstaller : IServiceInstaller
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<BookDbContext>(options =>
-        options.UseNpgsql(Env.POSTGRE_CONNECTION_STRING));
-
-        services.AddStackExchangeRedisCache(options =>
-        options.Configuration = Env.REDIS_CONNECTION_STRING);
+         options.UseNpgsql(Env.POSTGRE_CONNECTION_STRING)
+         //.UseTriggers(x => x.AddTrigger<BookItemBeforeTrigger>())
+         );
 
         //TODO: fix problem with Scrutor
         //services.Scan(selector =>
@@ -42,6 +42,7 @@ internal sealed class InfrastructureServiceInstaller : IServiceInstaller
         services.AddTransient<IIdentityEmailService, IdentityEmailService>();
         services.AddTransient<IHashingService, HashingService>();
         services.AddTransient<IJwtManager, JwtManager>();
+        services.AddTransient<IJwtBlacklistManager, JwtBlacklistManager>();
         services.AddTransient<IFileService, MinioService>();
 
         services.AddTransient<IUnitOfWork, UnitOfWork>();

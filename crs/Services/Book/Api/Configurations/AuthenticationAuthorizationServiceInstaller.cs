@@ -2,6 +2,7 @@
 using Api.OptionsSetup;
 using Contracts.Enum;
 using Contracts.Enumerations;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -14,11 +15,11 @@ internal sealed class AuthenticationAuthorizationServiceInstaller : IServiceInst
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, configureOptions =>
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
-                configureOptions.RequireHttpsMetadata = true;
-                configureOptions.SaveToken = true;
-                configureOptions.TokenValidationParameters = new TokenValidationParameters
+                options.RequireHttpsMetadata = true;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidIssuer = Env.AUTH_ISSUER,
@@ -33,6 +34,11 @@ internal sealed class AuthenticationAuthorizationServiceInstaller : IServiceInst
                         Encoding.UTF8.GetBytes(Env.JWT_SECURITY_KEY)),
                 };
             });
+            //}).AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+            //{
+            //    options.ClientId = Env.GOOGLE_ID;
+            //    options.ClientSecret = Env.GOOGLE_SECRET;
+            //}
 
         services.AddAuthorization(options =>
         {

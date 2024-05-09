@@ -2,6 +2,7 @@
 using Domain.CartAggregate.Ids;
 using Domain.CartAggregate.ValueObjects;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Xml.Linq;
 
 namespace Persistence.Configurations;
 
@@ -9,6 +10,8 @@ internal sealed class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
 {
     public void Configure(EntityTypeBuilder<CartItem> builder)
     {
+        builder.ToTable(x => x.HasTrigger("SomeTrigger"));
+
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)

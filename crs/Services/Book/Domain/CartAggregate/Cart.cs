@@ -1,5 +1,4 @@
-﻿using Domain.BookAggregate.ValueObjects;
-using Domain.CartAggregate.Entities;
+﻿using Domain.CartAggregate.Entities;
 using Domain.CartAggregate.Errors;
 using Domain.CartAggregate.Ids;
 using Domain.CartAggregate.ValueObjects;
@@ -44,21 +43,9 @@ public class Cart : AggregateRoot<CartId>
         if (isExistInCart)
         {
             item = Items.First(x => x.Book.Id == item.Book.Id);
-            var incrementResult = item.Increment();
-
-            if (incrementResult.IsSuccess)
-            {
-                ExpirationTime = CartExpirationTime.Default();
-            }
-
-            return incrementResult;
-        }
-
-        var decrementResult = item.Book.Decrement();
-
-        if (decrementResult.IsFailure)
-        {
-            return decrementResult;
+            item.Increment();
+            ExpirationTime = CartExpirationTime.Default();
+            return Result.Success();
         }
 
         _items.Add(item);
@@ -69,18 +56,6 @@ public class Cart : AggregateRoot<CartId>
 
     public Result RemoveItem(CartItemId itemId)
     {
-        var isExist = _items.Any(x => x.Id == itemId);
-
-        if (!isExist)
-        {
-            return Result.Failure(CartErrors.ItemNotFound);
-        }
-
-        if (_items.Count != 1)
-        {
-            ExpirationTime = CartExpirationTime.Default();
-        }
-
         var item = _items.First(x => x.Id == itemId);
         _items.Remove(item);
 
@@ -110,12 +85,6 @@ public class Cart : AggregateRoot<CartId>
 
     public void Clear()
     {
-        foreach (var item in _items)
-        {
-            item.Book.UpdateQuantity(QuantityBook.Create
-                (item.Quantity.Value + item.Book.Quantity.Value).Value);
-        }
-
         _items.Clear();
         ExpirationTime = null;
     }

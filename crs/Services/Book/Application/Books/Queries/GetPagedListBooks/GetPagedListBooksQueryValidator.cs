@@ -1,10 +1,10 @@
 ﻿using Domain.BookAggregate.ValueObjects;
 
-namespace Application.Books.Queries.GetBooks;
+namespace Application.Books.Queries.GetPagedListBooks;
 
-internal sealed class GetBooksQueryValidator : AbstractValidator<GetBooksQuery>
+internal sealed class GetPagedListBooksQueryValidator : AbstractValidator<GetPagedListBooksQuery>
 {
-    public GetBooksQueryValidator()
+    public GetPagedListBooksQueryValidator()
     {
         RuleFor(x => x.PageNumber)
             .GreaterThan(0);

@@ -12,15 +12,15 @@ using Persistence.DbContexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20240503110846_Intialize_Db")]
-    partial class Intialize_Db
+    [Migration("20240508101150_Initialize_DB")]
+    partial class Initialize_DB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -131,7 +131,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.ToTable("CartItem");
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("Domain.GenreAggregate.Genre", b =>
@@ -260,7 +260,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("WishId");
 
-                    b.ToTable("Wishes");
+                    b.ToTable("WishItems");
                 });
 
             modelBuilder.Entity("Domain.WishAggregate.Wish", b =>
@@ -276,7 +276,7 @@ namespace Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Wish");
+                    b.ToTable("Wishes");
                 });
 
             modelBuilder.Entity("Domain.BookAggregate.Book", b =>

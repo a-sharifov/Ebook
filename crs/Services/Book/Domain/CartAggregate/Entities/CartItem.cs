@@ -40,18 +40,6 @@ public class CartItem : Entity<CartItemId>
                 CartItemErrors.QuantityExceedsBookQuantity);
         }
 
-        var quantityBookResult = QuantityBook.Create(
-            Quantity.Value + Book.Quantity.Value - quantity.Value);
-
-        if (quantityBookResult.IsFailure)
-        {
-            return Result.Failure(
-                quantityBookResult.Error);
-        }
-
-        var updateQuantityBook = Book.UpdateQuantity(
-            quantityBookResult.Value);
-
         Quantity = quantity;
 
         return Result.Success();
@@ -59,24 +47,8 @@ public class CartItem : Entity<CartItemId>
 
     internal Result Increment()
     {
-        var bookDecrementResult = Book.Decrement();
-
-        if (bookDecrementResult.IsFailure)
-        {
-            return Result.Failure(
-                bookDecrementResult.Error);
-        }
-
-        var itemQuantityResult = CartItemQuantity.Create(Quantity.Value + 1);
-
-        if (itemQuantityResult.IsFailure)
-        {
-            return Result.Failure(
-                itemQuantityResult.Error);
-        }
-
-        Quantity = itemQuantityResult.Value;
-
+        var itemQuantity = CartItemQuantity.Create(Quantity.Value + 1).Value;
+        Quantity = itemQuantity;
         return Result.Success();
     }
 
