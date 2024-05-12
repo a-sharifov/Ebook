@@ -18,4 +18,7 @@ public class QuantityBook
 
         return new QuantityBook(quantity);
     }
+
+    public static implicit operator int(QuantityBook quantity) =>
+        quantity.Value;
 }

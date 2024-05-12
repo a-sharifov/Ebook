@@ -2,6 +2,7 @@
 using Domain.GenreAggregate.Errors;
 using Domain.GenreAggregate.Ids;
 using Domain.GenreAggregate.Repositories;
+using Domain.GenreAggregate.ValueObjects;
 
 namespace Application.Genres.Commands.UpdateGenre;
 
@@ -25,6 +26,15 @@ internal sealed class UpdateGenreCommandHandler(
         }
 
         var genre = await _repository.GetAsync(id, cancellationToken);
+
+        var genreNameResult = GenreName.Create(request.Name);
+
+        if (genreNameResult.IsFailure)
+        {
+            return genreNameResult;
+        }
+
+        genre.Update(genreNameResult.Value);
 
         await _repository.UpdateAsync(genre, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);

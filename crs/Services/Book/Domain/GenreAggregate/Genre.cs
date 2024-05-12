@@ -28,4 +28,10 @@ public class Genre : AggregateRoot<GenreId>
 
         return Result.Success(genre);
     }
+
+    public Result Update(GenreName name)
+    {
+        Name = name;
+        return Result.Success();
+    }
 }

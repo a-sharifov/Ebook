@@ -1,6 +1,7 @@
 ﻿using Domain.AuthorAggregate.Errors;
 using Domain.AuthorAggregate.Ids;
 using Domain.AuthorAggregate.Repositories;
+using Domain.AuthorAggregate.ValueObjects;
 using Domain.Core.UnitOfWorks.Interfaces;
 
 namespace Application.Authors.Commands.UpdateAuthor;
@@ -25,6 +26,16 @@ internal sealed class UpdateAuthorCommandHandler(
         }
 
         var author = await _repository.GetAsync(id, cancellationToken);
+        var pseudonymResult = Pseudonym.Create(request.Pseudonym);
+
+        if (pseudonymResult.IsFailure)
+        {
+            return pseudonymResult;
+        }
+
+        var pseudonym = pseudonymResult.Value;
+
+        author.Update(pseudonym);
 
         await _repository.UpdateAsync(author, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);

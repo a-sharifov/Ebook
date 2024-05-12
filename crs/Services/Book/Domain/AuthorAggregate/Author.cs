@@ -33,4 +33,12 @@ public class Author : AggregateRoot<AuthorId>
 
         return author;
     }
+
+    public Result Update(Pseudonym pseudonym)
+    {
+        Pseudonym = pseudonym;
+        // TODO: Add domain events
+
+        return Result.Success();
+    }
 }

@@ -3,7 +3,6 @@ using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
 using Infrastructure.Jwt.Interfaces;
-using Persistence;
 
 namespace Application.Users.Commands.UpdateRefreshToken;
 
@@ -22,7 +21,15 @@ internal sealed class UpdateRefreshTokenCommandHandler(
         var emailString = _jwtManager.GetEmailFromToken(request.Token);
         var emailResult = Email.Create(emailString);
 
-        var user = await _repository.GetAsync(emailResult.Value, cancellationToken: cancellationToken);
+        if (emailResult.IsFailure)
+        {
+            return Result.Failure<UpdateRefreshTokenCommandResponse>(
+                emailResult.Error);
+        }
+
+        var email = emailResult.Value;
+
+        var user = await _repository.GetAsync(email, cancellationToken: cancellationToken);
 
         if (user.RefreshToken?.Token != request.RefreshToken)
         {

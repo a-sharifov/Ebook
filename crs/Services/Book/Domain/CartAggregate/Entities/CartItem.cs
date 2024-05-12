@@ -34,7 +34,7 @@ public class CartItem : Entity<CartItemId>
     //change logic 
     public Result UpdateQuantity(CartItemQuantity quantity)
     {
-        if (quantity.Value > Book.Quantity.Value + Quantity.Value)
+        if (quantity.Value > Book.Quantity + Quantity)
         {
             return Result.Failure(
                 CartItemErrors.QuantityExceedsBookQuantity);
@@ -47,7 +47,7 @@ public class CartItem : Entity<CartItemId>
 
     internal Result Increment()
     {
-        var itemQuantity = CartItemQuantity.Create(Quantity.Value + 1).Value;
+        var itemQuantity = CartItemQuantity.Create(Quantity + 1).Value;
         Quantity = itemQuantity;
         return Result.Success();
     }

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="CartAggregate\Events\" />
     <Folder Include="UserAggregate\ValueObjects\" />
   </ItemGroup>
 

@@ -26,10 +26,8 @@ public sealed class PasswordSalt : ValueObject
         return new PasswordSalt(passwordSalt);
     }
 
-    public static implicit operator string(PasswordSalt passwordSalt)
-    {
-        return passwordSalt.Value;
-    }
+    public static implicit operator string(PasswordSalt passwordSalt) => 
+        passwordSalt.Value;
 
     public override IEnumerable<object> GetEqualityComponents()
     {

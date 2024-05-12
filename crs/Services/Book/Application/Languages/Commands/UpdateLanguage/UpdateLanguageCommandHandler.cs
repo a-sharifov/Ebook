@@ -1,10 +1,8 @@
 ﻿using Domain.Core.UnitOfWorks.Interfaces;
-using Domain.LanguageAggregate;
 using Domain.LanguageAggregate.Errors;
 using Domain.LanguageAggregate.Ids;
 using Domain.LanguageAggregate.Repositories;
 using Domain.LanguageAggregate.ValueObjects;
-using Persistence;
 
 namespace Application.Languages.Commands.UpdateLanguage;
 
@@ -27,10 +25,20 @@ internal sealed class UpdateLanguageCommandHandler(
                 LanguageErrors.IsNotExist);
         }
 
-        var name = LanguageName.Create(request.Name).Value;
-        var code = LanguageCode.Create(request.Code).Value;
+        var language = await _repository.GetAsync(id, cancellationToken);
 
-        var language = Language.Create(id, name, code).Value;
+        var nameResult = LanguageName.Create(request.Name);
+        var codeResult = LanguageCode.Create(request.Code);
+
+        var firstFailureOrSuccessResult = 
+            Result.FirstFailureOrSuccess(nameResult, codeResult);
+
+        if (firstFailureOrSuccessResult.IsFailure)
+        {
+            return firstFailureOrSuccessResult;
+        }
+
+        language.Update(nameResult.Value, codeResult.Value);
 
         await _repository.UpdateAsync(language, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);

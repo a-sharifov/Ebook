@@ -14,8 +14,14 @@ public sealed class AddGenreCommandHandler(IGenreRepository repository, IUnitOfW
 
     public async Task<Result> Handle(AddGenreCommand request, CancellationToken cancellationToken)
     {
-        var name = GenreName.Create(request.Name).Value;
-        var isExist = await _repository.IsNameExistAsync(name);
+        var nameResult = GenreName.Create(request.Name);
+
+        if (nameResult.IsFailure)
+        {
+            return nameResult;
+        }
+
+        var isExist = await _repository.IsNameExistAsync(nameResult.Value, cancellationToken);
 
         if (isExist)
         {
@@ -24,7 +30,7 @@ public sealed class AddGenreCommandHandler(IGenreRepository repository, IUnitOfW
         }
 
         var id = new GenreId(Guid.NewGuid());
-        var genre = Genre.Create(id, name).Value;
+        var genre = Genre.Create(id, nameResult.Value).Value;
 
         await _repository.AddAsync(genre, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);

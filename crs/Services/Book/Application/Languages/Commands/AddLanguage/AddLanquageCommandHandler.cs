@@ -17,9 +17,17 @@ internal sealed class AddLanquageCommandHandler(
     public async Task<Result> Handle(AddLanquageCommand request, CancellationToken cancellationToken)
     {
         var id = new LanguageId(Guid.NewGuid());
-        var name = LanguageName.Create(request.Name).Value;
-        var code = LanguageCode.Create(request.Code).Value;
-        var language = Language.Create(id, name, code).Value;
+        var nameResult = LanguageName.Create(request.Name);
+        var codeResult = LanguageCode.Create(request.Code);
+
+        var firstFailureOrSuccessResult = Result.FirstFailureOrSuccess(nameResult, codeResult);
+
+        if (firstFailureOrSuccessResult.IsFailure)
+        {
+            return firstFailureOrSuccessResult;
+        }
+
+        var language = Language.Create(id, nameResult.Value, codeResult.Value).Value;
 
         await _repository.AddAsync(language, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);

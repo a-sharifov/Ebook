@@ -45,6 +45,7 @@ public class Cart : AggregateRoot<CartId>
             item = Items.First(x => x.Book.Id == item.Book.Id);
             item.Increment();
             ExpirationTime = CartExpirationTime.Default();
+            //AddDomainEvent();
             return Result.Success();
         }
 
@@ -58,6 +59,8 @@ public class Cart : AggregateRoot<CartId>
     {
         var item = _items.First(x => x.Id == itemId);
         _items.Remove(item);
+        //AddDomainEvent();
+
 
         return Result.Success();
     }
@@ -80,6 +83,7 @@ public class Cart : AggregateRoot<CartId>
         }
 
         ExpirationTime = CartExpirationTime.Default();
+
         return Result.Success();
     }
 
@@ -87,6 +91,7 @@ public class Cart : AggregateRoot<CartId>
     {
         _items.Clear();
         ExpirationTime = null;
+        //AddDomainEvent();
     }
 
     private decimal CalculateTotalPrice()
@@ -94,7 +99,7 @@ public class Cart : AggregateRoot<CartId>
         var totalPrice = 0m;
         foreach (var cartItem in _items)
         {
-            totalPrice += cartItem.Book.Price * cartItem.Quantity.Value;
+            totalPrice += cartItem.Book.Price * cartItem.Quantity;
         }
 
         return totalPrice;

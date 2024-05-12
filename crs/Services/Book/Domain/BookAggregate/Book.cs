@@ -108,7 +108,7 @@ public class Book : AggregateRoot<BookId>
 
     public Result Decrement()
     {
-        var quantityBookResult = QuantityBook.Create(Quantity.Value - 1);
+        var quantityBookResult = QuantityBook.Create(Quantity - 1);
 
         if (quantityBookResult.IsFailure)
         {
@@ -120,4 +120,28 @@ public class Book : AggregateRoot<BookId>
         return Result.Success();
     }
 
+    public Result Update(
+        Title title,
+        BookDescription description,
+        PageCount pageCount,
+        Money price,
+        Language language,
+        QuantityBook quantity,
+        SoldUnits soldUnits,
+        Author author,
+        Image poster,
+        Genre genre)
+    {
+        Title = title;
+        Description = description;
+        PageCount = pageCount;
+        Price = price;
+        Language = language;
+        Quantity = quantity;
+        SoldUnits = soldUnits;
+        Author = author;
+        Poster = poster;
+        Genre = genre;
+        return Result.Success();
+    }
 }

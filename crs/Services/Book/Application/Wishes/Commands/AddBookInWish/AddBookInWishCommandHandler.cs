@@ -4,10 +4,8 @@ using Domain.BookAggregate.Repositories;
 using Domain.Core.UnitOfWorks.Interfaces;
 using Domain.UserAggregate.Ids;
 using Domain.WishAggregate.Entities;
-using Domain.WishAggregate.Errors;
 using Domain.WishAggregate.Ids;
 using Domain.WishAggregate.Repositories;
-using Persistence;
 
 namespace Application.Wishes.Commands.AddBookInWish;
 

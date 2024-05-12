@@ -41,12 +41,20 @@ internal sealed class ChangePasswordCommandHadnler(
             oldPassword, user.PasswordSalt.Value, user.PasswordHash.Value);
 
         var generateSalt = _hashingService.GenerateSalt();
-        var passwordSalt = PasswordSalt.Create(generateSalt).Value;
+        var passwordSaltResult = PasswordSalt.Create(generateSalt);
 
         var hash = _hashingService.Hash(newPassword, generateSalt);
-        var passwordHash = PasswordHash.Create(hash).Value;
+        var passwordHashResult = PasswordHash.Create(hash);
 
-        var updatePasswordResult = user.UpdatePassword(passwordHash, passwordSalt, passwordIsCorrect);
+        var firstFailureOrSuccessResult = Result.FirstFailureOrSuccess(passwordSaltResult, passwordHashResult);
+
+        if (firstFailureOrSuccessResult.IsFailure)
+        {
+            return firstFailureOrSuccessResult;
+        }
+
+        var updatePasswordResult = user.UpdatePassword(
+            passwordHashResult.Value, passwordSaltResult.Value, passwordIsCorrect);
 
         return updatePasswordResult;
     }

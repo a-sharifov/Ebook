@@ -35,8 +35,12 @@ public sealed class PasswordHash : ValueObject
         return new PasswordHash(passwordHash);
     }
 
+    public static implicit operator string(PasswordHash hash) =>
+        hash.Value;
+
     public override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
 }
+ 

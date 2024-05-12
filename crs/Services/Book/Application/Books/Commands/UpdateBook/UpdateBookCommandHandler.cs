@@ -18,6 +18,11 @@ using Domain.SharedKernel.Repositories;
 using MediatR;
 using Application.Images.Commands.AddImage;
 using Domain.SharedKernel.Enumerations;
+using Domain.LanguageAggregate;
+using Domain.LanguageAggregate.Errors;
+using Domain.GenreAggregate.Errors;
+using Domain.GenreAggregate;
+using Domain.SharedKernel.Errors;
 
 namespace Application.Books.Commands.UpdateBook;
 
@@ -62,7 +67,8 @@ internal sealed class UpdateBookCommandHandler(
 
         var imageId = imageDtoResult.Value.Id;
 
-        var updateBookResult = await UpdateBookAsync(request, imageId, cancellationToken);
+        var book = await _bookRepository.GetAsync(id, cancellationToken);
+        var updateBookResult = await UpdateBookAsync(book, request, imageId, cancellationToken);
 
         if (updateBookResult.IsFailure)
         {
@@ -78,39 +84,125 @@ internal sealed class UpdateBookCommandHandler(
     }
 
     private async Task<Result<Book>> UpdateBookAsync(
-    UpdateBookCommand request,
-    Guid existImageId,
-    CancellationToken cancellationToken)
+        Book book,
+        UpdateBookCommand request,
+        Guid existImageId,
+        CancellationToken cancellationToken)
     {
-        var id = new BookId(request.Id);
-        var title = Title.Create(request.Title).Value;
-        var description = BookDescription.Create(request.Description).Value;
-        var pageCount = PageCount.Create(request.PageCount).Value;
-        var price = Money.Create(request.Price).Value;
-        var quantity = QuantityBook.Create(request.Quantity).Value;
-        var soldUnits = SoldUnits.Create(0).Value;
+        var titleResult = Title.Create(request.Title);
+        var descriptionResult = BookDescription.Create(request.Description);
+        var pageCountResult = PageCount.Create(request.PageCount);
+        var priceResult = Money.Create(request.Price);
+        var quantityResult = QuantityBook.Create(request.Quantity);
+        var soldUnitsResult = SoldUnits.Create(0);
 
-        var languageId = new LanguageId(request.LanguageId);
-        var language = await _languageRepository.GetAsync(languageId, cancellationToken: cancellationToken);
+        var firstFailureOrSuccess = Result.FirstFailureOrSuccess(
+            titleResult, descriptionResult, pageCountResult, priceResult, quantityResult, soldUnitsResult);
 
-        var genreId = new GenreId(request.GenreId);
-        var genre = await _genreRepository.GetAsync(genreId, cancellationToken: cancellationToken);
+        if(firstFailureOrSuccess.IsFailure)
+        {
+            return Result.Failure<Book>(firstFailureOrSuccess.Error);
+        }
 
-        var imageId = new ImageId(existImageId);
-        var image = await _imageRepository.GetAsync(imageId, cancellationToken: cancellationToken);
-        await _imageRepository.UpdateAsync(image, cancellationToken);
+        var languageResult = await GetLanguageAsync(request.LanguageId, cancellationToken);
 
-        var pseudonym = Pseudonym.Create(request.AuthorPseudonym).Value;
+        if (languageResult.IsFailure)
+        {
+            return Result.Failure<Book>(languageResult.Error);
+        }
+
+        var genreResult = await GetGenreAsync(request.GenreId, cancellationToken);
+
+        if (genreResult.IsFailure)
+        {
+            return Result.Failure<Book>(genreResult.Error);
+        }
+
+        var imageResult = await GetImageAsync(existImageId, cancellationToken);
+
+        if (imageResult.IsFailure)
+        {
+            return Result.Failure<Book>(imageResult.Error);
+        }
+
+        var author = await GetAuthorAsync(request.AuthorPseudonym, cancellationToken);
+
+         book.Update(
+            titleResult.Value, 
+            descriptionResult.Value, 
+            pageCountResult.Value,
+            priceResult.Value,
+            languageResult.Value, 
+            quantityResult.Value, 
+            soldUnitsResult.Value, 
+            author.Value, 
+            imageResult.Value, 
+            genreResult.Value);
+
+        return book;
+    }
+
+    private async Task<Result<Language>> GetLanguageAsync(Guid languageId, CancellationToken cancellationToken)
+    {
+        var id = new LanguageId(languageId);
+        var languageIsExist = await _languageRepository.IsExistAsync(id, cancellationToken: cancellationToken);
+
+        if (!languageIsExist)
+        {
+            return Result.Failure<Language>(LanguageErrors.IsNotExist);
+        }
+
+        var language = await _languageRepository.GetAsync(id, cancellationToken: cancellationToken);
+
+        return language;
+    }
+
+    private async Task<Result<Genre>> GetGenreAsync(Guid genreId, CancellationToken cancellationToken)
+    {
+        var id = new GenreId(genreId);
+        var genreIsExist = await _genreRepository.IsExistAsync(id, cancellationToken: cancellationToken);
+
+        if (!genreIsExist)
+        {
+            return Result.Failure<Genre>(GenreErrors.IsNotExist);
+        }
+
+        var genre = await _genreRepository.GetAsync(id, cancellationToken: cancellationToken);
+        return Result.Success(genre);
+    }
+
+    private async Task<Result<Image>> GetImageAsync(Guid imageId, CancellationToken cancellationToken)
+    {
+        var id = new ImageId(imageId);
+        var imageIsExist = await _imageRepository.IsExistAsync(id, cancellationToken: cancellationToken);
+
+        if (!imageIsExist)
+        {
+            return Result.Failure<Image>(ImageErrors.IsNotExist);
+        }
+
+        var image = await _imageRepository.GetAsync(id, cancellationToken: cancellationToken);
+        return Result.Success(image);
+    }
+
+    private async Task<Result<Author>> GetAuthorAsync(string authorPseudonym, CancellationToken cancellationToken)
+    {
+        var pseudonymResult = Pseudonym.Create(authorPseudonym);
+
+        if (pseudonymResult.IsFailure)
+        {
+            return Result.Failure<Author>(pseudonymResult.Error);
+        }
+
+        var pseudonym = pseudonymResult.Value;
+
         var isAuthorExists = await _authorRepository.IsExistAsync(pseudonym, cancellationToken);
 
         var author =
             isAuthorExists ? await _authorRepository.GetAsync(pseudonym, cancellationToken) :
             Author.Create(new AuthorId(Guid.NewGuid()), pseudonym).Value;
 
-        var book = Book.Create(
-            id, title, description, pageCount, price, language, quantity, soldUnits, author, image, genre).Value;
-
-        return book;
+        return author;
     }
 
 }
