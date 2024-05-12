@@ -3,13 +3,13 @@ using Domain.BookAggregate;
 using Domain.CartAggregate;
 using Domain.CartAggregate.Entities;
 using Domain.Core.Events.Interfaces;
+using Domain.Core.Messages.OutboxMessages;
 using Domain.GenreAggregate;
 using Domain.LanguageAggregate;
 using Domain.SharedKernel.Entities;
 using Domain.UserAggregate;
 using Domain.WishAggregate;
 using Domain.WishAggregate.Entities;
-using Microsoft.Extensions.Configuration;
 
 namespace Persistence.DbContexts;
 
@@ -25,6 +25,9 @@ public class BookDbContext : DbContext
     public DbSet<WishItem> WishItems { get; set; }
     public DbSet<Wish> Wishes { get; set; }
     public DbSet<Image> Images { get; set; }
+
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
+    public DbSet<OutboxMessageConsumer> OutboxMessageConsumers { get; set; }
 
     // if you need migration in Persistence layer.
     public BookDbContext()

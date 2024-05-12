@@ -60,7 +60,10 @@ internal sealed class LoginCommandHandler(
     private async Task<bool> IsEmailExistAsync(string userEmail, CancellationToken cancellationToken = default)
     {
         var email = Email.Create(userEmail).Value;
-        var isEmailExist = await _repository.IsExistAsync(email, cancellationToken);
+
+        var isEmailExist = await _repository.IsExistAsync(
+            email, cancellationToken);
+
         return isEmailExist;
     }
 
@@ -74,7 +77,7 @@ internal sealed class LoginCommandHandler(
     private Result Login(User user, string password)
     {
         var passwordIsCorrect = _hashingService.Verify(
-            password, user.PasswordSalt.Value, user.PasswordHash.Value);
+            password, user.PasswordSalt, user.PasswordHash);
 
         var loginResult = User.Login(user, passwordIsCorrect);
 

@@ -1,7 +1,6 @@
 ﻿using Domain.BookAggregate.Repositories.Requests;
 using Domain.BookAggregate;
 using System.Linq.Expressions;
-
 namespace Persistence.Filters;
 
 public class BookFiltersBuilder
@@ -10,7 +9,7 @@ public class BookFiltersBuilder
     {
         var filters = new List<Expression<Func<Book, bool>>>();
 
-        if (request.Title is not null)
+        if (request.Title != null)
         {
             filters.Add(x => x.Title == request.Title);
         }
@@ -22,12 +21,12 @@ public class BookFiltersBuilder
 
         if (request.MinPrice > 0)
         {
-            filters.Add(x => x.Price.Value > request.MinPrice);
+            filters.Add(x => x.Price > request.MinPrice);
         }
 
         if (request.MaxPrice > 0)
         {
-            filters.Add(x => x.Price.Value < request.MaxPrice);
+            filters.Add(x => x.Price < request.MaxPrice);
         }
 
         if (request.GenreId != default)

@@ -21,7 +21,15 @@ public class RetryConfirmEmailSendCommandHandler(
 
     public async Task<Result> Handle(RetryConfirmEmailSendCommand request, CancellationToken cancellationToken)
     {
-        var email = Email.Create(request.Email).Value;
+        var emailResult = Email.Create(request.Email);
+
+        if (emailResult.IsFailure)
+        {
+            return emailResult;
+        }
+
+        var email = emailResult.Value;
+
         var isEmailExists = await _repository.IsExistAsync(email, cancellationToken);
 
         if (!isEmailExists)

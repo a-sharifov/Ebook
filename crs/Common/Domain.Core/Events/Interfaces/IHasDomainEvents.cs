@@ -10,4 +10,9 @@ public interface IHasDomainEvents
     /// Gets the domain events.
     /// </summary>
     IReadOnlyCollection<IDomainEvent> DomainEvents { get; }
+
+    /// <summary>
+    /// Clear domain events collecion  
+    /// </summary>
+    void ClearDomainEvents();
 }

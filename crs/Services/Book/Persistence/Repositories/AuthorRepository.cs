@@ -18,10 +18,13 @@ public sealed class AuthorRepository(
     public async Task<Author> GetAsync(Pseudonym pseudonym, CancellationToken cancellationToken = default)
     {
         var author = await GetEntityDbSet()
+            .AsNoTracking()
             .Where(x => x.Pseudonym == pseudonym)
             .FirstAsync(cancellationToken: cancellationToken);
 
         await _cached.SetAsync(author, cancellationToken: cancellationToken);
+
+        _dbContext.Attach(author);
 
         return author;
     }
@@ -30,8 +33,8 @@ public sealed class AuthorRepository(
     {
         var isExists = await GetEntityDbSet()
             .AsNoTracking()
-           .Where(x => x.Pseudonym == pseudonym)
-           .AnyAsync(cancellationToken: cancellationToken);
+            .Where(x => x.Pseudonym == pseudonym)
+            .AnyAsync(cancellationToken: cancellationToken);
 
         return isExists;
     }

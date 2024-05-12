@@ -2,6 +2,8 @@
 using Api.Core.Pipelines;
 using FluentValidation;
 using Application.Core.MappingConfig;
+using Infrastructure.Idempotence;
+using MediatR;
 
 namespace Api.Configurations;
 
@@ -14,6 +16,8 @@ internal sealed class ApplicationServiceInstaller : IServiceInstaller
         .AddOpenBehavior(typeof(LoggingPipelineBehavior<,>))
         .AddOpenBehavior(typeof(ValidationPipelineBehavior<,>))
         );
+
+        services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandler<>));
 
         services.AddValidatorsFromAssembly(
             Application.AssemblyReference.Assembly,

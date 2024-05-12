@@ -10,17 +10,26 @@ internal sealed class BackgroundServiceInstaller : IServiceInstaller
     {
         services.AddQuartz(configure =>
         {
-            var jobKey = new JobKey(nameof(CartExpirationCleanupJob));
+            var cartExpirationCleanupKey = new JobKey(nameof(CartExpirationCleanupJob));
+            var outboxBackgroundJobKey = new JobKey(nameof(OutboxBackgroundJob));
 
             configure
-            .AddJob<CartExpirationCleanupJob>(jobKey)
+            .AddJob<CartExpirationCleanupJob>(cartExpirationCleanupKey)
             .AddTrigger(
                 trigger => trigger
-                .ForJob(jobKey)
+                .ForJob(cartExpirationCleanupKey)
                 .WithSimpleSchedule(
                     schedule => schedule
                     //TODO: move in env
                     .WithIntervalInSeconds(10)
+                    .RepeatForever()))
+           .AddJob<OutboxBackgroundJob>(outboxBackgroundJobKey)
+            .AddTrigger(
+                trigger => trigger
+                .ForJob(outboxBackgroundJobKey)
+                .WithSimpleSchedule(
+                    schedule => schedule
+                    .WithIntervalInSeconds(5)
                     .RepeatForever()));
         });
 

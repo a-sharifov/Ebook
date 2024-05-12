@@ -99,16 +99,33 @@ internal sealed class AddBookCommandHandler(
         }
 
         var id = new BookId(Guid.NewGuid());
-        var title = Title.Create(request.Title).Value;
-        var description = BookDescription.Create(request.Description).Value;
-        var pageCount = PageCount.Create(request.PageCount).Value;
-        var price = Money.Create(request.Price).Value;
-        var quantity = QuantityBook.Create(request.Quantity).Value;
-        var soldUnits = SoldUnits.Create(0).Value;
-        var authorResult = await GetAuthorAsync(request.AuthorPseudonym, cancellationToken);
+        var titleResult = Title.Create(request.Title);
+        var descriptionResult = BookDescription.Create(request.Description);
+        var pageCountResult = PageCount.Create(request.PageCount);
+        var priceResult = Money.Create(request.Price);
+        var quantityResult = QuantityBook.Create(request.Quantity);
+        var soldUnitsResult = SoldUnits.Create(0);
+        var author = await GetAuthorAsync(request.AuthorPseudonym, cancellationToken);
+
+        var firstFailureOrSuccessResult = Result.FirstFailureOrSuccess(titleResult, descriptionResult, pageCountResult, priceResult, quantityResult, soldUnitsResult);
+
+        if (firstFailureOrSuccessResult.IsFailure)
+        {
+            return Result.Failure<Book>(firstFailureOrSuccessResult.Error);
+        }
      
         var book = Book.Create(
-            id, title, description, pageCount, price, languageResult.Value, quantity, soldUnits, authorResult.Value, imageResult.Value, genreResult.Value).Value;
+            id,
+            titleResult.Value,
+            descriptionResult.Value,
+            pageCountResult.Value,
+            priceResult.Value,
+            languageResult.Value,
+            quantityResult.Value,
+            soldUnitsResult.Value,
+            author.Value,
+            imageResult.Value,
+            genreResult.Value).Value;
 
         return book;
     }
@@ -158,7 +175,15 @@ internal sealed class AddBookCommandHandler(
 
     private async Task<Result<Author>> GetAuthorAsync(string authorPseudonym, CancellationToken cancellationToken)
     {
-        var pseudonym = Pseudonym.Create(authorPseudonym).Value;
+        var pseudonymResult = Pseudonym.Create(authorPseudonym);
+
+        if (pseudonymResult.IsFailure)
+        {
+            return Result.Failure<Author>(pseudonymResult.Error);
+        }
+
+        var pseudonym = pseudonymResult.Value;
+
         var isAuthorExists = await _authorRepository.IsExistAsync(pseudonym, cancellationToken);
 
         var author =
