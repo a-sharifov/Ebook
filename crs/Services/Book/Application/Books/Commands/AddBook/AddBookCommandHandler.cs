@@ -98,6 +98,21 @@ internal sealed class AddBookCommandHandler(
             return Result.Failure<Book>(imageResult.Error);
         }
 
+        var createBookResult = await CreateBookAsync(
+            request, languageResult.Value, genreResult.Value, imageResult.Value, cancellationToken);
+
+        return createBookResult;
+    }
+
+    private async Task<Result<Book>> CreateBookAsync(
+        AddBookCommand request,
+        Language language,
+        Genre genre,
+        Image image,
+        CancellationToken cancellationToken)
+    {
+       
+
         var id = new BookId(Guid.NewGuid());
         var titleResult = Title.Create(request.Title);
         var descriptionResult = BookDescription.Create(request.Description);
@@ -120,12 +135,12 @@ internal sealed class AddBookCommandHandler(
             descriptionResult.Value,
             pageCountResult.Value,
             priceResult.Value,
-            languageResult.Value,
+            language,
             quantityResult.Value,
             soldUnitsResult.Value,
             author.Value,
-            imageResult.Value,
-            genreResult.Value).Value;
+            image,
+            genre).Value;
 
         return book;
     }

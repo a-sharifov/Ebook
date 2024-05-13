@@ -89,21 +89,6 @@ internal sealed class UpdateBookCommandHandler(
         Guid existImageId,
         CancellationToken cancellationToken)
     {
-        var titleResult = Title.Create(request.Title);
-        var descriptionResult = BookDescription.Create(request.Description);
-        var pageCountResult = PageCount.Create(request.PageCount);
-        var priceResult = Money.Create(request.Price);
-        var quantityResult = QuantityBook.Create(request.Quantity);
-        var soldUnitsResult = SoldUnits.Create(0);
-
-        var firstFailureOrSuccess = Result.FirstFailureOrSuccess(
-            titleResult, descriptionResult, pageCountResult, priceResult, quantityResult, soldUnitsResult);
-
-        if(firstFailureOrSuccess.IsFailure)
-        {
-            return Result.Failure<Book>(firstFailureOrSuccess.Error);
-        }
-
         var languageResult = await GetLanguageAsync(request.LanguageId, cancellationToken);
 
         if (languageResult.IsFailure)
@@ -125,19 +110,55 @@ internal sealed class UpdateBookCommandHandler(
             return Result.Failure<Book>(imageResult.Error);
         }
 
-        var author = await GetAuthorAsync(request.AuthorPseudonym, cancellationToken);
+        var authorResult = await GetAuthorAsync(request.AuthorPseudonym, cancellationToken);
+
+        var updateBookResult = UpdateBook(
+            book,
+            request,
+            languageResult.Value,
+            authorResult.Value,
+            imageResult.Value,
+            genreResult.Value,
+            existImageId);
+
+        return updateBookResult;
+    }
+
+    private static Result<Book> UpdateBook(
+        Book book,
+        UpdateBookCommand request,
+        Language language,
+        Author author,
+        Image image,
+        Genre genre,
+        Guid existImageId)
+    {
+        var titleResult = Title.Create(request.Title);
+        var descriptionResult = BookDescription.Create(request.Description);
+        var pageCountResult = PageCount.Create(request.PageCount);
+        var priceResult = Money.Create(request.Price);
+        var quantityResult = QuantityBook.Create(request.Quantity);
+        var soldUnitsResult = SoldUnits.Create(0);
+
+        var firstFailureOrSuccess = Result.FirstFailureOrSuccess(
+            titleResult, descriptionResult, pageCountResult, priceResult, quantityResult, soldUnitsResult);
+
+        if(firstFailureOrSuccess.IsFailure)
+        {
+            return Result.Failure<Book>(firstFailureOrSuccess.Error);
+        }
 
          book.Update(
             titleResult.Value, 
             descriptionResult.Value, 
             pageCountResult.Value,
             priceResult.Value,
-            languageResult.Value, 
+            language, 
             quantityResult.Value, 
             soldUnitsResult.Value, 
-            author.Value, 
-            imageResult.Value, 
-            genreResult.Value);
+            author, 
+            image, 
+            genre);
 
         return book;
     }

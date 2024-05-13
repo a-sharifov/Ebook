@@ -1,4 +1,5 @@
 ﻿using Domain.Core.UnitOfWorks.Interfaces;
+using Domain.LanguageAggregate;
 using Domain.LanguageAggregate.Errors;
 using Domain.LanguageAggregate.Ids;
 using Domain.LanguageAggregate.Repositories;
@@ -21,16 +22,29 @@ internal sealed class UpdateLanguageCommandHandler(
 
         if (!isExist)
         {
-            return Result.Failure(
-                LanguageErrors.IsNotExist);
+            return Result.Failure(LanguageErrors.IsNotExist);
         }
 
         var language = await _repository.GetAsync(id, cancellationToken);
 
+        var updateLanguageResult = UpdateLanguage(request, language);
+
+        if (updateLanguageResult.IsFailure)
+        {
+            return updateLanguageResult;
+        }
+
+        await _repository.UpdateAsync(language, cancellationToken);
+        await _unitOfWork.Commit(cancellationToken);
+        return Result.Success();
+    }
+
+    private Result UpdateLanguage(UpdateLanguageCommand request, Language language)
+    {
         var nameResult = LanguageName.Create(request.Name);
         var codeResult = LanguageCode.Create(request.Code);
 
-        var firstFailureOrSuccessResult = 
+        var firstFailureOrSuccessResult =
             Result.FirstFailureOrSuccess(nameResult, codeResult);
 
         if (firstFailureOrSuccessResult.IsFailure)
@@ -38,10 +52,8 @@ internal sealed class UpdateLanguageCommandHandler(
             return firstFailureOrSuccessResult;
         }
 
-        language.Update(nameResult.Value, codeResult.Value);
+        var updateResult = language.Update(nameResult.Value, codeResult.Value);
 
-        await _repository.UpdateAsync(language, cancellationToken);
-        await _unitOfWork.Commit(cancellationToken);
-        return Result.Success();
+        return updateResult;
     }
 }

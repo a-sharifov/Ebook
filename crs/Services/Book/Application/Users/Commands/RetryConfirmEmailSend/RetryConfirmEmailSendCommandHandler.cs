@@ -57,4 +57,5 @@ public class RetryConfirmEmailSendCommandHandler(
 
         return Result.Success();
     }
+
 }

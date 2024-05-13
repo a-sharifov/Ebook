@@ -21,7 +21,7 @@ internal sealed class BackgroundServiceInstaller : IServiceInstaller
                 .WithSimpleSchedule(
                     schedule => schedule
                     //TODO: move in env
-                    .WithIntervalInMinutes(15)
+                    .WithIntervalInSeconds(15)
                     .RepeatForever()));
            //.AddJob<OutboxBackgroundJob>(outboxBackgroundJobKey)
            // .AddTrigger(
