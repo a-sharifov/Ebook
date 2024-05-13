@@ -48,7 +48,6 @@ internal sealed class AddProductInCartCommandHandler(
         }
 
         await _cartRepository.UpdateAsync(cart, cancellationToken);
-        await _bookRepository.UpdateAsync(book, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
         return Result.Success();

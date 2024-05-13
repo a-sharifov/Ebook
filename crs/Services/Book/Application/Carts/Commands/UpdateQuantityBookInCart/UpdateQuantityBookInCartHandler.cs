@@ -52,7 +52,7 @@ internal sealed class UpdateQuantityBookInCartHandler(
         }
 
         await _cartItemRepository.UpdateAsync(item, cancellationToken);
-        await _bookRepository.UpdateAsync(item.Book, cancellationToken);
+        //await _bookRepository.UpdateAsync(item.Book, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
         return Result.Success();
