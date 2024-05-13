@@ -11,7 +11,7 @@ public class BookFiltersBuilder
 
         if (request.Title != null)
         {
-            filters.Add(x => x.Title == request.Title);
+            filters.Add(x => x.Title.Value.Contains(request.Title));
         }
 
         if (request.AuthorId != default)

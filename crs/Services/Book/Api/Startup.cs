@@ -45,6 +45,7 @@ public sealed class Startup(IConfiguration configuration)
         //app.UseHttpsRedirection();
 
         app.MigrateDbContext<BookDbContext>();
+        //app.CustomMigrateDbContext<>
         app.InstallSeed<SeedDefaultProject>();
 
         app.UseRouting();

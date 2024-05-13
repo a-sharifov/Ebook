@@ -59,6 +59,6 @@ public class HashingServiceTests
         var token = _hashingService.GenerateToken();
 
         // Assert
-        Assert.False(string.IsNullOrEmpty(token));
+        Assert.NotEmpty(token);
     }
 }
