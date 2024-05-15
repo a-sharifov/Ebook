@@ -28,8 +28,7 @@ internal sealed class UpdateQuantityBookInCartHandler(
 
         if (!isExist)
         {
-            Result.Failure(
-                CartItemErrors.NotFound);
+            Result.Failure(CartItemErrors.NotFound);
         }
 
         if (request.Quantity == 0)
@@ -40,19 +39,15 @@ internal sealed class UpdateQuantityBookInCartHandler(
         }
 
         var item = await _cartItemRepository.GetAsync(itemId, cancellationToken);
-
         var quantity = CartItemQuantity.Create(request.Quantity).Value;
-
         var updateQuantityResult = item.UpdateQuantity(quantity);
 
         if (updateQuantityResult.IsFailure)
         {
-            return Result.Failure(
-                updateQuantityResult.Error);
+            return Result.Failure(updateQuantityResult.Error);
         }
 
         await _cartItemRepository.UpdateAsync(item, cancellationToken);
-        await _bookRepository.UpdateAsync(item.Book, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
         return Result.Success();

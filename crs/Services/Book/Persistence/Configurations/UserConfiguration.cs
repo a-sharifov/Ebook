@@ -64,6 +64,11 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
             token => token == null ? null : token.Value,
             value => value == null ? null : EmailConfirmationToken.Create(value).Value);
 
+        builder.Property(x => x.ResetPasswordToken)
+           .HasConversion(
+            token => token == null ? null : token.Value,
+            value => value == null ? null : ResetPasswordToken.Create(value).Value);
+
         builder.Property(x => x.IsEmailConfirmed).IsRequired();
 
         builder.Property(x => x.Role).IsRequired();
@@ -72,6 +77,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
            gender => gender.Name,
            name => Role.FromName(name)
            ).IsRequired();
+
 
         //для того чтоб сделать каскадное удаление cart при удалении пользователя с помощью CartId:
         builder.HasOne(x => x.Cart)

@@ -29,19 +29,18 @@ internal sealed class DeleteItemInCartCommandHandler(
         }
 
         var item = await _cartItemRepository.GetAsync(itemId, cancellationToken);
-        var book = await _bookRepository.GetAsync(item.Book.Id, cancellationToken);
+        //var book = await _bookRepository.GetAsync(item.Book.Id, cancellationToken);
 
-        var bookQuantityResult = QuantityBook.Create(item.Quantity.Value);
+        //var bookQuantityResult = QuantityBook.Create(item.Quantity.Value);
 
-        if (bookQuantityResult.IsFailure)
-        {
-            return bookQuantityResult;
-        }
+        //if (bookQuantityResult.IsFailure)
+        //{
+        //    return bookQuantityResult;
+        //}
 
-        book.AddQuantity(bookQuantityResult.Value);
+        //book.AddQuantity(bookQuantityResult.Value);
 
         await _cartItemRepository.DeleteAsync(itemId, cancellationToken);
-        await _bookRepository.UpdateAsync(book, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
         return Result.Success();

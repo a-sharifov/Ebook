@@ -10,6 +10,11 @@ internal static class EmailTemplatePath
     /// </summary>
     public static string ConfirmEmailTemplate => GetTemplatePath("ConfirmEmailTemplate.html");
 
+    /// <summary>
+    /// required change this template: {{firstName}}, {{lastName}}, {{code}}
+    /// </summary>
+    public static string ForgotPasswordTemplate => GetTemplatePath("ForgotPasswordTemplate.html");
+
 
     private static string GetTemplatePath(string templateName) =>
         Path.Combine(Templates.AssemblyReference.AssemblyPath, templateName);

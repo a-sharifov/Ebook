@@ -16,6 +16,7 @@ public sealed class User : AggregateRoot<UserId>
     public PasswordSalt PasswordSalt { get; private set; }
     public RefreshToken? RefreshToken { get; private set; }
     public EmailConfirmationToken? EmailConfirmationToken { get; private set; }
+    public ResetPasswordToken? ResetPasswordToken { get; private set; }
     public bool IsEmailConfirmed { get; private set; }
     public Role Role { get; private set; }
     public Cart Cart { get; private set; }
@@ -134,10 +135,9 @@ public sealed class User : AggregateRoot<UserId>
         return user;
     }
 
-
-    public static Result Login(User user, bool passwordIsCorrect)
+    public Result Login(bool passwordIsCorrect)
     {
-        if (!user.IsEmailConfirmed)
+        if (!IsEmailConfirmed)
         {
             return Result.Failure(
                 UserErrors.EmailIsNotConfirmed);
@@ -154,6 +154,29 @@ public sealed class User : AggregateRoot<UserId>
 
         return Result.Success();
     }
+
+
+    public Result Login(ResetPasswordToken resetPasswordToken)
+    {
+        if(ResetPasswordToken == null)
+        {
+            return Result.Failure(
+                UserErrors.ResetPasswordTokenIsNotSet);
+        }
+
+        if (ResetPasswordToken != resetPasswordToken)
+        {
+            return Result.Failure(
+                UserErrors.ResetPasswordTokenIsNotCorrect);
+        }
+
+        //user.AddDomainEvent(
+        //    new UserLoggedInDomainEvent(Guid.NewGuid(), user.Id));
+
+        ResetPasswordToken = null;
+        return Result.Success();
+    }
+
 
 
     public Result ConfirmEmail(EmailConfirmationToken confirmationToken)
@@ -202,16 +225,33 @@ public sealed class User : AggregateRoot<UserId>
     public void UpdateRefreshToken(RefreshToken refreshToken) =>
         RefreshToken = refreshToken;
 
-    public Result UpdatePassword(PasswordHash passwordHash, PasswordSalt passwordSalt, bool oldPasswordIsCorrect)
+    public Result UpdatePassword(PasswordHash passwordHash, PasswordSalt passwordSalt)
     {
-        if (!oldPasswordIsCorrect)
-        {
-            return Result.Failure(
-                UserErrors.OldPasswordIsNotCorrect);
-        }
-
         PasswordHash = passwordHash;
         PasswordSalt = passwordSalt;
+
+        return Result.Success();
+    }
+
+    public Result SetResetPasswordToken(ResetPasswordToken resetPasswordToken)
+    {
+        ResetPasswordToken = resetPasswordToken;
+        return Result.Success();
+    }
+
+    public Result ConfirmForgotPassword(EmailConfirmationToken emailConfirmationToken)
+    {
+        if(ResetPasswordToken == null)
+        {
+            return Result.Failure(
+                UserErrors.ResetPasswordTokenIsNotSet);
+        }
+
+        if(EmailConfirmationToken != emailConfirmationToken)
+        {
+            return Result.Failure(
+                UserErrors.EmailConfirmationtokenIsnotCorrect);
+        }
 
         return Result.Success();
     }

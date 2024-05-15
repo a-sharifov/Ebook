@@ -1,5 +1,5 @@
 ﻿namespace Application.Users.Commands.Login;
 
-public sealed record LoginCommanResponse(
+public sealed record LoginCommandResponse(
     string Token,
     string RefreshToken);

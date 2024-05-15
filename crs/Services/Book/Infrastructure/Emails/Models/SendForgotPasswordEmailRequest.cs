@@ -1,10 +1,10 @@
 ﻿namespace Infrastructure.Emails.Models;
 
-public sealed record SendConfirmationEmailRequest(
+public sealed record SendForgotPasswordEmailRequest(
+    Guid UserId,
     string FirstName,
     string LastName,
-    string UserId,
     string Email,
-    string EmailConfirmationToken,
+    string ResetPasswordToken,
     string ReturnUrl
     );

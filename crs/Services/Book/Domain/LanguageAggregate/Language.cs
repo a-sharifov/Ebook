@@ -31,10 +31,11 @@ public class Language : AggregateRoot<LanguageId>
         return Result.Success(language);
     }
 
-    public void Update(LanguageName name, LanguageCode code)
+    public Result Update(LanguageName name, LanguageCode code)
     {
         Name = name;
         Code = code;
+        return Result.Success();
     }
 }
         

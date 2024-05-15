@@ -23,7 +23,7 @@ internal sealed class ChangePasswordCommandHadnler(
         var id = new UserId(request.UserId);
         var user = await _userRepository.GetAsync(id, cancellationToken);
 
-        var updatePasswordResult = UpdatePassword(user, request.OldPassword, request.NewPassword);
+        var updatePasswordResult = UpdatePassword(user, request.Password);
 
         if (updatePasswordResult.IsFailure)
         {
@@ -35,15 +35,12 @@ internal sealed class ChangePasswordCommandHadnler(
         return Result.Success();
     }
 
-    private Result UpdatePassword(User user, string oldPassword, string newPassword)
+    private Result UpdatePassword(User user, string password)
     {
-        var passwordIsCorrect = _hashingService.Verify(
-            oldPassword, user.PasswordSalt.Value, user.PasswordHash.Value);
-
         var generateSalt = _hashingService.GenerateSalt();
         var passwordSaltResult = PasswordSalt.Create(generateSalt);
 
-        var hash = _hashingService.Hash(newPassword, generateSalt);
+        var hash = _hashingService.Hash(password, generateSalt);
         var passwordHashResult = PasswordHash.Create(hash);
 
         var firstFailureOrSuccessResult = Result.FirstFailureOrSuccess(passwordSaltResult, passwordHashResult);
@@ -54,7 +51,7 @@ internal sealed class ChangePasswordCommandHadnler(
         }
 
         var updatePasswordResult = user.UpdatePassword(
-            passwordHashResult.Value, passwordSaltResult.Value, passwordIsCorrect);
+            passwordHashResult.Value, passwordSaltResult.Value);
 
         return updatePasswordResult;
     }

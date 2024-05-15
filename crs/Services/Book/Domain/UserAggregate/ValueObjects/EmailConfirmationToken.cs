@@ -9,6 +9,12 @@ public sealed class EmailConfirmationToken : ValueObject
     private EmailConfirmationToken(string value) =>
         Value = value;
 
+    public static EmailConfirmationToken Create()
+    {
+        var emailConfirmationToken = new EmailConfirmationToken(Guid.NewGuid().ToString());
+        return emailConfirmationToken;
+    }
+
     public static Result<EmailConfirmationToken> Create(string emailConfirmationToken)
     {
         if (emailConfirmationToken.IsNullOrWhiteSpace())
@@ -19,9 +25,6 @@ public sealed class EmailConfirmationToken : ValueObject
 
         return Result.Success(new EmailConfirmationToken(emailConfirmationToken));
     }
-
-    public static EmailConfirmationToken Empty =>
-        new(string.Empty);
 
     public static implicit operator EmailConfirmationToken(string token) =>
         Create(token).Value;

@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Emails.Models;
 
-public record SendMessageRequest(
+public sealed record SendMessageRequest(
     string To,
     string Subject,
     string Body

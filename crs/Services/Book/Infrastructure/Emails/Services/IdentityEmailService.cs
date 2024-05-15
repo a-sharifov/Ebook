@@ -36,7 +36,7 @@ public sealed class IdentityEmailService
 
         var sendMessageRequest = new SendMessageRequest(
             To: request.Email,
-            Subject: $"Eshop - confirm email",
+            Subject: $"Ebook - confirm email",
             Body: confirmEmailTemplate
             );
 
@@ -56,4 +56,45 @@ public sealed class IdentityEmailService
 
         await SendConfirmationEmailAsync(request, cancellationToken);
     }
+
+    public async Task SendForgotPasswordEmailAsync(SendForgotPasswordEmailRequest request, CancellationToken cancellationToken = default)
+    {
+        var forgotPasswordTemplatePath = EmailTemplatePath.ForgotPasswordTemplate;
+
+        string forgotPasswordTemplate =
+            await File.ReadAllTextAsync(forgotPasswordTemplatePath, cancellationToken);
+
+        var resetPasswordUrl =
+           $@"{_identityEndpointOptions.BaseUrl}/api/v1/users/confirm-forgot-password?userId={request.UserId}&resetPasswordToken={request.ResetPasswordToken}&returnUrl={request.ReturnUrl}";
+
+        var resetPasswordUrlEncode = HtmlEncoder.Default.Encode(resetPasswordUrl);
+
+        forgotPasswordTemplate =
+            forgotPasswordTemplate
+            .Replace("{{firstName}}", request.FirstName)
+            .Replace("{{lastName}}", request.LastName)
+            .Replace("{{resetPasswordLink}}", resetPasswordUrlEncode);
+
+        var sendMessageRequest = new SendMessageRequest(
+            To: request.Email,
+            Subject: $"Eshop - reset password",
+            Body: forgotPasswordTemplate);
+
+        await SendMessageAsync(sendMessageRequest, cancellationToken);
+    }
+
+    public async Task SendForgotPasswordEmailAsync(User user, string returnUrl, CancellationToken cancellationToken = default)
+    {
+        var request =
+            new SendForgotPasswordEmailRequest(
+                user.Id.Value,
+                user.FirstName,
+                user.LastName,
+                user.Email,
+                user.ResetPasswordToken!,
+                returnUrl);
+
+        await SendForgotPasswordEmailAsync(request, cancellationToken);
+    }
+
 }

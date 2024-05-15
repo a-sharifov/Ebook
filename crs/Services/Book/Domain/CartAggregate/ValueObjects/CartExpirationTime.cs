@@ -6,7 +6,7 @@ namespace Domain.CartAggregate.ValueObjects;
 public sealed class CartExpirationTime : ValueObject
 {
     public DateTime Value { get; private set; }
-    public const int DefaultMinutes = 1;
+    public const int DefaultMinutes = 15;
 
     private CartExpirationTime(DateTime value) => 
         Value = value;

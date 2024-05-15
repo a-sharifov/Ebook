@@ -7,10 +7,7 @@ internal sealed class ChangePasswordCommandValidator : AbstractValidator<ChangeP
         RuleFor(x => x.UserId)
             .NotEmpty();
 
-        RuleFor(x => x.OldPassword)
-            .NotEmpty();
-
-        RuleFor(x => x.NewPassword)
+        RuleFor(x => x.Password)
             .NotEmpty();
     }
 }

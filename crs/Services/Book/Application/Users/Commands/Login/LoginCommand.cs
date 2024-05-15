@@ -3,4 +3,4 @@
 public sealed record LoginCommand(
     string Email,
     string Password)
-    : ICommand<LoginCommanResponse>;
+    : ICommand<LoginCommandResponse>;

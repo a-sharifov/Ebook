@@ -17,7 +17,7 @@ internal sealed class ApplicationServiceInstaller : IServiceInstaller
         .AddOpenBehavior(typeof(ValidationPipelineBehavior<,>))
         );
 
-        services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandler<>));
+        //services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandler<>));
 
         services.AddValidatorsFromAssembly(
             Application.AssemblyReference.Assembly,

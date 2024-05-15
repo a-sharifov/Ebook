@@ -1,6 +1,9 @@
 ﻿using Domain.BookAggregate.Repositories.Requests;
 using Domain.BookAggregate;
 using System.Linq.Expressions;
+using Domain.AuthorAggregate.Ids;
+using Domain.GenreAggregate.Ids;
+using Domain.LanguageAggregate.Ids;
 namespace Persistence.Filters;
 
 public class BookFiltersBuilder
@@ -11,12 +14,7 @@ public class BookFiltersBuilder
 
         if (request.Title != null)
         {
-            filters.Add(x => x.Title == request.Title);
-        }
-
-        if (request.AuthorId != default)
-        {
-            filters.Add(x => x.Author.Id.Value == request.AuthorId);
+            filters.Add(x => x.Title.Value.Contains(request.Title));
         }
 
         if (request.MinPrice > 0)
@@ -29,9 +27,19 @@ public class BookFiltersBuilder
             filters.Add(x => x.Price < request.MaxPrice);
         }
 
+        if (request.AuthorId != default)
+        {
+            filters.Add(x => x.Author.Id == new AuthorId(request.AuthorId));
+        }
+
         if (request.GenreId != default)
         {
-            filters.Add(x => x.Genre.Id.Value == request.GenreId);
+            filters.Add(x => x.Genre.Id == new GenreId(request.GenreId));
+        }
+
+        if (request.LanguageId != default)
+        {
+            filters.Add(x => x.Language.Id == new LanguageId(request.LanguageId));
         }
 
         return filters;
