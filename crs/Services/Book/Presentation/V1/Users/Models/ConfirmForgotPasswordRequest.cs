@@ -3,5 +3,5 @@
 public record ConfirmForgotPasswordRequest(
     [Required] Guid UserId,
     [Required] string ResetPasswordToken,
-    [Required] string ReturnUrl
+    string ReturnUrl
     );

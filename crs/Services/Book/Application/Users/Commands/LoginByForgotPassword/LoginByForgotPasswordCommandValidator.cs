@@ -7,7 +7,7 @@ internal sealed class LoginByForgotPasswordCommandValidator : AbstractValidator<
         RuleFor(x => x.UserId)
             .NotEmpty();
 
-        RuleFor(x => x.ForgotPasswordToken)
+        RuleFor(x => x.ResetPasswordToken)
             .NotEmpty();
     }
 }

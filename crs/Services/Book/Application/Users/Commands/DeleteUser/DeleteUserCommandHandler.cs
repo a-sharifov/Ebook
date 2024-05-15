@@ -26,6 +26,7 @@ internal sealed class DeleteUserCommandHandler(
         }
 
         await _repository.DeleteAsync(userId, cancellationToken);
+        await _unitOfWork.Commit(cancellationToken);
 
         return Result.Success();
     }

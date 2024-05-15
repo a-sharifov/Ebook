@@ -239,7 +239,7 @@ public sealed class User : AggregateRoot<UserId>
         return Result.Success();
     }
 
-    public Result ConfirmForgotPassword(EmailConfirmationToken emailConfirmationToken)
+    public Result ConfirmForgotPassword(ResetPasswordToken resetPasswordToken)
     {
         if(ResetPasswordToken == null)
         {
@@ -247,10 +247,10 @@ public sealed class User : AggregateRoot<UserId>
                 UserErrors.ResetPasswordTokenIsNotSet);
         }
 
-        if(EmailConfirmationToken != emailConfirmationToken)
+        if(ResetPasswordToken != resetPasswordToken)
         {
             return Result.Failure(
-                UserErrors.EmailConfirmationtokenIsnotCorrect);
+                UserErrors.ResetPasswordTokenIsNotCorrect);
         }
 
         return Result.Success();

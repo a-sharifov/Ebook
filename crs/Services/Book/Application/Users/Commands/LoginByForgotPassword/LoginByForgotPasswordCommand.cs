@@ -4,6 +4,6 @@ namespace Application.Users.Commands.LoginByForgotPassword;
 
 public sealed record LoginByForgotPasswordCommand(
     Guid UserId,
-    string ForgotPasswordToken
+    string ResetPasswordToken
     ) : ICommand<LoginCommandResponse>;
     
