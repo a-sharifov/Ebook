@@ -12,7 +12,7 @@ using Persistence.DbContexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20240513083008_Intialize_DB")]
+    [Migration("20240515110432_Intialize_DB")]
     partial class Intialize_DB
     {
         /// <inheritdoc />
@@ -276,6 +276,9 @@ namespace Persistence.Migrations
 
                     b.Property<string>("PasswordSalt")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ResetPasswordToken")
                         .HasColumnType("text");
 
                     b.Property<string>("Role")

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -106,6 +105,7 @@ public partial class Intialize_DB : Migration
                 RefreshToken_Token = table.Column<string>(type: "text", nullable: true),
                 RefreshToken_ExpiredTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                 EmailConfirmationToken = table.Column<string>(type: "text", nullable: true),
+                ResetPasswordToken = table.Column<string>(type: "text", nullable: true),
                 IsEmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
                 Role = table.Column<string>(type: "text", nullable: false)
             },

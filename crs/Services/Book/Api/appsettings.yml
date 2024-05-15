@@ -16,6 +16,13 @@ Serilog:
         serverUrl: http://seq:5341
     Enrich: [FromLogContext, WithMachineName, WithProcessId]
 
+Email:
+  From: Eshop
+  Host: smtp.gmail.com
+  Port: 587
+  Username: akber.sharifov2004@gmail.com
+  Password: ueey qfia bnyx atce
+
 Jwt:
   RefreshTokenExpirationTimeMinutes: 2000
   TokenExpirationTimeMinutes: 40

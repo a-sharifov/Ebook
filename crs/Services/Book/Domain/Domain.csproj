@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="UserAggregate\ValueObjects\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Contracts\Contracts.csproj" />
     <ProjectReference Include="..\..\..\Common\Domain.Core\Domain.Core.csproj" />
   </ItemGroup>

@@ -7,6 +7,9 @@ using Application.Users.Commands.UpdateRefreshToken;
 using Microsoft.AspNetCore.Authorization;
 using Presentation.V1.Users.Models;
 using Application.Users.Commands.Logout;
+using Application.Users.Commands.ForgotPassword;
+using Application.Users.Commands.ConfirmForgotPassword;
+using Application.Users.Commands.LoginByForgotPassword;
 
 namespace Presentation.V1.Users.Controllers;
 
@@ -20,6 +23,19 @@ public sealed class UserController(ISender sender) : ApiController(sender)
         var command = new LoginCommand(
             request.Email,
             request.Password);
+
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? Ok(result.Value)
+            : HandleFailure(result);
+    }
+
+    [HttpPost("login-by-forgot-password")]
+    public async Task<IActionResult> LoginByForgotPassword([FromBody] LoginByForgotPasswordTokenRequest request)
+    {
+        var command = new LoginByForgotPasswordCommand(
+            request.UserId,
+            request.ResetPasswordToken);
 
         var result = await _sender.Send(command);
 
@@ -83,14 +99,38 @@ public sealed class UserController(ISender sender) : ApiController(sender)
             : HandleFailure(result);
     }
 
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        var command = new ForgotPasswordCommand(
+            request.Email,
+            request.ReturnUrl);
+
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? Ok()
+            : HandleFailure(result);
+    }
+
+    [HttpPost("confirm-forgot-password")]
+    public async Task<IActionResult> ConfirmChangePassword([FromForm] ConfirmForgotPasswordRequest request)
+    {
+        var command = new ConfirmForgotPasswordCommand(
+            request.UserId,
+            request.ResetPasswordToken);
+
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? Redirect(request.ReturnUrl)
+            : HandleFailure(result);
+    }
+
     [Authorize]
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         var userId = GetUserId();
-        var command = new ChangePasswordCommand(userId,
-            request.OldPassword,
-            request.NewPassword);
+        var command = new ChangePasswordCommand(userId, request.Password);
 
         var result = await _sender.Send(command);
 

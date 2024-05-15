@@ -15,14 +15,14 @@ internal sealed class LoginCommandHandler(
     IHashingService hashingService,
     IJwtManager jwtManager,
     IUnitOfWork unitOfWork)
-    : ICommandHandler<LoginCommand, LoginCommanResponse>
+    : ICommandHandler<LoginCommand, LoginCommandResponse>
 {
     private readonly IUserRepository _repository = repository; 
     private readonly IHashingService _hashingService = hashingService;
     private readonly IJwtManager _jwtManager = jwtManager;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<Result<LoginCommanResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<LoginCommandResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var email = request.Email;
 
@@ -30,7 +30,7 @@ internal sealed class LoginCommandHandler(
 
         if (!isEmailExist)
         {
-            return Result.Failure<LoginCommanResponse>(
+            return Result.Failure<LoginCommandResponse>(
                 UserErrors.EmailIsNotExists(email));
         }
 
@@ -40,7 +40,7 @@ internal sealed class LoginCommandHandler(
 
         if (loginResult.IsFailure)
         {
-            return Result.Failure<LoginCommanResponse>(
+            return Result.Failure<LoginCommandResponse>(
                 loginResult.Error);
         }
 
@@ -52,7 +52,7 @@ internal sealed class LoginCommandHandler(
         await _repository.UpdateAsync(user, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
-        var response = new LoginCommanResponse(userToken, refreshToken.Token);
+        var response = new LoginCommandResponse(userToken, refreshToken.Token);
 
         return response;
     }
@@ -79,7 +79,7 @@ internal sealed class LoginCommandHandler(
         var passwordIsCorrect = _hashingService.Verify(
             password, user.PasswordSalt, user.PasswordHash);
 
-        var loginResult = User.Login(user, passwordIsCorrect);
+        var loginResult = user.Login(passwordIsCorrect);
 
         return loginResult;
     }

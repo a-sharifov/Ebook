@@ -41,9 +41,10 @@ public class RetryConfirmEmailSendCommandHandler(
         var user = await _repository
             .GetAsync(email, cancellationToken: cancellationToken);
 
-        var confirmationEmailToken = _hashingService.GenerateToken();
+        var emailConfirmationToken = EmailConfirmationToken.Create();
+
         var RetryEmailConfirmationResult =
-            user.RetryEmailConfirmation(confirmationEmailToken);
+            user.RetryEmailConfirmation(emailConfirmationToken);
 
         if (RetryEmailConfirmationResult.IsFailure)
         {

@@ -66,7 +66,7 @@ internal sealed class RegisterCommandHandler(
                 firstFailureOrSuccessResult.Error);
         }
 
-        var emailConfirmationToken = _hashingService.GenerateToken();
+        var emailConfirmationToken = EmailConfirmationToken.Create();
 
         var role = Role.User;
 

@@ -43,4 +43,13 @@ public static class UserErrors
 
     public static Error IsCurrentEmail =>
       new("User.IsCurrentEmail", $"Is current email.");
+
+    public static Error ResetPasswordTokenIsNotSet =>
+        new("User.ResetPasswordTokenIsNotSet", $"Reset password token is not set.");
+
+    public static Error ResetPasswordTokenIsExpired =>
+        new("User.ResetPasswordTokenIsExpired", $"Reset password token is expired.");
+
+    public static Error ResetPasswordTokenIsNotCorrect =>
+        new("User.ResetPasswordTokenIsNotCorrect", $"Reset password token is not correct.");
 }
