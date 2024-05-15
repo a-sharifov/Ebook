@@ -30,7 +30,7 @@ internal sealed class LoginByForgotPasswordCommandHandler(
 
         var user = await _userRepository.GetAsync(id, cancellationToken);
 
-        var resetPasswordTokenResult = ResetPasswordToken.Create(request.ForgotPasswordToken);
+        var resetPasswordTokenResult = ResetPasswordToken.Create(request.ResetPasswordToken);
 
         if (resetPasswordTokenResult.IsFailure)
         {

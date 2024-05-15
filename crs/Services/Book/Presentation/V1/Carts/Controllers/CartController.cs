@@ -63,7 +63,7 @@ public sealed class CartController(ISender sender) : ApiController(sender)
     }
 
     [HttpPut("items/{itemId:guid}")]
-    public async Task<IActionResult> UpdateQuantityBookItem(Guid itemId, [FromBody] int quantity)
+    public async Task<IActionResult> UpdateQuantityBookItem(Guid itemId, [FromBody, Required] int quantity)
     {
         var command = new UpdateQuantityBookInCart(itemId, quantity);
 

@@ -1,4 +1,5 @@
-﻿using Domain.UserAggregate.Errors;
+﻿using Application.Users.Commands.ForgotPassword;
+using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
@@ -12,14 +13,14 @@ internal sealed class ConfirmForgotPasswordCommandHandler(IUserRepository userRe
 
     public async Task<Result> Handle(ConfirmForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        var emailConfirmationTokenResult = EmailConfirmationToken.Create(request.EmailConfirmationToken);
+        var resetPasswordTokenResult = ResetPasswordToken.Create(request.ResetPasswordToken);
 
-        if (emailConfirmationTokenResult.IsFailure)
+        if (resetPasswordTokenResult.IsFailure)
         {
-            return Result.Failure(emailConfirmationTokenResult.Error);
+            return Result.Failure(resetPasswordTokenResult.Error);
         }
 
-        var emailConfirmationToken = emailConfirmationTokenResult.Value;
+        var resetPasswordToken = resetPasswordTokenResult.Value;
 
         var id = new UserId(request.Id);
         var isExist = await _userRepository.IsExistAsync(id, cancellationToken);
@@ -30,7 +31,7 @@ internal sealed class ConfirmForgotPasswordCommandHandler(IUserRepository userRe
         }
 
         var user = await _userRepository.GetAsync(id, cancellationToken);
-        var confirmForgotPasswordResult = user.ConfirmForgotPassword(emailConfirmationToken);
+        var confirmForgotPasswordResult = user.ConfirmForgotPassword(resetPasswordToken);
 
         if (confirmForgotPasswordResult.IsFailure)
         {
