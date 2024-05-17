@@ -68,7 +68,7 @@ public abstract class BaseRepository<TEntity, TStrongestId>(
             .Take(pageSize)
             .Wheres(wheres)
             .Includes(includes)
-            .OrderBy(x => x.Id)    
+            .OrderBy(x => x.Id)
             .ToListAsync(cancellationToken);
 
         var count = Count(wheres);

@@ -14,7 +14,7 @@ public class BookFiltersBuilder
 
         if (request.Title != null)
         {
-            filters.Add(x => x.Title.Value.Contains(request.Title));
+            filters.Add(x => ((string)x.Title).Contains(request.Title));
         }
 
         if (request.MinPrice > 0)
