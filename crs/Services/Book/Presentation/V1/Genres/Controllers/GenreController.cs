@@ -74,4 +74,3 @@ public sealed class GenreController(ISender sender) : ApiController(sender)
           : HandleFailure(result);
     }
 }
-
