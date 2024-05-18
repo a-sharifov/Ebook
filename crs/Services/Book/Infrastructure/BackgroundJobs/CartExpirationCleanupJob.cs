@@ -16,7 +16,7 @@ public sealed class CartExpirationCleanupJob(BookDbContext dbContext) : IJob
         var cart = await _dbContext
             .Set<Cart>()
             .AsNoTracking()
-            .Where(x => x.ExpirationTime != null && x.ExpirationTime > DateTime.UtcNow)
+            .Where(x => x.ExpirationTime != null && x.ExpirationTime < DateTime.UtcNow)
             .FirstOrDefaultAsync();
 
         if(cart is null)
