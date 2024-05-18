@@ -58,7 +58,7 @@ public sealed class GenreController(ISender sender) : ApiController(sender)
 
         var result = await _sender.Send(command);
 
-        return result.IsSuccess ? Ok()
+        return result.IsSuccess ? Ok()  
           : HandleFailure(result);
     }
 

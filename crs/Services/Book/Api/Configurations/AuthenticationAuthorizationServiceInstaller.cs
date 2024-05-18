@@ -34,23 +34,14 @@ internal sealed class AuthenticationAuthorizationServiceInstaller : IServiceInst
                         Encoding.UTF8.GetBytes(Env.JWT_SECURITY_KEY)),
                 };
             });
-            //}).AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-            //{
-            //    options.ClientId = Env.GOOGLE_ID;
-            //    options.ClientSecret = Env.GOOGLE_SECRET;
-            //}
 
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy(Policy.Admin, policy =>
-           policy.RequireRole(Role.Admin));
-
-            options.AddPolicy(Policy.User, policy =>
-           policy.RequireRole(Role.User));
-
-            options.AddPolicy(Policy.UserAndAdmin, policy =>
-            policy.RequireRole(Role.User, Role.Admin));
-        });
+        services.AddAuthorizationBuilder()
+                     .AddPolicy(Policy.Admin, policy =>
+           policy.RequireRole(Role.Admin.Name))
+                     .AddPolicy(Policy.User, policy =>
+           policy.RequireRole(Role.User.Name))
+                     .AddPolicy(Policy.UserAndAdmin, policy =>
+            policy.RequireRole(Role.User.Name, Role.Admin.Name));
 
         services.ConfigureOptions<JwtOptionsSetup>();
         services.ConfigureOptions<JwtBearerOptionsSetup>();
