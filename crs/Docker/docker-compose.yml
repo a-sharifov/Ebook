@@ -29,6 +29,13 @@ services:
       context: . 
       dockerfile: ../Services/Book/Api/Dockerfile
     depends_on: [minio, redis, postgres]
+  
+  email.api:
+    container_name: email.api
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: . 
+      dockerfile: ../Services/Email/Api/Dockerfile
     
   monitoring.api:
     container_name: monitoring.api
@@ -37,3 +44,17 @@ services:
       context: .
       dockerfile: ../Services/Monitoring/Monitoring.Api/Dockerfile
     depends_on: [book.api]
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+      
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    depends_on: 
+    - prometheus
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management

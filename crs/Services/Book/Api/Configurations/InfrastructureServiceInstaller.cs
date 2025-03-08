@@ -1,11 +1,9 @@
 ﻿using Api.Core.ServiceInstaller.Interfaces;
 using Api.OptionsSetup;
 using Domain.Core.UnitOfWorks.Interfaces;
-using Infrastructure.Emails.Interfaces;
-using Infrastructure.Emails.Options;
-using Infrastructure.Emails.Services;
+using EventBus.MassTransit.Abstractions;
+using EventBus.MassTransit.RabbitMQ.Services;
 using Infrastructure.FileStorages.Interfaces;
-using Infrastructure.FileStorages.Options;
 using Infrastructure.FileStorages.Services;
 using Infrastructure.Hashing;
 using Infrastructure.Hashing.Interfaces;
@@ -15,7 +13,6 @@ using Infrastructure.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.DbContexts;
-using StackExchange.Redis;
 
 namespace Api.Configurations;
 
@@ -39,20 +36,16 @@ internal sealed class InfrastructureServiceInstaller : IServiceInstaller
         //.WithScopedLifetime());
 
         services.AddTransient<SeedDefaultProject>();
-        services.AddTransient<IIdentityEmailService, IdentityEmailService>();
         services.AddTransient<IHashingService, HashingService>();
         services.AddTransient<IJwtManager, JwtManager>();
         services.AddTransient<IJwtBlacklistManager, JwtBlacklistManager>();
         services.AddTransient<IFileService, MinioService>();
 
+        services.AddTransient<IMessageBus, EventBusRabbitMQ>();
+
         services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-        services.AddOptions<EmailOptions>()
-           .Bind(configuration.GetSection(SD.EmailSectionKey))
-           .ValidateDataAnnotations();
-
         services.ConfigureOptions<BaseUrlOptionsSetup>();
-
         services.ConfigureOptions<IdentityEndpointOptionsSetup>();
     }
 }

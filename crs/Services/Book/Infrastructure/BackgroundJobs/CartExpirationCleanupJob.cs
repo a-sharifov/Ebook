@@ -1,7 +1,6 @@
 ﻿using Domain.CartAggregate;
 using Microsoft.EntityFrameworkCore;
 using Persistence.DbContexts;
-using Persistence.Repositories;
 using Quartz;
 
 namespace Infrastructure.BackgroundJobs;

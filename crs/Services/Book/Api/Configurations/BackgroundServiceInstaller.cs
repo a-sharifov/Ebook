@@ -23,14 +23,16 @@ internal sealed class BackgroundServiceInstaller : IServiceInstaller
                     //TODO: move in env
                     .WithIntervalInSeconds(15)
                     .RepeatForever()));
-           //.AddJob<OutboxBackgroundJob>(outboxBackgroundJobKey)
-           // .AddTrigger(
-           //     trigger => trigger
-           //     .ForJob(outboxBackgroundJobKey)
-           //     .WithSimpleSchedule(
-           //         schedule => schedule
-           //         .WithIntervalInSeconds(5)
-           //         .RepeatForever()));
+
+           configure
+            .AddJob<OutboxBackgroundJob>(outboxBackgroundJobKey)
+            .AddTrigger(
+                trigger => trigger
+                .ForJob(outboxBackgroundJobKey)
+                .WithSimpleSchedule(
+                    schedule => schedule
+                    .WithIntervalInSeconds(5)
+                    .RepeatForever()));
         });
 
         services.AddQuartzHostedService(configure =>

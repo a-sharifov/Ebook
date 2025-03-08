@@ -1,18 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JsonNet.ContractResolvers" Version="2.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="JsonNet.ContractResolvers" Version="2.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Google.Protobuf" Version="3.30.0" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.67.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.70.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Domain.Core\Domain.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<Protobuf Include="Services\Users\users.proto" GrpcServices="Both" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Domain.Core\Domain.Core.csproj" />
+		<ProjectReference Include="..\EventsBus\EventBus.Common\EventBus.Common.csproj" />
+	</ItemGroup>
 
 </Project>

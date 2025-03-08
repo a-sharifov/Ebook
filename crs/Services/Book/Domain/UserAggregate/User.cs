@@ -1,9 +1,10 @@
-﻿using Contracts.Enumerations;
-using Domain.UserAggregate.Ids;
+﻿using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.ValueObjects;
 using Domain.CartAggregate;
 using Domain.WishAggregate;
+using Domain.UserAggregate.DomainEvents;
+using Contracts.Enumerations;
 
 namespace Domain.UserAggregate;
 
@@ -79,7 +80,8 @@ public sealed class User : AggregateRoot<UserId>
         EmailConfirmationToken emailConfirmationToken,
         Role role,
         Cart cart,
-        Wish wish)
+        Wish wish, 
+        string returnUrl)
     {
         if (!isEmailUnique)
         {
@@ -100,8 +102,9 @@ public sealed class User : AggregateRoot<UserId>
             cart,
             wish);
 
-        //user.AddDomainEvent(
-        //    new UserCreatedDomainEvent(Guid.NewGuid(), id));
+        user.AddDomainEvent(
+            new UserConfirmCreatedDomainEvent(
+                Guid.NewGuid(), id, returnUrl));
 
         return user;
     }
@@ -128,9 +131,6 @@ public sealed class User : AggregateRoot<UserId>
             role,
             cart,
             wish);
-
-        //user.AddDomainEvent(
-        //    new UserCreatedDomainEvent(Guid.NewGuid(), id));
 
         return user;
     }
@@ -207,6 +207,10 @@ public sealed class User : AggregateRoot<UserId>
 
         EmailConfirmationToken = emailConfirmationToken;
 
+        AddDomainEvent(
+            new UserRetryEmailConfirmationDomainEvent(
+                Guid.NewGuid(), Id));
+
         return Result.Success();
     }
 
@@ -236,6 +240,10 @@ public sealed class User : AggregateRoot<UserId>
     public Result SetResetPasswordToken(ResetPasswordToken resetPasswordToken)
     {
         ResetPasswordToken = resetPasswordToken;
+        AddDomainEvent(
+            new UserResetPasswordTokenDomainEvent(
+                Guid.NewGuid(), Id));
+
         return Result.Success();
     }
 

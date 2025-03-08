@@ -1,5 +1,4 @@
-﻿using Domain.UserAggregate;
-using Infrastructure.Emails.Interfaces;
+﻿using Infrastructure.Emails.Interfaces;
 using Infrastructure.Emails.Models;
 using Infrastructure.Emails.Options;
 using Infrastructure.Endpoint.Options;
@@ -43,20 +42,6 @@ public sealed class IdentityEmailService
         await SendMessageAsync(sendMessageRequest, cancellationToken);
     }
 
-    public async Task SendConfirmationEmailAsync(User user, string returnUrl, CancellationToken cancellationToken = default)
-    {
-        var request =
-            new SendConfirmationEmailRequest(
-                user.FirstName.Value,
-                user.LastName.Value,
-                user.Id.Value.ToString(),
-                user.Email.Value,
-                user.EmailConfirmationToken!.Value,
-                returnUrl);
-
-        await SendConfirmationEmailAsync(request, cancellationToken);
-    }
-
     public async Task SendForgotPasswordEmailAsync(SendForgotPasswordEmailRequest request, CancellationToken cancellationToken = default)
     {
         var forgotPasswordTemplatePath = EmailTemplatePath.ForgotPasswordTemplate;
@@ -81,20 +66,6 @@ public sealed class IdentityEmailService
             Body: forgotPasswordTemplate);
 
         await SendMessageAsync(sendMessageRequest, cancellationToken);
-    }
-
-    public async Task SendForgotPasswordEmailAsync(User user, string returnUrl, CancellationToken cancellationToken = default)
-    {
-        var request =
-            new SendForgotPasswordEmailRequest(
-                user.Id.Value,
-                user.FirstName,
-                user.LastName,
-                user.Email,
-                user.ResetPasswordToken!,
-                returnUrl);
-
-        await SendForgotPasswordEmailAsync(request, cancellationToken);
     }
 
 }

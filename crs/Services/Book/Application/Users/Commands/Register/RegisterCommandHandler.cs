@@ -6,7 +6,6 @@ using Domain.UserAggregate.Ids;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
 using Infrastructure.Hashing.Interfaces;
-using Infrastructure.Emails.Interfaces;
 using Domain.CartAggregate;
 using Domain.CartAggregate.Ids;
 using Domain.WishAggregate.Ids;
@@ -17,13 +16,11 @@ namespace Application.Users.Commands.Register;
 internal sealed class RegisterCommandHandler(
     IHashingService hashingService,
     IUserRepository repository,
-    IIdentityEmailService identityEmailService,
     IUnitOfWork unitOfWork)
     : ICommandHandler<RegisterCommand>
 {
     private readonly IHashingService _hashingService = hashingService;
     private readonly IUserRepository _repository = repository;
-    private readonly IIdentityEmailService _identityEmailService = identityEmailService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<Result> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -39,7 +36,6 @@ internal sealed class RegisterCommandHandler(
 
         await _repository.AddAsync(user, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
-        await _identityEmailService.SendConfirmationEmailAsync(user, request.ReturnUrl, cancellationToken);
 
         return Result.Success();
     }
@@ -90,7 +86,8 @@ internal sealed class RegisterCommandHandler(
             emailConfirmationToken,
             role,
             cart,
-            wish);
+            wish, 
+            request.ReturnUrl);
 
         return userResult;
     }

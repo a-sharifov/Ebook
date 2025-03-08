@@ -4,26 +4,23 @@ using Domain.Core.Results.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Presentation.Core.Controllers;
 
 /// <summary>
 /// Base class for API controllers.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="ApiController"/> class.
+/// </remarks>
+/// <param name="sender"> The sender.</param>
 [ApiController]
-public abstract class ApiController : ControllerBase
+public abstract class ApiController(ISender sender) : ControllerBase
 {
     /// <summary>
     /// The sender.
     /// </summary>
-    protected readonly ISender _sender;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ApiController"/> class.
-    /// </summary>
-    /// <param name="sender"> The sender.</param>
-    protected ApiController(ISender sender) => _sender = sender;
+    protected readonly ISender _sender = sender;
 
     /// <summary>
     /// Handles the result of a request.
@@ -72,17 +69,13 @@ public abstract class ApiController : ControllerBase
         int status,
         Error error,
         Error[]? errors = null) =>
-        new()
-        {
-            Title = title,
-            Status = status,
-            Detail = error.Message,
-            Type = $"https://httpstatuses.com/{status}",
-            Extensions =
-            {
-                { nameof(errors),  errors  }
-            }
-        };
+        new(
+            title,
+            status,
+            error.Message,
+            $"https://httpstatuses.com/{status}",
+            ( nameof(errors),  errors  )
+        );
 
     protected Guid GetUserId()
     {

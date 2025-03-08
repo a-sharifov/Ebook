@@ -2,4 +2,7 @@
 
 namespace Domain.UserAggregate.DomainEvents;
 
-public sealed record UserCreatedDomainEvent(Guid Id, UserId UserId) : DomainEvent(Id);
+public sealed record UserConfirmCreatedDomainEvent(
+    Guid Id, 
+    UserId UserId, 
+    string ReturnUrl) : DomainEvent(Id);

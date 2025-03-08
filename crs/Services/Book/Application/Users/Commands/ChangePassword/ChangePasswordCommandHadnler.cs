@@ -8,7 +8,7 @@ using Infrastructure.Hashing.Interfaces;
 
 namespace Application.Users.Commands.ChangePassword;
 
-internal sealed class ChangePasswordCommandHadnler(
+internal sealed class ChangePasswordCommandHadler(
     IUnitOfWork unitOfWork,
     IUserRepository userRepository,
     IHashingService hashingService)

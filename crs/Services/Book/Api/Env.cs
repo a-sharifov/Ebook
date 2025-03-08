@@ -23,6 +23,10 @@ public static class Env
     public static string GOOGLE_ID => GetEnvironmentVariable("GOOGLE_ID");
     public static string GOOGLE_SECRET => GetEnvironmentVariable("GOOGLE_SECRET");
 
+    // Rabbit MQ
+    public static string RABBITMQ_DEFAULT_USER => GetEnvironmentVariable("RABBITMQ_DEFAULT_USER");
+    public static string RABBITMQ_DEFAULT_PASS => GetEnvironmentVariable("RABBITMQ_DEFAULT_PASS");
+
     private static string GetEnvironmentVariable(string key) =>
         Environment.GetEnvironmentVariable(key) ??
        throw new Exception($"Environment variable {key} not found");

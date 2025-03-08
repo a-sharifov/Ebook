@@ -38,7 +38,7 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - "5341:5341"
-      - "7070:80"
+      - "7076:80"
     volumes:
       - seq:/data
     restart: always
@@ -72,20 +72,36 @@ services:
       - SERVER_SECRET_KEY=${MINIO_SECRET_KEY}
       - GOOGLE_ID=${GOOGLE_ID}
       - GOOGLE_SECRET=${GOOGLE_SECRET}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS} 
       - SERVER_ENDPOINT=minio
     ports:
       - "6060:6060"
-      - "6061:6061"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     restart: always
 
+
+  email.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=7070
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS} 
+    ports:
+      - "7070:7070"
+      - "7071:7071"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    restart: always
+   
+
   monitoring.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
       - Email__From=${EMAIL_FROM} 
       - Email__Host=${EMAIL_HOST}
       - Email__Port=${EMAIL_PORT}
@@ -99,14 +115,41 @@ services:
       - HealthChecksUI__Webhooks__0__RestoredPayload=${TELEGRAM_RESTORED_PAYLOAD}
       - HealthChecksUI__EvaluationTimeInSeconds=10
     ports:
-      - "8081:8081"
       - "8080:8080"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     restart: always
 
+  prometheus:
+    ports:
+    - 9090:9090
+    volumes:
+    - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    ports:
+    - 3000:3000
+    volumes:
+    - grafana:/etc/grafana/provisioning
+
+  rabbitmq:
+    ports:
+    # http port
+    - 15672:15672
+    # amqp port
+    - 5672:5672
+    environment:
+    - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER} 
+    - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    - RABBITMQ_CONFIG_FILE=./configs/rabbitmq.conf
+    volumes:
+    - rabbitmq:/var/lib/rabbitmq
+
+
 volumes:
+  rabbitmq:
+  grafana:
   minio:
   pgadmin:
   postgres:

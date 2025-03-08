@@ -2,16 +2,13 @@
 using Domain.UserAggregate.Errors;
 using Domain.UserAggregate.Repositories;
 using Domain.UserAggregate.ValueObjects;
-using Infrastructure.Emails.Interfaces;
 
 namespace Application.Users.Commands.ForgotPassword;
 
 internal sealed class ForgotPasswordCommandHandler(
-    IIdentityEmailService identityEmailService,
     IUserRepository repository,
     IUnitOfWork unitOfWork) : ICommandHandler<ForgotPasswordCommand>
 {
-    private readonly IIdentityEmailService _identityEmailService = identityEmailService;
     private readonly IUserRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
@@ -51,7 +48,7 @@ internal sealed class ForgotPasswordCommandHandler(
             return Result.Failure(setResetPasswordResult.Error);
         }
 
-        await _identityEmailService.SendForgotPasswordEmailAsync(user, request.ReturnUrl, cancellationToken);
+        //await _identityEmailService.SendForgotPasswordEmailAsync(user, request.ReturnUrl, cancellationToken);
 
         await _unitOfWork.Commit(cancellationToken);
         return Result.Success();
