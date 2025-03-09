@@ -71,12 +71,14 @@ services:
       - SERVER_ACCESS_KEY=${MINIO_ACCESS_KEY}
       - SERVER_SECRET_KEY=${MINIO_SECRET_KEY}
       - GOOGLE_ID=${GOOGLE_ID}
+      - GRPC_PORT=${GRPC_PORT}
+      - HTTP_PORT=${HTTP_PORT}
       - GOOGLE_SECRET=${GOOGLE_SECRET}
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS} 
       - SERVER_ENDPOINT=minio
     ports:
-      - "6060:6060"
+      - "6060:80"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -89,9 +91,9 @@ services:
       - ASPNETCORE_HTTP_PORTS=7070
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS} 
+      - USER_GRPC_URL=${USER_GRPC_URL}
     ports:
       - "7070:7070"
-      - "7071:7071"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

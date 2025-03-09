@@ -1,7 +1,7 @@
 ﻿using Contracts.Services.Users.Commands;
 using Domain.UserAggregate.DomainEvents;
 using EventBus.MassTransit.Abstractions;
- 
+
 namespace Application.Users.Events;
 
 internal sealed class UserConfirmCreatedDomainEventHandler(IMessageBus bus)
@@ -17,9 +17,10 @@ internal sealed class UserConfirmCreatedDomainEventHandler(IMessageBus bus)
         var @event = 
             new UserCreatedConfirmationEmailSendCommand(
                 Guid.NewGuid(),
-                notification.Id,
+                notification.UserId.Value,
                 notification.ReturnUrl);
 
         await endpoint.Send(@event, cancellationToken);
     }
 }
+

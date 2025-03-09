@@ -197,7 +197,8 @@ public sealed class User : AggregateRoot<UserId>
         return Result.Success();
     }
 
-    public Result RetryEmailConfirmation(EmailConfirmationToken emailConfirmationToken)
+    public Result RetryEmailConfirmation(
+        EmailConfirmationToken emailConfirmationToken, string returnUrl)
     {
         if (IsEmailConfirmed)
         {
@@ -209,7 +210,7 @@ public sealed class User : AggregateRoot<UserId>
 
         AddDomainEvent(
             new UserRetryEmailConfirmationDomainEvent(
-                Guid.NewGuid(), Id));
+                Guid.NewGuid(), Id, returnUrl));
 
         return Result.Success();
     }

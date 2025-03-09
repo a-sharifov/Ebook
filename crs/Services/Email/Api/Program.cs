@@ -9,5 +9,7 @@ builder.Services.InstallServicesFromAssembly(builder.Configuration, AssemblyRefe
 
 var app = builder.Build();
 
+app.MapPrometheusScrapingEndpoint();
+
 app.Run();
 

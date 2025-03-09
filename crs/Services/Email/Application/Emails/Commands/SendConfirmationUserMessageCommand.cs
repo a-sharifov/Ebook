@@ -26,7 +26,7 @@ internal sealed class SendConfirmationUserMessageCommandHandler(
             userDetails.LastName,
             userDetails.Id,
             userDetails.Email,
-            request.ConfirmationEmailToken,
+            userDetails.EmailConfirmationToken,
             request.ReturnUrl);
 
         await _emailService.SendConfirmationEmailAsync(emailRequest, cancellationToken);

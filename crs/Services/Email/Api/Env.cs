@@ -5,7 +5,7 @@
 /// </summary>
 internal static class Env
 {
-    public static string IDENTITY_GRPC_URL => GetEnvironmentVariable("IDENTITY_GRPC_URL");
+    public static string USER_GRPC_URL => GetEnvironmentVariable("USER_GRPC_URL");
 
     // Rabbit MQ
     public static string RABBITMQ_DEFAULT_USER => GetEnvironmentVariable("RABBITMQ_DEFAULT_USER");

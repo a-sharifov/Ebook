@@ -8,6 +8,7 @@ using Asp.Versioning.ApiExplorer;
 using Api.Core.SeedInstaller;
 using Infrastructure.Seeds;
 using Api.Middlewares;
+using Grpc;
 
 namespace Api;
 
@@ -56,6 +57,8 @@ public sealed class Startup(IConfiguration configuration)
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            endpoints.MapPrometheusScrapingEndpoint();
+            endpoints.MapGrpcService<UserGrpcService>();
             endpoints.MapHealthChecks("/health", new HealthCheckOptions
             {
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse

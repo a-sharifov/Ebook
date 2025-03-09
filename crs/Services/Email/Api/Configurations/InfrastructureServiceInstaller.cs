@@ -5,6 +5,7 @@ using Infrasctructure.Grpc.Users;
 using Infrastructure.Emails.Interfaces;
 using Infrastructure.Emails.Options;
 using Infrastructure.Emails.Services;
+using Users.Protobuf;
 
 namespace Api.Configurations;
 
@@ -15,10 +16,11 @@ internal sealed class InfrastructureServiceInstaller : IServiceInstaller
         services.AddTransient<IIdentityEmailService, IdentityEmailService>();
         services.AddTransient<IMessageBus, EventBusRabbitMQ>();
 
-        services.AddTransient<IUserGrpcService, UserGrpcService>();
 
-        services.AddGrpcClient<UserGrpcService>(x => 
-            x.Address = );
+        services.AddGrpcClient<UserService.UserServiceClient>(x => 
+            x.Address = new Uri(Env.USER_GRPC_URL));
+
+        services.AddTransient<IUserGrpcService, UserGrpcService>();
 
         services.AddOptions<EmailOptions>()
         .Bind(configuration.GetSection(SD.EmailSectionKey))

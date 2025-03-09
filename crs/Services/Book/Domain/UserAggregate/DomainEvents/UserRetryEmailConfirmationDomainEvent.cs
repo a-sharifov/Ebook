@@ -5,5 +5,6 @@ namespace Domain.UserAggregate.DomainEvents;
 
 public sealed record UserRetryEmailConfirmationDomainEvent(
     Guid Id, 
-    UserId UserId) 
+    UserId UserId,
+    string ReturnUrl) 
     : IDomainEvent;

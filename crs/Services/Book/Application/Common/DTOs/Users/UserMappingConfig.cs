@@ -12,5 +12,6 @@ public sealed class UserMappingConfig : IMappingConfig
        .Map(dest => dest.Role, src => src.Role.Name)
        .Map(dest => dest.Email, src => src.Email.Value)
        .Map(dest => dest.FirstName, src => src.FirstName.Value)
+       .Map(dest => dest.IsEmailConfirmed, src => src.IsEmailConfirmed)
        .Map(dest => dest.LastName, src => src.LastName.Value);
 }

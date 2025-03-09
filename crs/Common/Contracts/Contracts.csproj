@@ -26,4 +26,8 @@
 		<ProjectReference Include="..\EventsBus\EventBus.Common\EventBus.Common.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Services\Carts\" />
+	</ItemGroup>
+
 </Project>

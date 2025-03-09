@@ -2,7 +2,7 @@
 
 namespace Contracts.Services.Users.Commands;
 
-public sealed record UserCreatedConfirmationEmailSendCommand(
+public sealed record UserRetryEmailConfirmationSendCommand(
     Guid Id,
     Guid UserId,
     string ReturnUrl) : IntegrationCommand(Id);

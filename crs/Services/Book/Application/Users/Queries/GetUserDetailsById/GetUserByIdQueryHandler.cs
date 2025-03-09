@@ -6,7 +6,7 @@ using Domain.UserAggregate.Repositories;
 
 namespace Application.Users.Queries.GetUserDetailsById;
 
-internal sealed class GetUserByIdQueryHandler(IUserRepository repository) 
+internal sealed class GetUserDetailsByIdQueryHandler(IUserRepository repository) 
     : IQueryHandler<GetUserDetailsByIdQuery, UserDetailsDto>
 {
     private readonly IUserRepository _repository = repository;

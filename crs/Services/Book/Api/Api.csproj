@@ -52,6 +52,7 @@
 		<ProjectReference Include="..\..\..\Common\EventsBus\EventBus.MassTransit.RabbitMQ\EventBus.MassTransit.RabbitMQ.csproj" />
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Domain\Domain.csproj" />
+		<ProjectReference Include="..\Grpc\Grpc.csproj" />
 		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
 		<ProjectReference Include="..\Persistence\Persistence.csproj" />
 		<ProjectReference Include="..\Presentation\Presentation.csproj" />

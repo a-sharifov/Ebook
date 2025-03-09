@@ -5,12 +5,12 @@ using MassTransit;
 
 namespace MessageBus.Users.Handlers.Commands;
 
-public sealed class UserCreatedConfirmationEmailSendCommandHandler(ISender sender)
-        : IntegrationCommandHandler<UserCreatedConfirmationEmailSendCommand>
+public sealed class UserRetryEmailConfirmationSendCommandHandler(ISender sender)
+        : IntegrationCommandHandler<UserRetryEmailConfirmationSendCommand>
 {
     private readonly ISender _sender = sender;
 
-    public override async Task Handle(ConsumeContext<UserCreatedConfirmationEmailSendCommand> context)
+    public override async Task Handle(ConsumeContext<UserRetryEmailConfirmationSendCommand> context)
     {
         var message = context.Message;
 
