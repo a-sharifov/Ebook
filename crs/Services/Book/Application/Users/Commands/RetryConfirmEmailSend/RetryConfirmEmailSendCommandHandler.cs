@@ -41,7 +41,7 @@ public class RetryConfirmEmailSendCommandHandler(
         var emailConfirmationToken = EmailConfirmationToken.Create();
 
         var RetryEmailConfirmationResult =
-            user.RetryEmailConfirmation(emailConfirmationToken);
+            user.RetryEmailConfirmation(emailConfirmationToken, request.ReturnUrl);
 
         if (RetryEmailConfirmationResult.IsFailure)
         {

@@ -27,6 +27,11 @@ public static class Env
     public static string RABBITMQ_DEFAULT_USER => GetEnvironmentVariable("RABBITMQ_DEFAULT_USER");
     public static string RABBITMQ_DEFAULT_PASS => GetEnvironmentVariable("RABBITMQ_DEFAULT_PASS");
 
+    // GRPC
+    public static int GRPC_PORT = int.Parse(GetEnvironmentVariable("GRPC_PORT"));
+
+    public static int HTTP_PORT = int.Parse(GetEnvironmentVariable("HTTP_PORT"));
+
     private static string GetEnvironmentVariable(string key) =>
         Environment.GetEnvironmentVariable(key) ??
        throw new Exception($"Environment variable {key} not found");
