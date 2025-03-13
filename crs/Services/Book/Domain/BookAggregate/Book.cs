@@ -129,8 +129,8 @@ public class Book : AggregateRoot<BookId>
         QuantityBook quantity,
         SoldUnits soldUnits,
         Author author,
-        Image poster,
-        Genre genre)
+        Genre genre,
+        Image? poster = null)
     {
         Title = title;
         Description = description;
@@ -140,8 +140,13 @@ public class Book : AggregateRoot<BookId>
         Quantity = quantity;
         SoldUnits = soldUnits;
         Author = author;
-        Poster = poster;
         Genre = genre;
+
+        if (poster is not null)
+        {
+            Poster = poster;
+        }
+
         return Result.Success();
     }
 }

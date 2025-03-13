@@ -23,7 +23,8 @@ public sealed class IdentityEmailService
             await File.ReadAllTextAsync(confirmEmailTemplatePath, cancellationToken);
 
         var confirmUrl =
-           $@"{_identityEndpointOptions.BaseUrl}/api/v1/users/confirm-email?userId={request.UserId}&emailConfirmationToken={request.EmailConfirmationToken}&returnUrl={request.ReturnUrl}";
+        //$@"{_identityEndpointOptions.BaseUrl}/users/confirm-email?userId={request.UserId}&emailConfirmationToken={request.EmailConfirmationToken}&returnUrl={request.ReturnUrl}";
+        $@"http://localhost/api/v1/users/confirm-email?userId={request.UserId}&emailConfirmationToken={request.EmailConfirmationToken}&returnUrl={request.ReturnUrl}";
 
         var confirmUrlEncode = HtmlEncoder.Default.Encode(confirmUrl);
 
@@ -50,7 +51,7 @@ public sealed class IdentityEmailService
             await File.ReadAllTextAsync(forgotPasswordTemplatePath, cancellationToken);
 
         var resetPasswordUrl =
-           $@"{_identityEndpointOptions.BaseUrl}/api/v1/users/confirm-forgot-password?userId={request.UserId}&resetPasswordToken={request.ResetPasswordToken}&returnUrl={request.ReturnUrl}";
+           $@"{_identityEndpointOptions.BaseUrl}/users/confirm-forgot-password?userId={request.UserId}&resetPasswordToken={request.ResetPasswordToken}&returnUrl={request.ReturnUrl}";
 
         var resetPasswordUrlEncode = HtmlEncoder.Default.Encode(resetPasswordUrl);
 

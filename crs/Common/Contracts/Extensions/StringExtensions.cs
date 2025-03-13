@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Contracts.Extensions;
 
 /// <summary>
 /// Class for string extension.
 /// </summary>
-public static class StringExtensions
+public static partial class StringExtensions
 {
     /// <summary>
     /// Checks if the string is null or empty.
@@ -84,4 +85,12 @@ public static class StringExtensions
 
         return base64String;
     }
+
+    public static string ToKebabCase(this string str) =>
+        KebabCaseRegex().Replace(str, "-$1")
+          .Trim()
+          .ToLower();
+
+    [GeneratedRegex("(?<!^)([A-Z][a-z]|(?<=[a-z])[A-Z0-9])", RegexOptions.Compiled)]
+    private static partial Regex KebabCaseRegex();
 }

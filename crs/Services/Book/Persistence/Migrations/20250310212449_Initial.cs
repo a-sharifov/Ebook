@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Persistence.Migrations;
 
 /// <inheritdoc />
-public partial class Intialize_DB : Migration
+public partial class Initial : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +21,6 @@ public partial class Intialize_DB : Migration
             constraints: table =>
             {
                 table.PrimaryKey("PK_Authors", x => x.Id);
-                table.UniqueConstraint("AK_Authors_Pseudonym", x => x.Pseudonym);
             });
 
         migrationBuilder.CreateTable(
@@ -33,7 +33,6 @@ public partial class Intialize_DB : Migration
             constraints: table =>
             {
                 table.PrimaryKey("PK_Genres", x => x.Id);
-                table.UniqueConstraint("AK_Genres_Name", x => x.Name);
             });
 
         migrationBuilder.CreateTable(
@@ -61,7 +60,6 @@ public partial class Intialize_DB : Migration
             constraints: table =>
             {
                 table.PrimaryKey("PK_Languages", x => x.Id);
-                table.UniqueConstraint("AK_Languages_Code", x => x.Code);
             });
 
         migrationBuilder.CreateTable(
@@ -300,63 +298,6 @@ public partial class Intialize_DB : Migration
             name: "IX_WishItems_WishId",
             table: "WishItems",
             column: "WishId");
-
-        migrationBuilder.Sql("""
-                      CREATE OR REPLACE FUNCTION trg_decrease_book_quantity()
-                      RETURNS TRIGGER AS $$
-                      BEGIN
-                          UPDATE public."Books"
-                          SET "Quantity" = "Quantity" - NEW."Quantity"
-                          WHERE "Id" = NEW."BookId";
-                          RETURN NEW;
-                      END;
-                      $$ LANGUAGE plpgsql;
-                      """);
-
-        migrationBuilder.Sql("""
-                      CREATE TRIGGER trg_before_insert_decrease_book_quantity
-                      BEFORE INSERT ON public."CartItems"
-                      FOR EACH ROW
-                      EXECUTE FUNCTION trg_decrease_book_quantity();
-                      """);
-
-        migrationBuilder.Sql("""
-                      CREATE OR REPLACE FUNCTION trg_increase_book_quantity()
-                      RETURNS TRIGGER AS $$
-                      BEGIN
-                          UPDATE public."Books"
-                          SET "Quantity" = "Quantity" + OLD."Quantity"
-                          WHERE "Id" = OLD."BookId";
-                          RETURN OLD;
-                      END;
-                      $$ LANGUAGE plpgsql;
-                      """);
-
-        migrationBuilder.Sql("""
-                      CREATE TRIGGER trg_before_delete_increase_book_quantity
-                      BEFORE DELETE ON public."CartItems"
-                      FOR EACH ROW
-                      EXECUTE FUNCTION trg_increase_book_quantity();
-                      """);
-
-        migrationBuilder.Sql("""
-                      CREATE OR REPLACE FUNCTION trg_adjust_book_quantity()
-                      RETURNS TRIGGER AS $$
-                      BEGIN
-                          UPDATE public."Books"
-                          SET "Quantity" = ("Quantity" + OLD."Quantity") - NEW."Quantity"
-                          WHERE "Id" = NEW."BookId";
-                          RETURN NEW;
-                      END;
-                      $$ LANGUAGE plpgsql;
-                      """);
-
-        migrationBuilder.Sql("""
-                      CREATE TRIGGER trg_before_update_adjust_book_quantity
-                      BEFORE UPDATE ON public."CartItems"
-                      FOR EACH ROW
-                      EXECUTE FUNCTION trg_adjust_book_quantity();
-                      """);
     }
 
     /// <inheritdoc />

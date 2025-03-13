@@ -2,5 +2,5 @@
 
 public class IdentityEndpointOptions
 {
-    public string BaseUrl { get; set; } = null!;
+    public string BaseUrl { get; set; } = "http//:localhost/api/v1";
 }

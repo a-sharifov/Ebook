@@ -1,16 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
-	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<UserSecretsId>e170996a-cd70-4844-a9ec-8b2172e3ea28</UserSecretsId>
-		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<DockerfileContext>..\..\..\..</DockerfileContext>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
 
 	<ItemGroup>
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2" />
 		<PackageReference Include="Serilog" Version="4.2.0" />
@@ -29,10 +28,12 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Common\Api.Core\Api.Core.csproj" />
+		<ProjectReference Include="..\..\..\Common\Contracts\Contracts.csproj" />
 		<ProjectReference Include="..\..\..\Common\EventsBus\EventBus.MassTransit.RabbitMQ\EventBus.MassTransit.RabbitMQ.csproj" />
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Infrascturture\Infrasctructure.csproj" />
 		<ProjectReference Include="..\MessageBus\MessageBus.csproj" />
 	</ItemGroup>
+
 
 </Project>

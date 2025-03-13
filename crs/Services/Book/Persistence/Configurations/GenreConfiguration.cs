@@ -11,8 +11,6 @@ internal sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
     {
         builder.HasKey(x => x.Id);
 
-        builder.HasAlternateKey(x => x.Name);
-
         builder.Property(x => x.Id)
             .HasConversion(
             genreId => genreId.Value,

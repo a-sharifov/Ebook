@@ -1,5 +1,4 @@
-﻿using System.Runtime.Loader;
-using System.Text.RegularExpressions;
+﻿using Contracts.Extensions;
 
 namespace EventBus.MassTransit.RabbitMQ.Services;
 
@@ -23,14 +22,7 @@ public sealed class EventBusRabbitMQ(IBusControl busControl) : IMessageBus
     public async Task<ISendEndpoint> GetSendEndpoint<TEvent>() 
         where TEvent : IIntegrationCommand
     {
-        var address = Regex.Replace(
-            typeof(TEvent).Name,
-          "(?<!^)([A-Z][a-z]|(?<=[a-z])[A-Z0-9])",
-          "-$1",
-          RegexOptions.Compiled)
-          .Trim()
-          .ToLower();
-
+        var address = typeof(TEvent).Name.ToKebabCase();
         var endpoint = await GetSendEndpoint(new Uri("rabbitmq://rabbitmq/"+address));
 
         return endpoint;

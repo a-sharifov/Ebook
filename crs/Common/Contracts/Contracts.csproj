@@ -18,7 +18,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Protobuf Include="Services\Orders\orders.proto" GrpcServices="Server" />
 		<Protobuf Include="Services\Users\users.proto" GrpcServices="Both" />
+		<Protobuf Include="Services\Orders\orders.proto" GrpcServices="Both" />
 	</ItemGroup>
 
 	<ItemGroup>

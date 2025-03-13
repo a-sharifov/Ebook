@@ -26,17 +26,10 @@ internal sealed class UpdateBookCommandValidator : AbstractValidator<UpdateBookC
         RuleFor(x => x.Quantity)
             .GreaterThanOrEqualTo(0);
 
-        RuleFor(x => x.AuthorPseudonym)
-            .MaximumLength(Pseudonym.MaxLength)
+        RuleFor(x => x.AuthorId)
             .NotEmpty();
 
         RuleFor(x => x.GenreId)
-            .NotEmpty();
-
-        RuleFor(x => x.Poster)
-            .NotEmpty();
-
-        RuleFor(x => x.PosterStream)
             .NotEmpty();
     }
 }

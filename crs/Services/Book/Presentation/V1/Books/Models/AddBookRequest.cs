@@ -10,7 +10,7 @@ public sealed record AddBookRequest
     [Required] decimal Price,
     [Required] Guid LanguageId,
     [Required] int Quantity,
-    [Required] string AuthorPseudonym,
+    [Required] Guid AuthorId,
     [Required] Guid GenreId,
     IFormFile Poster
 );

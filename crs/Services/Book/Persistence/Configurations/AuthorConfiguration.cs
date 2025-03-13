@@ -11,8 +11,6 @@ internal sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
     {
         builder.HasKey(x => x.Id);
 
-        builder.HasAlternateKey(x => x.Pseudonym);
-
         builder.Property(x => x.Id)
             .HasConversion(
             authorId => authorId.Value,

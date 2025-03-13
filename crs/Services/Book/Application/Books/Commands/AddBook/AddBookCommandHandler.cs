@@ -1,5 +1,6 @@
 ﻿using Application.Images.Commands.AddImage;
 using Domain.AuthorAggregate;
+using Domain.AuthorAggregate.Errors;
 using Domain.AuthorAggregate.Ids;
 using Domain.AuthorAggregate.Repositories;
 using Domain.AuthorAggregate.ValueObjects;
@@ -98,21 +99,28 @@ internal sealed class AddBookCommandHandler(
             return Result.Failure<Book>(imageResult.Error);
         }
 
-        var createBookResult = await CreateBookAsync(
-            request, languageResult.Value, genreResult.Value, imageResult.Value, cancellationToken);
+        var authorResult = await GetAuthorAsync(request.AuthorId, cancellationToken);
+
+        if (authorResult.IsFailure)
+        {
+            return Result.Failure<Book>(authorResult.Error);
+        }
+
+        var createBookResult = CreateBook(
+            request, languageResult.Value, genreResult.Value, 
+            imageResult.Value, authorResult.Value, cancellationToken);
 
         return createBookResult;
     }
 
-    private async Task<Result<Book>> CreateBookAsync(
+    private Result<Book> CreateBook(
         AddBookCommand request,
         Language language,
         Genre genre,
         Image image,
+        Author author,
         CancellationToken cancellationToken)
     {
-       
-
         var id = new BookId(Guid.NewGuid());
         var titleResult = Title.Create(request.Title);
         var descriptionResult = BookDescription.Create(request.Description);
@@ -120,7 +128,6 @@ internal sealed class AddBookCommandHandler(
         var priceResult = Money.Create(request.Price);
         var quantityResult = QuantityBook.Create(request.Quantity);
         var soldUnitsResult = SoldUnits.Create(0);
-        var author = await GetAuthorAsync(request.AuthorPseudonym, cancellationToken);
 
         var firstFailureOrSuccessResult = Result.FirstFailureOrSuccess(titleResult, descriptionResult, pageCountResult, priceResult, quantityResult, soldUnitsResult);
 
@@ -138,7 +145,7 @@ internal sealed class AddBookCommandHandler(
             language,
             quantityResult.Value,
             soldUnitsResult.Value,
-            author.Value,
+            author,
             image,
             genre).Value;
 
@@ -188,23 +195,17 @@ internal sealed class AddBookCommandHandler(
         return Result.Success(image);
     }
 
-    private async Task<Result<Author>> GetAuthorAsync(string authorPseudonym, CancellationToken cancellationToken)
+    private async Task<Result<Author>> GetAuthorAsync(Guid authorId, CancellationToken cancellationToken)
     {
-        var pseudonymResult = Pseudonym.Create(authorPseudonym);
+        var id = new AuthorId(authorId);
+        var authorIsExist = await _authorRepository.IsExistAsync(id, cancellationToken: cancellationToken);
 
-        if (pseudonymResult.IsFailure)
+        if (!authorIsExist)
         {
-            return Result.Failure<Author>(pseudonymResult.Error);
+            return Result.Failure<Author>(AuthorErrors.IsNotExist);
         }
 
-        var pseudonym = pseudonymResult.Value;
-
-        var isAuthorExists = await _authorRepository.IsExistAsync(pseudonym, cancellationToken);
-
-        var author =
-            isAuthorExists ? await _authorRepository.GetAsync(pseudonym, cancellationToken) :
-            Author.Create(new AuthorId(Guid.NewGuid()), pseudonym).Value;
-
-        return author;
+        var author = await _authorRepository.GetAsync(id, cancellationToken: cancellationToken);
+        return Result.Success(author);
     }
 }

@@ -11,8 +11,6 @@ internal sealed class LanguageConfiguration : IEntityTypeConfiguration<Language>
     {
         builder.HasKey(x => x.Id);
 
-        builder.HasAlternateKey(x => x.Code);
-
         builder.Property(x => x.Id)
             .HasConversion(
             languageId => languageId.Value,

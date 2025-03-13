@@ -1,19 +1,28 @@
 global:
-  scrape_interval: 10s
+  scrape_interval: 15s
+  evaluation_interval: 15s
 
 scrape_configs:
-- job_name: "email-api"
-  static_configs:
-  - targets: ["email.api"]
-- job_name: "email-app"
-  static_configs:
-  - targets: ["book.api"]
-- job_name: "rabbitmq"
-  static_configs:
-  - targets: ["rabbitmq:15692"]
-  
-remote_write:
-- url: http://grafana:3000
-  basic_auth:
-    username: admin
-    password: admin
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'book_api'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['book.api:80']
+
+  - job_name: 'order_api'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['order.api:80']
+
+  - job_name: 'email_api'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['email.api:7070']
+
+  - job_name: 'monitoring_api'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['monitoring.api:8080']

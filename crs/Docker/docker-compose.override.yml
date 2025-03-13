@@ -13,7 +13,6 @@ services:
     restart: always
 
   pgadmin:
-    image: dpage/pgadmin4
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
@@ -33,7 +32,6 @@ services:
     restart: always
 
   seq:
-    image: datalust/seq:latest
     environment:
       - ACCEPT_EULA=Y
     ports:
@@ -44,7 +42,6 @@ services:
     restart: always
 
   minio:
-    image: minio/minio
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
@@ -58,10 +55,45 @@ services:
       - minio:/data
     restart: always
 
+  rabbitmq:
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER} 
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_CONFIG_FILE=./configs/rabbitmq.conf
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    restart: always
+
+  prometheus:
+    ports:
+      - 9090:9090
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: always
+
+  grafana:
+    ports:
+      - 3003:3000
+    volumes:
+      - grafana:/etc/grafana/provisioning
+      - ./configs/grafana.ini:/etc/grafana/grafana.ini 
+    restart: always
+
+  nginx:
+    volumes:
+      - ./configs/nginx.conf:/etc/nginx/nginx.conf
+      - ./configs/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+
   book.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=6060
       - POSTGRE_CONNECTION_STRING=Server=postgres;Port=5432;Include Error Detail=True;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TimeZone=UTC;
       - REDIS_CONNECTION_STRING=redis:6379,password=${REDIS_PASSWORD}
       - AUTH_ISSUER=${AUTH_ISSUER}
@@ -78,76 +110,68 @@ services:
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS} 
       - SERVER_ENDPOINT=minio
     ports:
-      - "6060:80"
+    - 8939:80 
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     restart: always
 
+  order.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=80
+      - POSTGRE_CONNECTION_STRING=Server=postgres;Port=5432;Include Error Detail=True;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};TimeZone=UTC;
+      - REDIS_CONNECTION_STRING=redis:6379,password=${REDIS_PASSWORD}
+      - AUTH_ISSUER=${AUTH_ISSUER}
+      - WEB_AUDIENCE=${WEB_AUDIENCE}
+      - JWT_SECURITY_KEY=${JWT_SECURITY_KEY}
+      - IDENTITY_ENDPOINT=${IDENTITY_ENDPOINT}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    ports:
+    - 6077:80 
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    restart: always
 
   email.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=7070
+      - ASPNETCORE_HTTP_PORTS=80
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS} 
       - USER_GRPC_URL=${USER_GRPC_URL}
-    ports:
-      - "7070:7070"
+      - IdentityEndpoint__BaseUrl=${IdentityEndpoint__BaseUrl} 
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     restart: always
    
-
   monitoring.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTP_PORTS=80
       - Email__From=${EMAIL_FROM} 
       - Email__Host=${EMAIL_HOST}
       - Email__Port=${EMAIL_PORT}
       - Email__Username=${EMAIL_USERNAME}
       - Email__Password=${EMAIL_PASSWORD}
-      - HealthChecksUI__HealthChecks__0__Name=Book api
-      - HealthChecksUI__HealthChecks__0__Uri=http://book.api:6060/health
+      - HealthChecksUI__HealthChecks__0__Name=Book API
+      - HealthChecksUI__HealthChecks__0__Uri=http://book.api:80/health
+      - HealthChecksUI__HealthChecks__1__Name=Order API
+      - HealthChecksUI__HealthChecks__1__Uri=http://order.api:80/health
+#      - HealthChecksUI__HealthChecks__2__Name=Email API
+#      - HealthChecksUI__HealthChecks__2__Uri=http://order.api:80/health
       - HealthChecksUI__Webhooks__0__Name=Telegram
       - HealthChecksUI__Webhooks__0__Uri=https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}
       - HealthChecksUI__Webhooks__0__Payload=${TELEGRAM_PAYLOAD}
       - HealthChecksUI__Webhooks__0__RestoredPayload=${TELEGRAM_RESTORED_PAYLOAD}
       - HealthChecksUI__EvaluationTimeInSeconds=10
-    ports:
-      - "8080:8080"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     restart: always
-
-  prometheus:
-    ports:
-    - 9090:9090
-    volumes:
-    - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
-
-  grafana:
-    ports:
-    - 3000:3000
-    volumes:
-    - grafana:/etc/grafana/provisioning
-
-  rabbitmq:
-    ports:
-    # http port
-    - 15672:15672
-    # amqp port
-    - 5672:5672
-    environment:
-    - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER} 
-    - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
-    - RABBITMQ_CONFIG_FILE=./configs/rabbitmq.conf
-    volumes:
-    - rabbitmq:/var/lib/rabbitmq
-
 
 volumes:
   rabbitmq:
@@ -157,4 +181,4 @@ volumes:
   postgres:
   redis:
   seq:
-
+  nginx:

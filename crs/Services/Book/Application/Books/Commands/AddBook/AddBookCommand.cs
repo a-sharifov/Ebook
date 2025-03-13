@@ -7,7 +7,7 @@ public sealed record AddBookCommand(
     decimal Price,
     Guid LanguageId,
     int Quantity,
-    string AuthorPseudonym,
+    Guid AuthorId,
     Guid GenreId,
     string Poster,
     Stream PosterStream

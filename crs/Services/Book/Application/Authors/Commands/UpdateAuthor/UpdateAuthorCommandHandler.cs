@@ -35,7 +35,12 @@ internal sealed class UpdateAuthorCommandHandler(
 
         var pseudonym = pseudonymResult.Value;
 
-        author.Update(pseudonym);
+        var updateResult = author.Update(pseudonym);
+
+        if (updateResult.IsFailure)
+        {
+            return updateResult;
+        }
 
         await _repository.UpdateAsync(author, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);

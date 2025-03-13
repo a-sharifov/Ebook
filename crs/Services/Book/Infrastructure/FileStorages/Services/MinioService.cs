@@ -115,5 +115,6 @@ public class MinioService(IMinioClient minioClient, IOptions<BaseUrlOptions> url
     }
 
     public string GeneratePermanentUrl(string bucketName, string objectName) =>
-        $@"{_urlOptions.BaseUrl}/api/v1/buckets/{bucketName}/objects/download?preview=true&prefix={objectName.EncodingBase64()}";
+        //$@"{_urlOptions.BaseUrl}/api/v1/buckets/{bucketName}/objects/download?preview=true&prefix={objectName.EncodingBase64()}";
+        $@"{_urlOptions.BaseUrl}/api/v1/buckets/{bucketName}/objects/download?preview=true&prefix={objectName}";
 }

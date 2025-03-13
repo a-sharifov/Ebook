@@ -12,19 +12,21 @@ public class BookFiltersBuilder
     {
         var filters = new List<Expression<Func<Book, bool>>>();
 
+
         if (request.Title != null)
         {
-            filters.Add(x => x.Title.Value.Contains(request.Title));
+            filters.Add(x => (
+            (string)x.Title).Contains(request.Title));
         }
 
         if (request.MinPrice > 0)
         {
-            filters.Add(x => x.Price > request.MinPrice);
+            filters.Add(x => x.Price.Value > request.MinPrice);
         }
 
         if (request.MaxPrice > 0)
         {
-            filters.Add(x => x.Price < request.MaxPrice);
+            filters.Add(x => x.Price.Value < request.MaxPrice);
         }
 
         if (request.AuthorId != default)

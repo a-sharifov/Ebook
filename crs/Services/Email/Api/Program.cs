@@ -1,4 +1,5 @@
 using Api.Core.ServiceInstaller;
+using Asp.Versioning.ApiExplorer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,24 @@ builder.Services.InstallServicesFromAssembly(builder.Configuration, AssemblyRefe
 
 var app = builder.Build();
 
-app.MapPrometheusScrapingEndpoint();
+//app.UseSwagger();
+//app.UseSwaggerUI(options =>
+//{
+//    using var scope = app.Services.CreateScope();
+//    var apiVersionDescriptionProvider =
+//        scope.ServiceProvider.GetRequiredService<IApiVersionDescriptionProvider>();
+
+//    foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+//    {
+//        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+//            description.GroupName.ToUpperInvariant());
+//    }
+//});
+
+//app.MapPrometheusScrapingEndpoint();
+//app.MapHealthChecks("/health", new HealthCheckOptions
+//{
+//    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+//});
 
 app.Run();
-

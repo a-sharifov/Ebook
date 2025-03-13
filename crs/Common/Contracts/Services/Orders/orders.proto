@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package orders.protobuf;
+
+service OrderService {
+  rpc GetOrder (GetOrderRequest) returns (OrderResponse);
+  rpc GetOrdersByUser (GetOrdersByUserRequest) returns (OrdersResponse);
+}
+
+message GetOrderRequest {
+  string order_id = 1;
+}
+
+message GetOrdersByUserRequest {
+  string user_id = 1;
+}
+
+message CancelOrderRequest {
+  string order_id = 1;
+}
+
+message OrderResponse {
+  string order_id = 1;
+  string user_id = 2;
+  string order_date = 3;
+  string status = 4;
+  ShippingAddressDto shipping_address = 5;
+  repeated OrderItemDto items = 6;
+  double total_amount = 7;
+}
+
+message OrdersResponse {
+  repeated OrderResponse orders = 1;
+}
+
+message OrderItemDto {
+  string book_id = 1;
+  string book_title = 2;
+  int32 quantity = 3;
+  double price = 4;
+}
+
+message ShippingAddressDto {
+  string street = 1;
+  string city = 2;
+  string state = 3;
+  string country = 4;
+  string zip_code = 5;
+}

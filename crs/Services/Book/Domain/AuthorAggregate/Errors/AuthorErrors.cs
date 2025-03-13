@@ -7,4 +7,7 @@ public static class AuthorErrors
 
     public static Error IsExist =>
      new("Author.IsExist", "The Author is exist.");
+
+    public static Error IsNotExist =>
+    new("Author.IsNotExist", "Author is not exist.");
 }

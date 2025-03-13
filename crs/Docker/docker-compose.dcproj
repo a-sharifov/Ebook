@@ -11,6 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include=".env" />
+    <None Include="configs\grafana.ini" />
     <None Include="configs\prometheus.yml" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>

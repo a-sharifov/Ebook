@@ -23,8 +23,7 @@ internal sealed class AddBookCommandValidator : AbstractValidator<AddBookCommand
         RuleFor(x => x.Quantity)
             .GreaterThanOrEqualTo(0);
 
-        RuleFor(x => x.AuthorPseudonym)
-            .MaximumLength(Pseudonym.MaxLength)
+        RuleFor(x => x.AuthorId)
             .NotEmpty();
 
         RuleFor(x => x.GenreId)

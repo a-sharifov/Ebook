@@ -1,4 +1,6 @@
 ﻿using Api.Core.ServiceInstaller.Interfaces;
+using Contracts.Extensions;
+using Contracts.Services.Users.Commands;
 using MassTransit;
 using MessageBus.Users.Handlers.Commands;
 
@@ -18,10 +20,22 @@ internal sealed class MessageBusServiceInstaller : IServiceInstaller
                     hostConfigurator.Password(Env.RABBITMQ_DEFAULT_PASS);
                 });
 
-                configurator.ReceiveEndpoint("user-created-confirmation-email-send-command", x =>
+                configurator.ReceiveEndpoint(
+                    nameof(UserCreatedConfirmationEmailSendCommand).ToKebabCase(), x =>
                 {
                     x.ConfigureConsumer<UserCreatedConfirmationEmailSendCommandHandler>(context);
                 });
+
+                configurator.ReceiveEndpoint(
+                    nameof(UserRetryEmailConfirmationSendCommand).ToKebabCase(), x =>
+                {
+                    x.ConfigureConsumer<UserRetryEmailConfirmationSendCommandHandler>(context);
+                });
+
+                //configurator.ReceiveEndpoint("user-retry-email-confirmation-send-command", x =>
+                //{
+                //    x.ConfigureConsumer<UserConfirmItemMoveInCartToWishListCommandHandler>(context);
+                //});
 
 
                 configurator.ConfigureEndpoints(context);

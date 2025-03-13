@@ -23,6 +23,7 @@ using Domain.LanguageAggregate.Errors;
 using Domain.GenreAggregate.Errors;
 using Domain.GenreAggregate;
 using Domain.SharedKernel.Errors;
+using Domain.AuthorAggregate.Errors;
 
 namespace Application.Books.Commands.UpdateBook;
 
@@ -55,17 +56,27 @@ internal sealed class UpdateBookCommandHandler(
                 BookErrors.BookIsNotExist);
         }
 
-        var addImageCommand =
-          new AddImageCommand(ImageBucket.Books, request.PosterStream, request.Poster);
+        var imageId = Guid.Empty;
 
-        var imageDtoResult = await _sender.Send(addImageCommand, cancellationToken);
-
-        if (imageDtoResult.IsFailure)
+        if (request is
+            {
+                PosterStream: not null,
+                Poster: not null
+            })
         {
-            return imageDtoResult;
+            var addImageCommand =
+                new AddImageCommand(ImageBucket.Books, request.PosterStream, request.Poster);
+
+            var imageDtoResult = await _sender.Send(addImageCommand, cancellationToken);
+
+            if (imageDtoResult.IsFailure)
+            {
+                return imageDtoResult;
+            }
+
+            imageId = imageDtoResult.Value.Id;
         }
 
-        var imageId = imageDtoResult.Value.Id;
 
         var book = await _bookRepository.GetAsync(id, cancellationToken);
         var updateBookResult = await UpdateBookAsync(book, request, imageId, cancellationToken);
@@ -103,23 +114,24 @@ internal sealed class UpdateBookCommandHandler(
             return Result.Failure<Book>(genreResult.Error);
         }
 
-        var imageResult = await GetImageAsync(existImageId, cancellationToken);
+        var imageResult = 
+            existImageId != Guid.Empty ? await GetImageAsync(existImageId, cancellationToken) : null;
 
-        if (imageResult.IsFailure)
+        if (imageResult is { IsFailure: true })
         {
             return Result.Failure<Book>(imageResult.Error);
         }
 
-        var authorResult = await GetAuthorAsync(request.AuthorPseudonym, cancellationToken);
+        var authorResult = await GetAuthorAsync(request.AuthorId, cancellationToken);
 
         var updateBookResult = UpdateBook(
             book,
             request,
             languageResult.Value,
             authorResult.Value,
-            imageResult.Value,
             genreResult.Value,
-            existImageId);
+            existImageId,
+            imageResult?.Value);
 
         return updateBookResult;
     }
@@ -129,9 +141,9 @@ internal sealed class UpdateBookCommandHandler(
         UpdateBookCommand request,
         Language language,
         Author author,
-        Image image,
         Genre genre,
-        Guid existImageId)
+        Guid existImageId,
+        Image? image)
     {
         var titleResult = Title.Create(request.Title);
         var descriptionResult = BookDescription.Create(request.Description);
@@ -157,8 +169,8 @@ internal sealed class UpdateBookCommandHandler(
             quantityResult.Value, 
             soldUnitsResult.Value, 
             author, 
-            image, 
-            genre);
+            genre,
+            image);
 
         return book;
     }
@@ -206,24 +218,19 @@ internal sealed class UpdateBookCommandHandler(
         return Result.Success(image);
     }
 
-    private async Task<Result<Author>> GetAuthorAsync(string authorPseudonym, CancellationToken cancellationToken)
+    private async Task<Result<Author>> GetAuthorAsync(Guid authorId, CancellationToken cancellationToken)
     {
-        var pseudonymResult = Pseudonym.Create(authorPseudonym);
 
-        if (pseudonymResult.IsFailure)
+        var id = new AuthorId(authorId);
+        var imageIsExist = await _authorRepository.IsExistAsync(id, cancellationToken: cancellationToken);
+
+        if (!imageIsExist)
         {
-            return Result.Failure<Author>(pseudonymResult.Error);
+            return Result.Failure<Author>(AuthorErrors.IsNotExist);
         }
 
-        var pseudonym = pseudonymResult.Value;
-
-        var isAuthorExists = await _authorRepository.IsExistAsync(pseudonym, cancellationToken);
-
-        var author =
-            isAuthorExists ? await _authorRepository.GetAsync(pseudonym, cancellationToken) :
-            Author.Create(new AuthorId(Guid.NewGuid()), pseudonym).Value;
-
-        return author;
+        var image = await _authorRepository.GetAsync(id, cancellationToken: cancellationToken);
+        return Result.Success(image);
     }
 
 }

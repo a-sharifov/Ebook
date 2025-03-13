@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Api.Configurations;
 
-internal sealed class AuthenticationAuthorizationServiceInstaller : IServiceInstaller
+internal sealed class AuthenticationServiceInstaller : IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {

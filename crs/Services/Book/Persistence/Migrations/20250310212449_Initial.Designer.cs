@@ -12,15 +12,15 @@ using Persistence.DbContexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20240515110432_Intialize_DB")]
-    partial class Intialize_DB
+    [Migration("20250310212449_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -36,8 +36,6 @@ namespace Persistence.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("Pseudonym");
 
                     b.ToTable("Authors");
                 });
@@ -192,8 +190,6 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Name");
-
                     b.ToTable("Genres");
                 });
 
@@ -213,8 +209,6 @@ namespace Persistence.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("Code");
 
                     b.ToTable("Languages");
                 });

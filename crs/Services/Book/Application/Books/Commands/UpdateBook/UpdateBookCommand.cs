@@ -8,8 +8,8 @@ public sealed record UpdateBookCommand(
     decimal Price,
     Guid LanguageId,
     int Quantity,
-    string AuthorPseudonym,
+    Guid AuthorId,
     Guid GenreId,
-    string Poster,
-    Stream PosterStream
+    string? Poster,
+    Stream? PosterStream
     ) : ICommand;

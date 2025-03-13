@@ -1,0 +1,10 @@
+global using Domain.Core.UnitOfWorks;
+global using Domain.OrderAggregate;
+global using Domain.OrderAggregate.Entities;
+global using Domain.OrderAggregate.Ids;
+global using Domain.OrderAggregate.Repositories;
+global using Domain.OrderAggregate.ValueObjects;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;

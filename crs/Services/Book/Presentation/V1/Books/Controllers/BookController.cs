@@ -57,7 +57,7 @@ public sealed class BookController(ISender sender) : ApiController(sender)
             request.Price,
             request.LanguageId,
             request.Quantity,
-            request.AuthorPseudonym,
+            request.AuthorId,
             request.GenreId,
             request.Poster.FileName,
             stream
@@ -73,7 +73,8 @@ public sealed class BookController(ISender sender) : ApiController(sender)
     [HttpPut]
     public async Task<IActionResult> Update([FromForm] UpdateBookRequest request)
     {
-        using var stream = request.Poster.OpenReadStream();
+            using var stream = request.Poster?.OpenReadStream();
+        
 
         var command = new UpdateBookCommand(
             request.Id,
@@ -83,9 +84,9 @@ public sealed class BookController(ISender sender) : ApiController(sender)
             request.Price,
             request.LanguageId,
             request.Quantity,
-            request.AuthorPseudonym,
+            request.AuthorId,
             request.GenreId,
-            request.Poster.FileName,
+            request.Poster?.FileName,
             stream
             );
 

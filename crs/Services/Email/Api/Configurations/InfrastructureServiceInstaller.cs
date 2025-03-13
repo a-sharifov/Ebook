@@ -5,6 +5,7 @@ using Infrasctructure.Grpc.Users;
 using Infrastructure.Emails.Interfaces;
 using Infrastructure.Emails.Options;
 using Infrastructure.Emails.Services;
+using Infrastructure.Endpoint.Options;
 using Users.Protobuf;
 
 namespace Api.Configurations;
