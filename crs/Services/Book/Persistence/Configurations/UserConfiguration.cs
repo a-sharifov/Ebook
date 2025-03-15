@@ -6,7 +6,6 @@ using Domain.UserAggregate.Ids;
 using Domain.SharedKernel.ValueObjects;
 using Domain.CartAggregate;
 using Domain.WishAggregate;
-using Contracts.Extensions;
 
 namespace Persistence.Configurations;
 
@@ -69,6 +68,11 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
             token => token == null ? null : token.Value,
             value => value == null ? null : ResetPasswordToken.Create(value).Value);
 
+        builder.Property(x => x.ChangePasswordToken)
+         .HasConversion(
+          token => token == null ? null : token.Value,
+          value => value == null ? null : ChangePasswordToken.Create(value).Value);
+
         builder.Property(x => x.IsEmailConfirmed).IsRequired();
 
         builder.Property(x => x.Role).IsRequired();
@@ -79,7 +83,6 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
            ).IsRequired();
 
 
-        //для того чтоб сделать каскадное удаление cart при удалении пользователя с помощью CartId:
         builder.HasOne(x => x.Cart)
             .WithOne()
             .HasForeignKey<Cart>(x => x.UserId)

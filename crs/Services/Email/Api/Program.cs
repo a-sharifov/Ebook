@@ -1,5 +1,7 @@
 using Api.Core.ServiceInstaller;
 using Asp.Versioning.ApiExplorer;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,10 +26,10 @@ var app = builder.Build();
 //    }
 //});
 
-//app.MapPrometheusScrapingEndpoint();
-//app.MapHealthChecks("/health", new HealthCheckOptions
-//{
-//    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-//});
+app.MapPrometheusScrapingEndpoint();
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.Run();

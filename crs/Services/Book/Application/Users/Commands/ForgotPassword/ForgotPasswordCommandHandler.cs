@@ -41,7 +41,7 @@ internal sealed class ForgotPasswordCommandHandler(
         }
 
         var resetPasswordToken = ResetPasswordToken.Create();
-        var setResetPasswordResult = user.SetResetPasswordToken(resetPasswordToken);
+        var setResetPasswordResult = user.SetResetPasswordToken(resetPasswordToken, request.ReturnUrl);
 
         if (setResetPasswordResult.IsFailure)
         {

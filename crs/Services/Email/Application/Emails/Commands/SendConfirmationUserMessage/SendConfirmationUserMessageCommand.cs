@@ -1,4 +1,4 @@
-﻿namespace Application.Emails.Commands;
+﻿namespace Application.Emails.Commands.SendConfirmationUserMessage;
 
 public sealed record SendConfirmationUserMessageCommand(
     Guid UserId,

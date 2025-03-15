@@ -12,8 +12,8 @@ using Persistence.DbContexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20250310212449_Initial")]
-    partial class Initial
+    [Migration("20250314220359_Initialize_DB")]
+    partial class Initialize_DB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -241,6 +241,9 @@ namespace Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("ChangePasswordToken")
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .IsRequired()

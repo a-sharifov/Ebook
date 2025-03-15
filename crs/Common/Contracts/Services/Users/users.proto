@@ -20,6 +20,7 @@ message UserDetails {
 	bool is_email_confirmed = 6;
 	string reset_password_token = 7;
 	string email_confirmation_token = 8;
+	string change_password_token = 9;
 }
 
 enum Role {

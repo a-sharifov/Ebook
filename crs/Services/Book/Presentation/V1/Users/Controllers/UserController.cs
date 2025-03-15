@@ -10,6 +10,9 @@ using Application.Users.Commands.Logout;
 using Application.Users.Commands.ForgotPassword;
 using Application.Users.Commands.ConfirmForgotPassword;
 using Application.Users.Commands.LoginByForgotPassword;
+using Application.Users.Commands.ChangePasswordWithoutOldConfirm;
+using System.Security.Cryptography.X509Certificates;
+using Application.Users.Commands.ChangePasswordWithoutOld;
 
 namespace Presentation.V1.Users.Controllers;
 
@@ -113,7 +116,7 @@ public sealed class UserController(ISender sender) : ApiController(sender)
     }
 
     [HttpPost("confirm-forgot-password")]
-    public async Task<IActionResult> ConfirmChangePassword([FromForm] ConfirmForgotPasswordRequest request)
+    public async Task<IActionResult> ConfirmChangePassword([FromQuery] ConfirmForgotPasswordRequest request)
     {
         var command = new ConfirmForgotPasswordCommand(
             request.UserId,
@@ -122,6 +125,34 @@ public sealed class UserController(ISender sender) : ApiController(sender)
         var result = await _sender.Send(command);
 
         return result.IsSuccess ? Redirect(request.ReturnUrl)
+            : HandleFailure(result);
+    }
+
+    [Authorize]
+    [HttpPost("change-password-without-old")]
+    public async Task<IActionResult> ChangePasswordWithoutOld([FromBody] ChangePasswordWithoutOldRequest request)
+    {
+        var command = new ChangePasswordWithoutOldCommand(
+            request.UserId,
+            request.ReturnUrl);
+
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? Ok()
+            : HandleFailure(result);
+    }
+
+    [HttpPost("change-password-without-old-confirm")]
+    public async Task<IActionResult> ConfirmChangePasswordWithoutOld([FromQuery] ConfirmChangePasswordWithoutOldRequest request)
+    {
+        var command = new ChangePasswordWithoutOldConfirmCommand(
+            request.UserId,
+            request.Password,
+            request.ChangePasswordToken);
+
+        var result = await _sender.Send(command);
+
+        return result.IsSuccess ? Ok()
             : HandleFailure(result);
     }
 

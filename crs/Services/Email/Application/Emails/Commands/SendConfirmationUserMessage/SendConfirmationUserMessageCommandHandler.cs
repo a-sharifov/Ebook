@@ -3,7 +3,7 @@ using Infrasctructure.Grpc.Users;
 using Infrastructure.Emails.Interfaces;
 using Infrastructure.Emails.Models;
 
-namespace Application.Emails.Commands;
+namespace Application.Emails.Commands.SendConfirmationUserMessage;
 
 internal sealed class SendConfirmationUserMessageCommandHandler(
     IIdentityEmailService emailService,

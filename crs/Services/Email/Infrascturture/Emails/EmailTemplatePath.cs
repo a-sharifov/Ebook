@@ -11,9 +11,15 @@ internal static class EmailTemplatePath
     public static string ConfirmEmailTemplate => GetTemplatePath("ConfirmEmailTemplate.html");
 
     /// <summary>
-    /// required change this template: {{firstName}}, {{lastName}}, {{code}}
+    /// required change this template: {{firstName}}, {{lastName}}, {{resetPasswordLink}}
     /// </summary>
     public static string ForgotPasswordTemplate => GetTemplatePath("ForgotPasswordTemplate.html");
+
+
+    /// <summary>
+    /// required change this template: {{firstName}}, {{lastName}}, {{changePasswordLink}}
+    /// </summary>
+    public static string ChangePasswordTemplate => GetTemplatePath("ChangePasswordTemplate.html");
 
 
     private static string GetTemplatePath(string templateName) =>

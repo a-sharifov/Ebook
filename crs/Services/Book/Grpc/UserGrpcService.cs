@@ -31,6 +31,7 @@ public sealed class UserGrpcService(ISender sender) : UserService.UserServiceBas
             EmailConfirmationToken = userDetails.EmailConfirmationToken ?? string.Empty,
             ResetPasswordToken = userDetails.ResetPasswordToken ?? string.Empty,
             IsEmailConfirmed = userDetails.IsEmailConfirmed,
+            ChangePasswordToken = userDetails.ChangePasswordToken
             };
 
 

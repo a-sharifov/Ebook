@@ -3,7 +3,7 @@ using Domain.UserAggregate.Ids;
 
 namespace Domain.UserAggregate.DomainEvents;
 
-public sealed record UserResetPasswordTokenDomainEvent(
+public sealed record UserChangePasswordTokenDomainEvent(
     Guid Id,
     UserId UserId,
     string ReturnUrl)

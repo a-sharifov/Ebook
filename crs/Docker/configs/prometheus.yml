@@ -20,9 +20,9 @@ scrape_configs:
   - job_name: 'email_api'
     metrics_path: /metrics
     static_configs:
-      - targets: ['email.api:7070']
+      - targets: ['email.api:80']
 
   - job_name: 'monitoring_api'
     metrics_path: /metrics
     static_configs:
-      - targets: ['monitoring.api:8080']
+      - targets: ['monitoring.api:80']

@@ -23,7 +23,7 @@ public class UpdateOrderStatusCommandHandler(
         
         if (!await _orderRepository.IsExistAsync(orderId, cancellationToken))
         {
-            return Result.Failure<Domain.OrderAggregate.Order>(OrderErrors.OrderNotFound);
+            return Result.Failure<Order>(OrderErrors.OrderNotFound);
         }
         
         var order = await _orderRepository.GetAsync(orderId, cancellationToken);
@@ -32,20 +32,19 @@ public class UpdateOrderStatusCommandHandler(
         var updateResult = order.UpdateStatus(request.NewStatus);
         if (updateResult.IsFailure)
         {
-            return Result.Failure<Domain.OrderAggregate.Order>(updateResult.Error);
+            return Result.Failure<Order>(updateResult.Error);
         }
 
         _orderRepository.Update(order);
         await _unitOfWork.Commit(cancellationToken);
 
-        // Publish integration event
         var integrationEvent = new OrderStatusChangedIntegrationEvent(
             Guid.NewGuid(),
             order.Id.Value.ToString(),
             order.UserId,
             oldStatus.ToString(),
             order.Status.ToString(),
-            "user@example.com" // In a real application, you would get this from a user service
+            "user@example.com" // TODO: Change logic
         );
 
         await _messageBus.Publish(integrationEvent, cancellationToken);

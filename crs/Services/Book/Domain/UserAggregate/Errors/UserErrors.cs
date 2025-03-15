@@ -52,4 +52,10 @@ public static class UserErrors
 
     public static Error ResetPasswordTokenIsNotCorrect =>
         new("User.ResetPasswordTokenIsNotCorrect", $"Reset password token is not correct.");
+
+    public static Error ChangePasswordTokenIsExpired =>
+       new("User.ChangePasswordTokenIsExpired", $"Change password token is expired.");
+
+    public static Error ChangePasswordTokenIsNotCorrect =>
+        new("User.ChangePasswordTokenIsNotCorrect", $"Change password token is not correct.");
 }

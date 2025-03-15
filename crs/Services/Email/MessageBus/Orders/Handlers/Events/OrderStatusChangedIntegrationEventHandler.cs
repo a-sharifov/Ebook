@@ -11,8 +11,8 @@ public class OrderStatusChangedIntegrationEventHandler(ISender sender)
 
     private readonly ISender _sender = sender;
 
-    public async override Task Handle(ConsumeContext<OrderStatusChangedIntegrationEvent> context)
+    public override Task Handle(ConsumeContext<OrderStatusChangedIntegrationEvent> context)
     {
-
+        return Task.CompletedTask;
     }
 }

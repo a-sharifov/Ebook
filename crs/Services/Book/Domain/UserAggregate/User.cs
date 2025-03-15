@@ -18,6 +18,7 @@ public sealed class User : AggregateRoot<UserId>
     public RefreshToken? RefreshToken { get; private set; }
     public EmailConfirmationToken? EmailConfirmationToken { get; private set; }
     public ResetPasswordToken? ResetPasswordToken { get; private set; }
+    public ChangePasswordToken? ChangePasswordToken { get; private set; }
     public bool IsEmailConfirmed { get; private set; }
     public Role Role { get; private set; }
     public Cart Cart { get; private set; }
@@ -238,12 +239,42 @@ public sealed class User : AggregateRoot<UserId>
         return Result.Success();
     }
 
-    public Result SetResetPasswordToken(ResetPasswordToken resetPasswordToken)
+    public Result SetResetPasswordToken(ResetPasswordToken resetPasswordToken, string returnUrl)
     {
         ResetPasswordToken = resetPasswordToken;
         AddDomainEvent(
             new UserResetPasswordTokenDomainEvent(
-                Guid.NewGuid(), Id));
+                Guid.NewGuid(),Id, returnUrl));
+
+        return Result.Success();
+    }
+
+    public Result SetChangePasswordToken(ChangePasswordToken changePasswordToken, string returnUrl)
+    {
+        ChangePasswordToken = changePasswordToken;
+        AddDomainEvent(
+            new UserChangePasswordTokenDomainEvent(
+                Guid.NewGuid(), Id, returnUrl));
+
+        return Result.Success();
+    }
+
+    public Result ChangePassword(ChangePasswordToken changePasswordToken, PasswordHash passwordHash, PasswordSalt passwordSalt)
+    {
+        if (ChangePasswordToken == null)
+        {
+            return Result.Failure(
+                UserErrors.ResetPasswordTokenIsNotSet);
+        }
+
+        if (ChangePasswordToken != changePasswordToken)
+        {
+            return Result.Failure(
+                UserErrors.ResetPasswordTokenIsNotCorrect);
+        }
+
+        PasswordHash = passwordHash;
+        PasswordSalt = passwordSalt;
 
         return Result.Success();
     }

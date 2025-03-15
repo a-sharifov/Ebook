@@ -32,6 +32,18 @@ internal sealed class MessageBusServiceInstaller : IServiceInstaller
                     x.ConfigureConsumer<UserRetryEmailConfirmationSendCommandHandler>(context);
                 });
 
+                configurator.ReceiveEndpoint(
+                  nameof(UserForgotPasswordEmailConfirmationSendCommand).ToKebabCase(), x =>
+                  {
+                      x.ConfigureConsumer<UserForgotPasswordEmailConfirmationSendCommandHadnler>(context);
+                  });
+
+                configurator.ReceiveEndpoint(
+                 nameof(UserChangePasswordEmailSendCommand).ToKebabCase(), x =>
+                 {
+                     x.ConfigureConsumer<UserChangePasswordEmailSendCommandHandler>(context);
+                 });
+
                 //configurator.ReceiveEndpoint("user-retry-email-confirmation-send-command", x =>
                 //{
                 //    x.ConfigureConsumer<UserConfirmItemMoveInCartToWishListCommandHandler>(context);

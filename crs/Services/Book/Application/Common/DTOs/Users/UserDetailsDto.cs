@@ -8,5 +8,6 @@ public sealed record UserDetailsDto(
     bool IsEmailConfirmed,
     string Role,
     string? EmailConfirmationToken,
-    string? ResetPasswordToken
+    string? ResetPasswordToken,
+    string? ChangePasswordToken
     );

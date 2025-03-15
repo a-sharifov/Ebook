@@ -8,12 +8,10 @@ namespace Application.Users.Commands.RetryConfirmEmailSend;
 
 public class RetryConfirmEmailSendCommandHandler(
     IUserRepository repository,
-    IHashingService hashingService,
     IUnitOfWork unitOfWork)
     : ICommandHandler<RetryConfirmEmailSendCommand>
 {
     private readonly IUserRepository _repository = repository;
-    private readonly IHashingService _hashingService = hashingService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<Result> Handle(RetryConfirmEmailSendCommand request, CancellationToken cancellationToken)

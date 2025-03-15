@@ -1,4 +1,5 @@
 ﻿using Application.Emails.Commands;
+using Application.Emails.Commands.SendConfirmationUserMessage;
 using Contracts.Services.Users.Commands;
 using EventBus.MassTransit.Handlers;
 using MassTransit;

@@ -1,7 +1,16 @@
+using OpenTelemetry.Metrics;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
     .AddYamlFile(
         "appsettings.yml", optional: true, reloadOnChange: true);
+
+builder.Services
+      .AddOpenTelemetry()
+      .WithMetrics(options => options
+      .AddPrometheusExporter()
+      .AddHttpClientInstrumentation()
+      .AddRuntimeInstrumentation());
 
 builder.Services
     .AddHealthChecksUI()
@@ -10,12 +19,12 @@ builder.Services
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
+app.MapPrometheusScrapingEndpoint();
 
 app.MapHealthChecksUI(options =>
 {

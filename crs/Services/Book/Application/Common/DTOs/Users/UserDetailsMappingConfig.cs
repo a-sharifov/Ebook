@@ -15,5 +15,6 @@ public sealed class UserDetailsMappingConfig : IMappingConfig
        .Map(dest => dest.LastName, src => src.LastName.Value)
        .Map(dest => dest.IsEmailConfirmed, src => src.IsEmailConfirmed)
        .Map(dest => dest.EmailConfirmationToken, src => src.EmailConfirmationToken!.Value)
+       .Map(dest => dest.ChangePasswordToken, src => src.ChangePasswordToken!.Value)
        .Map(dest => dest.ResetPasswordToken, src => src.ResetPasswordToken!.Value);
 }
